@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {
+            CLASS = AppController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                appMenu = NSMenu; 
+                asrItem = NSMenuItem; 
+                dhuhurItem = NSMenuItem; 
+                fajrItem = NSMenuItem; 
+                ishaItem = NSMenuItem; 
+                maghribItem = NSMenuItem; 
+                shuruqItem = NSMenuItem; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
