@@ -34,4 +34,5 @@
 - (void) timeToPray;
 - (void) initPrayers;
 - (void) initGui;
+- (void) setPrayerTimes;
 @end
