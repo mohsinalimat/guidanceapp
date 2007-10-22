@@ -12,12 +12,7 @@
 	NSCalendarDate *now;
 	now = [NSCalendarDate calendarDate];
 
-	NSTimer *timer;
-	timer = [NSTimer scheduledTimerWithTimeInterval:5
-                                              target:self
-                                            selector:@selector(handleTimer)
-                                            userInfo:nil
-                                            repeats:YES];
+	bootstrapTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleBootstrapTimer) userInfo:nil repeats:YES];
 }
 
 - (void) initGui
@@ -60,6 +55,15 @@
 	}
 }
 
+- (void) handleBootstrapTimer
+{
+	if ([[NSCalendarDate calendarDate] secondOfMinute] == 0)
+	{
+		timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];
+		[bootstrapTimer invalidate];
+	}
+}
+
 - (void) handleTimer
 {
     //[self timeToPray];
@@ -67,8 +71,7 @@
 	MyPrayer = [[Prayer alloc] init];
 	[MyPrayer setName : @"Fajr"];
 	[MyGrowler doGrowl : @"Guidance" : [MyPrayer getName] : NO];
-} 
-
+}
 
 - (void)timeToPray
 {

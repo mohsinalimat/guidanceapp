@@ -24,8 +24,12 @@
 	Prayer *ishaPrayer;
 	
 	Growler *MyGrowler;
+	
+	NSTimer *bootstrapTimer;
+	NSTimer *timer;
 }
 
+- (void) handleBootstrapTimer;
 - (void) handleTimer;
 - (void) timeToPray;
 - (void) initPrayers;
