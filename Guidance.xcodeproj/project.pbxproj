@@ -9,10 +9,8 @@
 /* Begin PBXBuildFile section */
 		347BEC330CCC5E93008BE40C /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 347BEC320CCC5E93008BE40C /* Growl.framework */; };
 		347BEC450CCC5EE8008BE40C /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347BEC320CCC5E93008BE40C /* Growl.framework */; };
-		347BEC550CCC6214008BE40C /* Growler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347BEC530CCC6214008BE40C /* Growler.h */; };
 		347BEC560CCC6214008BE40C /* Growler.m in Sources */ = {isa = PBXBuildFile; fileRef = 347BEC540CCC6214008BE40C /* Growler.m */; };
 		347BEDD80CCC724C008BE40C /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 347BEDD70CCC724B008BE40C /* Growl Registration Ticket.growlRegDict */; };
-		34E7E5640CCD2DBA0098659D /* Prayer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34E7E5620CCD2DBA0098659D /* Prayer.h */; };
 		34E7E5650CCD2DBA0098659D /* Prayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E7E5630CCD2DBA0098659D /* Prayer.m */; };
 		843C4E2C0CCBE610000DAEB4 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
@@ -30,8 +28,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				347BEC450CCC5EE8008BE40C /* Growl.framework in CopyFiles */,
-				347BEC550CCC6214008BE40C /* Growler.h in CopyFiles */,
-				34E7E5640CCD2DBA0098659D /* Prayer.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
