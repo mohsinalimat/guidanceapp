@@ -23,7 +23,7 @@
 
 - (NSString *) getFormattedTime
 {
-	return [PrayerTime descriptionWithCalendarFormat: @"%X"];
+	return [PrayerTime descriptionWithCalendarFormat: @"%1I:%M %p"];
 }
 
 - (void) setName: (NSString *) prayerName
