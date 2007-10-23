@@ -11,6 +11,14 @@
 	//initialize prayer objects with names
 	[self initPrayers];
 	
+	//initialize prayer times object 
+	todaysPrayerTimes = [[PrayerTimes alloc] init];
+	
+	//set user latitude and longitude
+	//currently hardcoded to raleigh
+	[todaysPrayerTimes setLatitude: 35.776049];
+	[todaysPrayerTimes setLongitude: -78.708552];
+	
 	//set prayer times
 	[self setPrayerTimes];
 	
@@ -119,7 +127,6 @@
 	}
 	*/
 	
-	todaysPrayerTimes = [[PrayerTimes alloc] init];
 	
 	[fajrPrayer setTime: [todaysPrayerTimes getFajrTime]];
 	
@@ -177,7 +184,7 @@
 
     aboutImg = [NSImage imageNamed: @"aboutImg"];
     options = [NSDictionary dictionaryWithObjectsAndKeys:
-          @"0.1a", @"Version",
+          @"42", @"Version",
           @"Guidance", @"ApplicationName",
           aboutImg, @"ApplicationIcon",
           @"Copyright 2007, Batoul Apps", @"Copyright",
