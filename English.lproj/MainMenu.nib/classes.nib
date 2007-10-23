@@ -1,7 +1,7 @@
 {
     IBClasses = (
         {
-            ACTIONS = {donate = id; selectPrayer = id; }; 
+            ACTIONS = {donate = id; openAboutPanel = id; selectPrayer = id; }; 
             CLASS = AppController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

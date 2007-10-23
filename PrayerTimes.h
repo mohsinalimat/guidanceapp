@@ -10,9 +10,19 @@
 
 
 @interface PrayerTimes : NSObject {
-	int theNumber;
+
 }
 
-- (int)getNumber;
-- (void)setNumber:(int)number;
+- (NSCalendarDate *)getFajrTime;
+
+- (NSCalendarDate *)getShuruqTime;
+
+- (NSCalendarDate *)getDhuhurTime;
+
+- (NSCalendarDate *)getAsrTime;
+
+- (NSCalendarDate *)getMaghribTime;
+
+- (NSCalendarDate *)getIshaTime;
+
 @end
