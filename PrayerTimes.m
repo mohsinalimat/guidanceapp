@@ -11,6 +11,16 @@
 
 @implementation PrayerTimes
  
+- (void)setLatitude:(float)lat
+{
+	latitude = lat;
+}
+
+- (void)setLongitude:(float)lon
+{
+	longitude = lon;
+}
+ 
 - (NSCalendarDate *)getFajrTime 
 {
 	NSCalendarDate *fajrTime = [NSCalendarDate calendarDate];
