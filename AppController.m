@@ -5,15 +5,28 @@
 - (void)awakeFromNib
 {
 	
+	//store today's date
+	today = [NSCalendarDate calendarDate];
+	
+	//initialize prayer objects with names
 	[self initPrayers];
-	[self initGui];
+	
+	//set prayer times
 	[self setPrayerTimes];
 	
+	//create menu bar
+	[self initGui];
+	
+	//initialize prayer time items in menu bar
+	[self initPrayerItems];
+	
+	//create growl object
 	MyGrowler = [[Growler alloc] init];
 	
-	NSCalendarDate *now;
-	now = [NSCalendarDate calendarDate];
+	//run once in case its time for prayer now
+	[self handleTimer];
 
+	//run bootstrapTimer so timer can run at 60 second intervals with the system clock
 	bootstrapTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleBootstrapTimer) userInfo:nil repeats:YES];
 }
 
@@ -23,8 +36,8 @@
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
 	[menuBar retain];
 	[menuBar setHighlightMode:YES];
-	[menuBar setMenu:appMenu]; // set menu items
-	[menuBar setTitle:NSLocalizedString(@"Guidance",@"")]; // set title
+	[menuBar setMenu:appMenu];
+	[menuBar setTitle:NSLocalizedString(@"Guidance",@"")];
 }
 
 - (NSDictionary*)prayerFontAttributes {
@@ -33,7 +46,7 @@
 }
 
 
-- (void) setPrayerTimes
+- (void) initPrayerItems
 {
 	//[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t",@"")]; 
 	//stringByAppendingString:[fajrPrayer getFormattedTime]],@""
@@ -55,10 +68,12 @@
 	
 	[fajrItem setAttributedTitle:fajrTitle];
 	
+	NSString *shuruqFormattedName = [[shuruqPrayer getName] stringByPaddingToLength: 22-[[shuruqPrayer getFormattedTime] length] withString: @" " startingAtIndex:0];
+	[shuruqItem setTitle:NSLocalizedString([shuruqFormattedName stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
 	
+	NSString *dhuhurFormattedName = [[dhuhurPrayer getName] stringByPaddingToLength: 22-[[dhuhurPrayer getFormattedTime] length] withString: @" " startingAtIndex:0];
+	[dhuhurItem setTitle:NSLocalizedString([dhuhurFormattedName stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
 	
-	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
-	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
 	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
 	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")];
 	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")];
@@ -73,6 +88,24 @@
 	maghribPrayer = [[Prayer alloc] init];
 	ishaPrayer = [[Prayer alloc] init];
 	
+	//set names
+	[fajrPrayer setName: @"Fajr"];
+	
+	[shuruqPrayer setName: @"Shuruq"];
+	
+	[dhuhurPrayer setName: @"Dhuhur"];
+	
+	[asrPrayer setName: @"Asr"];
+	
+	[maghribPrayer setName: @"Maghrib"];
+	
+	[ishaPrayer setName: @"Isha"];
+}
+
+	
+- (void) setPrayerTimes
+{	
+	/* DOES NOT WORK
 	Prayer *prayers[] = {fajrPrayer, shuruqPrayer, dhuhurPrayer, asrPrayer, maghribPrayer, ishaPrayer};
 	
 	int i;
@@ -84,6 +117,21 @@
 		[prayers[i] setName : name];
 		[prayers[i] setTime : time];
 	}
+	*/
+	
+	todaysPrayerTimes = [[PrayerTimes alloc] init];
+	
+	[fajrPrayer setTime: [todaysPrayerTimes getFajrTime]];
+	
+	[shuruqPrayer setTime: [todaysPrayerTimes getShuruqTime]];
+	
+	[dhuhurPrayer setTime: [todaysPrayerTimes getDhuhurTime]];
+	
+	[asrPrayer setTime: [todaysPrayerTimes getAsrTime]];
+	
+	[maghribPrayer setTime: [todaysPrayerTimes getMaghribTime]];
+	
+	[ishaPrayer setTime: [todaysPrayerTimes getIshaTime]];
 }
 
 - (void) handleBootstrapTimer
@@ -97,11 +145,15 @@
 
 - (void) handleTimer
 {
-    //[self timeToPray];
-	Prayer *MyPrayer;
-	MyPrayer = [[Prayer alloc] init];
-	[MyPrayer setName : @"Fajr"];
-	[MyGrowler doGrowl : @"Guidance" : [MyPrayer getName] : NO];
+    //get current time
+	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
+	NSCalendarDate *shuruqTime = [shuruqPrayer getTime];
+	
+	if ([shuruqTime minuteOfHour] == [currentTime minuteOfHour]) {
+		[MyGrowler doGrowl : @"Guidance" : [shuruqPrayer getName] : NO];	
+	}
+	
+	
 }
 
 - (void)timeToPray
