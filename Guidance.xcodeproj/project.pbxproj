@@ -12,9 +12,9 @@
 		347BEC560CCC6214008BE40C /* Growler.m in Sources */ = {isa = PBXBuildFile; fileRef = 347BEC540CCC6214008BE40C /* Growler.m */; };
 		347BEDD80CCC724C008BE40C /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 347BEDD70CCC724B008BE40C /* Growl Registration Ticket.growlRegDict */; };
 		34E7E5650CCD2DBA0098659D /* Prayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E7E5630CCD2DBA0098659D /* Prayer.m */; };
-		84031F4B0CCDBAFC005DA599 /* aboutImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 84031F4A0CCDBAFC005DA599 /* aboutImg.png */; };
 		84031FA40CCDBEE8005DA599 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */; };
 		843C4E2C0CCBE610000DAEB4 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */; };
+		84951C650CCE3CB400A97394 /* aboutImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 84951C640CCE3CB400A97394 /* aboutImg.png */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -51,10 +51,10 @@
 		347BEDD70CCC724B008BE40C /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
 		34E7E5620CCD2DBA0098659D /* Prayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prayer.h; sourceTree = "<group>"; };
 		34E7E5630CCD2DBA0098659D /* Prayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Prayer.m; sourceTree = "<group>"; };
-		84031F4A0CCDBAFC005DA599 /* aboutImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = aboutImg.png; path = ../../aboutImg.png; sourceTree = SOURCE_ROOT; };
 		84031FA30CCDBEE8005DA599 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		843C4E2A0CCBE610000DAEB4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		843C4E2B0CCBE610000DAEB4 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+		84951C640CCE3CB400A97394 /* aboutImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aboutImg.png; sourceTree = "<group>"; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
 		84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrayerTimes.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -146,7 +146,7 @@
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 				347BEDD70CCC724B008BE40C /* Growl Registration Ticket.growlRegDict */,
 				84031FA30CCDBEE8005DA599 /* Credits.rtf */,
-				84031F4A0CCDBAFC005DA599 /* aboutImg.png */,
+				84951C640CCE3CB400A97394 /* aboutImg.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -205,8 +205,8 @@
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				347BEDD80CCC724C008BE40C /* Growl Registration Ticket.growlRegDict in Resources */,
-				84031F4B0CCDBAFC005DA599 /* aboutImg.png in Resources */,
 				84031FA40CCDBEE8005DA599 /* Credits.rtf in Resources */,
+				84951C650CCE3CB400A97394 /* aboutImg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
