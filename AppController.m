@@ -4,6 +4,7 @@
 
 - (void)awakeFromNib
 {
+	
 	[self initPrayers];
 	[self initGui];
 	[self setPrayerTimes];
@@ -26,14 +27,35 @@
 	[menuBar setTitle:NSLocalizedString(@"Guidance",@"")]; // set title
 }
 
+- (NSDictionary*)prayerFontAttributes {
+	return [NSDictionary dictionaryWithObject: [NSFont boldSystemFontOfSize:[NSFont systemFontSize]] forKey:NSFontAttributeName];
+
+}
+
+
 - (void) setPrayerTimes
 {
 	//[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t",@"")]; 
 	//stringByAppendingString:[fajrPrayer getFormattedTime]],@""
-	[fajrItem setTitle:NSLocalizedString(@"Fajr:",@"")]; // set title
+	//[fajrItem setTitle:NSLocalizedString(@"Fajr:",@"")]; // set title
 	//[fajrItem setIndentationLevel:3];
 	//setAttributedTitle
+	//NSAttributedString *fajrString;
+	//[fajrString initWithString:@"dude"];
+	//[fajrItem setAttributedTitle:fajrString];
+	//NSAttributedString
+	//- (void)setAttributedTitle:(NSAttributedString *)title
 	//[fajrItem setKeyEquivalent:NSLocalizedString(@"5:43 AM",@"")];
+	
+	
+	NSAttributedString *fajrTitle = [[[NSAttributedString alloc] 
+		initWithString:NSLocalizedString(@"Fajr",@"")
+		attributes:[self prayerFontAttributes]] autorelease];
+	
+	
+	[fajrItem setAttributedTitle:fajrTitle];
+	
+	
 	
 	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
 	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
@@ -92,6 +114,26 @@
 	[self timeToPray];
 }
 
+- (IBAction)donate:(id)sender {
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://ameir.com/ameir/donate/"]];
+}
+
+- (IBAction)openAboutPanel:(id)sender
+{
+    NSDictionary *options;
+    NSImage *aboutImg;
+
+    aboutImg = [NSImage imageNamed: @"aboutImg"];
+    options = [NSDictionary dictionaryWithObjectsAndKeys:
+          @"0.1a", @"Version",
+          @"Guidance", @"ApplicationName",
+          aboutImg, @"ApplicationIcon",
+          @"Copyright 2007, Batoul Apps", @"Copyright",
+          @"Guidance v0.1a", @"ApplicationVersion",
+         nil];
+
+    [[NSApplication sharedApplication] orderFrontStandardAboutPanelWithOptions:options];
+}
 
 @end
 
