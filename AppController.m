@@ -126,6 +126,10 @@
 {
 	if ([[NSCalendarDate calendarDate] secondOfMinute] == 0)
 	{
+		//check salah times
+		[self handleTimer];
+		
+		//run 60 second timer to check for salah times
 		timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];
 		[bootstrapTimer invalidate];
 	}
@@ -136,17 +140,18 @@
     //get current time
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
 	NSCalendarDate *prayerTime;
+	[MyGrowler doGrowl : @"Guidance" : @"whatup" : NO];
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
 	int i;
 	for (i=0; i<6; i++)
 	{
-		BOOL display = NO;
+		BOOL display = YES;
 		Prayer *prayer = prayers[i];
 		prayerTime = [prayer getTime];
 		
-		if ([prayerTime minuteOfHour] == [currentTime minuteOfHour]) display = YES;
-		if ([prayerTime hourOfDay] == [currentTime hourOfDay]) display = YES;
+		if ([prayerTime minuteOfHour] != [currentTime minuteOfHour]) display = NO;
+		if ([prayerTime hourOfDay] != [currentTime hourOfDay]) display = NO;
 		
 		if (display)
 		{
