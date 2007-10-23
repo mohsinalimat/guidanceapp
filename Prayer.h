@@ -15,6 +15,8 @@
 	@private
 	NSString *PrayerName;
 	NSCalendarDate *PrayerTime;
+	BOOL ShowGrowl;
+	BOOL PlayAudio;
 }
 
 - (void) setTime : (NSCalendarDate *) prayerTime;
@@ -23,5 +25,12 @@
 - (NSString *) getName;
 
 - (NSString *) getFormattedTime;
+
+- (void) setShowGrowl: (BOOL) ShowGrowl;
+- (BOOL) getShowGrowl;
+
+- (void) setPlayAudio: (BOOL) PlayAudio;
+- (BOOL) getPlayAudio;
+
 
 @end

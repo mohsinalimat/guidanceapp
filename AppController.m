@@ -33,6 +33,8 @@
 	
 	//run once in case its time for prayer now
 	[self handleTimer];
+	[self handleTimer];
+	[self handleTimer];
 
 	//run bootstrapTimer so timer can run at 60 second intervals with the system clock
 	bootstrapTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleBootstrapTimer) userInfo:nil repeats:YES];
