@@ -36,7 +36,7 @@
  
 - (IBAction)selectPrayer:(id)sender;
 - (IBAction)donate:(id)sender;
-//- (IBAction)openAboutPanel:(id)sender;
+- (IBAction)openAboutPanel:(id)sender;
 
 - (void) handleBootstrapTimer;
 - (void) handleTimer;
