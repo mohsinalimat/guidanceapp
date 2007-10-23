@@ -582,6 +582,30 @@
 			8403211F0CCDD112005DA599 /* PBXTextBookmark */ = 8403211F0CCDD112005DA599 /* PBXTextBookmark */;
 			840321200CCDD112005DA599 /* PBXTextBookmark */ = 840321200CCDD112005DA599 /* PBXTextBookmark */;
 			840321210CCDD12D005DA599 /* PBXTextBookmark */ = 840321210CCDD12D005DA599 /* PBXTextBookmark */;
+			840321220CCDD255005DA599 /* PBXTextBookmark */ = 840321220CCDD255005DA599 /* PBXTextBookmark */;
+			840321230CCDD255005DA599 /* PBXTextBookmark */ = 840321230CCDD255005DA599 /* PBXTextBookmark */;
+			840321240CCDD255005DA599 /* PBXTextBookmark */ = 840321240CCDD255005DA599 /* PBXTextBookmark */;
+			840321250CCDD255005DA599 /* PBXTextBookmark */ = 840321250CCDD255005DA599 /* PBXTextBookmark */;
+			840321260CCDD255005DA599 /* PBXTextBookmark */ = 840321260CCDD255005DA599 /* PBXTextBookmark */;
+			840321270CCDD255005DA599 /* PBXTextBookmark */ = 840321270CCDD255005DA599 /* PBXTextBookmark */;
+			840321290CCDD255005DA599 /* PBXTextBookmark */ = 840321290CCDD255005DA599 /* PBXTextBookmark */;
+			8403212A0CCDD255005DA599 /* PBXTextBookmark */ = 8403212A0CCDD255005DA599 /* PBXTextBookmark */;
+			8403212B0CCDD255005DA599 /* PBXTextBookmark */ = 8403212B0CCDD255005DA599 /* PBXTextBookmark */;
+			8403212C0CCDD255005DA599 /* PBXTextBookmark */ = 8403212C0CCDD255005DA599 /* PBXTextBookmark */;
+			8403212D0CCDD255005DA599 /* PBXTextBookmark */ = 8403212D0CCDD255005DA599 /* PBXTextBookmark */;
+			8403212E0CCDD255005DA599 /* PBXTextBookmark */ = 8403212E0CCDD255005DA599 /* PBXTextBookmark */;
+			8403212F0CCDD255005DA599 /* PBXTextBookmark */ = 8403212F0CCDD255005DA599 /* PBXTextBookmark */;
+			840321300CCDD255005DA599 /* PBXTextBookmark */ = 840321300CCDD255005DA599 /* PBXTextBookmark */;
+			840321310CCDD255005DA599 /* PBXTextBookmark */ = 840321310CCDD255005DA599 /* PBXTextBookmark */;
+			840321320CCDD255005DA599 /* PBXTextBookmark */ = 840321320CCDD255005DA599 /* PBXTextBookmark */;
+			840321330CCDD255005DA599 /* PBXTextBookmark */ = 840321330CCDD255005DA599 /* PBXTextBookmark */;
+			840321350CCDD255005DA599 /* PBXTextBookmark */ = 840321350CCDD255005DA599 /* PBXTextBookmark */;
+			840321360CCDD255005DA599 /* PBXTextBookmark */ = 840321360CCDD255005DA599 /* PBXTextBookmark */;
+			840321370CCDD2B0005DA599 /* PBXTextBookmark */ = 840321370CCDD2B0005DA599 /* PBXTextBookmark */;
+			840321380CCDD2B0005DA599 /* PBXTextBookmark */ = 840321380CCDD2B0005DA599 /* PBXTextBookmark */;
+			840321390CCDD2B0005DA599 /* PBXTextBookmark */ = 840321390CCDD2B0005DA599 /* PBXTextBookmark */;
+			8403213A0CCDD2B0005DA599 /* PBXTextBookmark */ = 8403213A0CCDD2B0005DA599 /* PBXTextBookmark */;
+			8403213B0CCDD2B0005DA599 /* PBXTextBookmark */ = 8403213B0CCDD2B0005DA599 /* PBXTextBookmark */;
 			840F681F0CCD71890021B202 = 840F681F0CCD71890021B202 /* PBXTextBookmark */;
 			843C4E350CCBE6B0000DAEB4 = 843C4E350CCBE6B0000DAEB4 /* PBXTextBookmark */;
 			843C4E380CCBE6B0000DAEB4 = 843C4E380CCBE6B0000DAEB4 /* PBXTextBookmark */;
@@ -642,9 +666,9 @@
 		path = /Users/ameir/Developer/guidanceapp/Guidance.xcodeproj/ameir.pbxuser;
 		sourceTree = "<absolute>";
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1032, 5012}}";
-			sepNavSelRange = "{10113, 0}";
-			sepNavVisRect = "{{0, 4893}, {1032, 21}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1032, 87780}}";
+			sepNavSelRange = "{11278, 0}";
+			sepNavVisRect = "{{0, 1842}, {1032, 420}}";
 		};
 	};
 	84031D470CCD81D2005DA599 /* PBXTextBookmark */ = {
@@ -3624,6 +3648,13 @@
 		vrLen = 276;
 		vrLoc = 3658;
 	};
+	84031FA30CCDBEE8005DA599 /* Credits.rtf */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1032, 435}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {1032, 435}}";
+		};
+	};
 	84031FA60CCDBEEC005DA599 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */;
@@ -5797,6 +5828,258 @@
 		vrLoc = 3789;
 	};
 	840321210CCDD12D005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */;
+		name = "AppController.m: 118";
+		rLen = 0;
+		rLoc = 3788;
+		rType = 0;
+		vrLen = 242;
+		vrLoc = 3789;
+	};
+	840321220CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */;
+		name = "AppController.m: 108";
+		rLen = 0;
+		rLoc = 3394;
+		rType = 0;
+		vrLen = 806;
+		vrLoc = 3345;
+	};
+	840321230CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 843C4E2A0CCBE610000DAEB4 /* AppController.h */;
+		name = "AppController.h: todaysPrayerTimes";
+		rLen = 0;
+		rLoc = 556;
+		rType = 0;
+		vrLen = 596;
+		vrLoc = 0;
+	};
+	840321240CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */;
+		name = "PrayerTimes.m: 12";
+		rLen = 0;
+		rLoc = 187;
+		rType = 0;
+		vrLen = 526;
+		vrLoc = 0;
+	};
+	840321250CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		name = "Info.plist: 22";
+		rLen = 0;
+		rLoc = 714;
+		rType = 0;
+		vrLen = 890;
+		vrLoc = 0;
+	};
+	840321260CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031D460CCD81D2005DA599 /* ameir.pbxuser */;
+		name = "ameir.pbxuser: 159";
+		rLen = 0;
+		rLoc = 11278;
+		rType = 0;
+		vrLen = 3100;
+		vrLoc = 8530;
+	};
+	840321270CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 840321280CCDD255005DA599 /* project.pbxproj */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2257;
+		vrLoc = 0;
+	};
+	840321280CCDD255005DA599 /* project.pbxproj */ = {
+		isa = PBXFileReference;
+		name = project.pbxproj;
+		path = /Users/ameir/Developer/guidanceapp/Guidance.xcodeproj/project.pbxproj;
+		sourceTree = "<absolute>";
+	};
+	840321290CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */;
+		name = "Credits.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 48;
+		vrLoc = 0;
+	};
+	8403212A0CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */;
+		name = "AppController.m: 108";
+		rLen = 0;
+		rLoc = 3394;
+		rType = 0;
+		vrLen = 806;
+		vrLoc = 3345;
+	};
+	8403212B0CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 843C4E2A0CCBE610000DAEB4 /* AppController.h */;
+		name = "AppController.h: todaysPrayerTimes";
+		rLen = 0;
+		rLoc = 556;
+		rType = 0;
+		vrLen = 596;
+		vrLoc = 0;
+	};
+	8403212C0CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */;
+		name = "Credits.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 48;
+		vrLoc = 0;
+	};
+	8403212D0CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031D460CCD81D2005DA599 /* ameir.pbxuser */;
+		name = "ameir.pbxuser: 159";
+		rLen = 0;
+		rLoc = 11278;
+		rType = 0;
+		vrLen = 3100;
+		vrLoc = 8530;
+	};
+	8403212E0CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 843C4E2A0CCBE610000DAEB4 /* AppController.h */;
+		name = "AppController.h: todaysPrayerTimes";
+		rLen = 0;
+		rLoc = 556;
+		rType = 0;
+		vrLen = 596;
+		vrLoc = 0;
+	};
+	8403212F0CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */;
+		name = "PrayerTimes.m: 12";
+		rLen = 0;
+		rLoc = 187;
+		rType = 0;
+		vrLen = 526;
+		vrLoc = 0;
+	};
+	840321300CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		name = "Info.plist: 22";
+		rLen = 0;
+		rLoc = 714;
+		rType = 0;
+		vrLen = 890;
+		vrLoc = 0;
+	};
+	840321310CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031D460CCD81D2005DA599 /* ameir.pbxuser */;
+		name = "ameir.pbxuser: 159";
+		rLen = 0;
+		rLoc = 11278;
+		rType = 0;
+		vrLen = 3100;
+		vrLoc = 8530;
+	};
+	840321320CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */;
+		name = "Credits.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 48;
+		vrLoc = 0;
+	};
+	840321330CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 840321340CCDD255005DA599 /* project.pbxproj */;
+		name = "(null): 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2257;
+		vrLoc = 0;
+	};
+	840321340CCDD255005DA599 /* project.pbxproj */ = {
+		isa = PBXFileReference;
+		name = project.pbxproj;
+		path = /Users/ameir/Developer/guidanceapp/Guidance.xcodeproj/project.pbxproj;
+		sourceTree = "<absolute>";
+	};
+	840321350CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */;
+		name = "Credits.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 48;
+		vrLoc = 0;
+	};
+	840321360CCDD255005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */;
+		name = "AppController.m: 118";
+		rLen = 0;
+		rLoc = 3788;
+		rType = 0;
+		vrLen = 242;
+		vrLoc = 3789;
+	};
+	840321370CCDD2B0005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */;
+		name = "Credits.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 48;
+		vrLoc = 0;
+	};
+	840321380CCDD2B0005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031D460CCD81D2005DA599 /* ameir.pbxuser */;
+		name = "ameir.pbxuser: 159";
+		rLen = 0;
+		rLoc = 11278;
+		rType = 0;
+		vrLen = 3100;
+		vrLoc = 8530;
+	};
+	840321390CCDD2B0005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */;
+		name = "Credits.rtf: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 48;
+		vrLoc = 0;
+	};
+	8403213A0CCDD2B0005DA599 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 84031D460CCD81D2005DA599 /* ameir.pbxuser */;
+		name = "ameir.pbxuser: 159";
+		rLen = 0;
+		rLoc = 11278;
+		rType = 0;
+		vrLen = 3100;
+		vrLoc = 8530;
+	};
+	8403213B0CCDD2B0005DA599 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */;
 		name = "AppController.m: 118";
