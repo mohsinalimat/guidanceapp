@@ -6,6 +6,7 @@
 {
 	[self initPrayers];
 	[self initGui];
+	[self setPrayerTimes];
 	
 	MyGrowler = [[Growler alloc] init];
 	
@@ -18,19 +19,21 @@
 - (void) initGui
 {
 	NSStatusBar *bar = [NSStatusBar systemStatusBar];
-            menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
-            [menuBar retain]; // keep it!
-            [menuBar setTitle:NSLocalizedString(@"Menu",@"")]; // title
-            [menuBar setHighlightMode:YES]; // behave like main menu
-            [menuBar setMenu:appMenu]; // set submenu
-	[menuBar setTitle:NSLocalizedString(@"Guidance",@"")]; // title
-	
-	[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t " stringByAppendingString:[fajrPrayer getFormattedTime]],@"")]; // title
-	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")]; // title
-	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")]; // title
-	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")]; // title
-	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")]; // title
-	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")]; // title
+	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
+	[menuBar retain];
+	[menuBar setHighlightMode:YES];
+	[menuBar setMenu:appMenu]; // set menu items
+	[menuBar setTitle:NSLocalizedString(@"Guidance",@"")]; // set title
+}
+
+- (void) setPrayerTimes
+{
+	[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t " stringByAppendingString:[fajrPrayer getFormattedTime]],@"")]; 
+	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
+	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
+	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
+	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")];
+	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")];
 }
 
 - (void) initPrayers
@@ -78,6 +81,11 @@
 	int alert = NSRunAlertPanel(@"Fajr",@"It is time to pray Fajr",@"Ok",@"Cancel",nil);
 	NSLog(@"" + alert);
 }
+
+- (IBAction)selectPrayer:(id)sender {
+	//[self timeToPray];
+}
+
 
 @end
 
