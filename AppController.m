@@ -140,14 +140,15 @@
     //get current time
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
 	NSCalendarDate *prayerTime;
-	[MyGrowler doGrowl : @"Guidance" : @"whatup" : NO];
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
+	Prayer *prayer;
+	
 	int i;
 	for (i=0; i<6; i++)
 	{
 		BOOL display = YES;
-		Prayer *prayer = prayers[i];
+		prayer = prayers[i];
 		prayerTime = [prayer getTime];
 		
 		if ([prayerTime minuteOfHour] != [currentTime minuteOfHour]) display = NO;
@@ -158,7 +159,6 @@
 			NSString *name = [prayer getName];
 			NSString *time = [prayer getFormattedTime];
 			[MyGrowler doGrowl : @"Guidance" : [[name stringByAppendingString:@"\n"] stringByAppendingString:time] : NO];
-			break;
 		}
 	}
 }
