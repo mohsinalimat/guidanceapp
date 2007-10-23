@@ -28,7 +28,13 @@
 
 - (void) setPrayerTimes
 {
-	[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t " stringByAppendingString:[fajrPrayer getFormattedTime]],@"")]; 
+	//[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t",@"")]; 
+	//stringByAppendingString:[fajrPrayer getFormattedTime]],@""
+	[fajrItem setTitle:NSLocalizedString(@"Fajr:",@"")]; // set title
+	//[fajrItem setIndentationLevel:3];
+	//setAttributedTitle
+	//[fajrItem setKeyEquivalent:NSLocalizedString(@"5:43 AM",@"")];
+	
 	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
 	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
 	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
@@ -83,7 +89,7 @@
 }
 
 - (IBAction)selectPrayer:(id)sender {
-	//[self timeToPray];
+	[self timeToPray];
 }
 
 
