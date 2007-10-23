@@ -89,6 +89,10 @@
 
 - (void) initPrayers
 {
+	//init PrayerTimes object
+	todaysPrayerTimes = [[PrayerTimes alloc] init];
+	
+	//init Prayer objects
 	fajrPrayer = [[Prayer alloc] init];
 	shuruqPrayer = [[Prayer alloc] init];
 	dhuhurPrayer = [[Prayer alloc] init];
@@ -98,46 +102,23 @@
 	
 	//set names
 	[fajrPrayer setName: @"Fajr"];
-	
 	[shuruqPrayer setName: @"Shuruq"];
-	
 	[dhuhurPrayer setName: @"Dhuhur"];
-	
 	[asrPrayer setName: @"Asr"];
-	
 	[maghribPrayer setName: @"Maghrib"];
-	
 	[ishaPrayer setName: @"Isha"];
+	
+	[self setPrayerTimes];
 }
 
-	
 - (void) setPrayerTimes
 {	
-	/* DOES NOT WORK
-	Prayer *prayers[] = {fajrPrayer, shuruqPrayer, dhuhurPrayer, asrPrayer, maghribPrayer, ishaPrayer};
-	
-	int i;
-	for (i = 0; i < 6; i++)
-	{
-		NSString *name = @"Prayer Name " + (i+1);
-		NSCalendarDate *time = [NSCalendarDate calendarDate];
-		time = [time dateByAddingYears: 0 months: 0 days: 0 hours: 2*(i+1) minutes: 0 seconds: 0];
-		[prayers[i] setName : name];
-		[prayers[i] setTime : time];
-	}
-	*/
-	
-	
+	//set times
 	[fajrPrayer setTime: [todaysPrayerTimes getFajrTime]];
-	
 	[shuruqPrayer setTime: [todaysPrayerTimes getShuruqTime]];
-	
 	[dhuhurPrayer setTime: [todaysPrayerTimes getDhuhurTime]];
-	
 	[asrPrayer setTime: [todaysPrayerTimes getAsrTime]];
-	
 	[maghribPrayer setTime: [todaysPrayerTimes getMaghribTime]];
-	
 	[ishaPrayer setTime: [todaysPrayerTimes getIshaTime]];
 }
 
@@ -154,13 +135,27 @@
 {
     //get current time
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
-	NSCalendarDate *shuruqTime = [shuruqPrayer getTime];
+	NSCalendarDate *prayerTime;
 	
-	if ([shuruqTime minuteOfHour] == [currentTime minuteOfHour]) {
-		[MyGrowler doGrowl : @"Guidance" : [shuruqPrayer getName] : NO];	
+	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
+	int i;
+	for (i=0; i<6; i++)
+	{
+		BOOL display = NO;
+		Prayer *prayer = prayers[i];
+		prayerTime = [prayer getTime];
+		
+		if ([prayerTime minuteOfHour] == [currentTime minuteOfHour]) display = YES;
+		if ([prayerTime hourOfDay] == [currentTime hourOfDay]) display = YES;
+		
+		if (display)
+		{
+			NSString *name = [prayer getName];
+			NSString *time = [prayer getFormattedTime];
+			[MyGrowler doGrowl : @"Guidance" : [[name stringByAppendingString:@"\n"] stringByAppendingString:time] : NO];
+			break;
+		}
 	}
-	
-	
 }
 
 - (void)timeToPray
