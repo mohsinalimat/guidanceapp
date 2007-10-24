@@ -40,7 +40,7 @@
 
 - (void) handleBootstrapTimer;
 - (void) handleTimer;
-- (void) timeToPray;
+
 - (void) initPrayers;
 - (void) initGui;
 - (void) initPrayerItems;

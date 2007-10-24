@@ -33,8 +33,6 @@
 	
 	//run once in case its time for prayer now
 	[self handleTimer];
-	[self handleTimer];
-	[self handleTimer];
 
 	//run bootstrapTimer so timer can run at 60 second intervals with the system clock
 	bootstrapTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleBootstrapTimer) userInfo:nil repeats:YES];
@@ -50,40 +48,13 @@
 	[menuBar setTitle:NSLocalizedString(@"Guidance",@"")];
 }
 
-- (NSDictionary*)prayerFontAttributes {
-	return [NSDictionary dictionaryWithObject: [NSFont boldSystemFontOfSize:[NSFont systemFontSize]] forKey:NSFontAttributeName];
-
-}
-
 
 - (void) initPrayerItems
 {
-	//[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t",@"")]; 
-	//stringByAppendingString:[fajrPrayer getFormattedTime]],@""
-	//[fajrItem setTitle:NSLocalizedString(@"Fajr:",@"")]; // set title
-	//[fajrItem setIndentationLevel:3];
-	//setAttributedTitle
-	//NSAttributedString *fajrString;
-	//[fajrString initWithString:@"dude"];
-	//[fajrItem setAttributedTitle:fajrString];
-	//NSAttributedString
-	//- (void)setAttributedTitle:(NSAttributedString *)title
-	//[fajrItem setKeyEquivalent:NSLocalizedString(@"5:43 AM",@"")];
-	
-	
-	NSAttributedString *fajrTitle = [[[NSAttributedString alloc] 
-		initWithString:NSLocalizedString(@"Fajr",@"")
-		attributes:[self prayerFontAttributes]] autorelease];
-	
-	
-	[fajrItem setAttributedTitle:fajrTitle];
-	
-	NSString *shuruqFormattedName = [[shuruqPrayer getName] stringByPaddingToLength: 22-[[shuruqPrayer getFormattedTime] length] withString: @" " startingAtIndex:0];
-	[shuruqItem setTitle:NSLocalizedString([shuruqFormattedName stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
-	
-	NSString *dhuhurFormattedName = [[dhuhurPrayer getName] stringByPaddingToLength: 22-[[dhuhurPrayer getFormattedTime] length] withString: @" " startingAtIndex:0];
-	[dhuhurItem setTitle:NSLocalizedString([dhuhurFormattedName stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
-	
+
+	[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t " stringByAppendingString:[fajrPrayer getFormattedTime]],@"")];
+	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
+	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
 	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
 	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")];
 	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")];
@@ -141,12 +112,18 @@
 
 - (void) handleTimer
 {
+	
     //get current time
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
 	NSCalendarDate *prayerTime;
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
 	Prayer *prayer;
+	
+	
+	//THIS LINE WILL NOT WORK WHEN RUN BY THE TIMER
+	[MyGrowler doGrowl : [fajrPrayer getName] : [[fajrPrayer getTime] descriptionWithCalendarFormat: @"%1I:%M %p"] : NO];
+	
 	
 	int i;
 	for (i=0; i<6; i++)
@@ -162,19 +139,15 @@
 		{
 			NSString *name = [prayer getName];
 			NSString *time = [prayer getFormattedTime];
-			[MyGrowler doGrowl : @"Guidance" : [[name stringByAppendingString:@"\n"] stringByAppendingString:time] : NO];
+			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : NO];
 		}
 	}
+	
 }
 
-- (void)timeToPray
-{
-	int alert = NSRunAlertPanel(@"Fajr",@"It is time to pray Fajr",@"Ok",@"Cancel",nil);
-	NSLog(@"" + alert);
-}
 
 - (IBAction)selectPrayer:(id)sender {
-	[self timeToPray];
+	//do nothing for now
 }
 
 - (IBAction)donate:(id)sender {

@@ -29,6 +29,8 @@
 - (void)setLongitude:(double)n;
 - (void)setAltitude:(double)n;
 
+- (void)calcTimes;
+
 - (NSCalendarDate *)getFajrTime;
 
 - (NSCalendarDate *)getShuruqTime;
