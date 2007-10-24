@@ -114,7 +114,9 @@
 }
 
 - (void) setPrayerTimes
-{	
+{
+	[todaysPrayerTimes calcTimes];
+	
 	//set times
 	[fajrPrayer setTime: [todaysPrayerTimes getFajrTime]];
 	[shuruqPrayer setTime: [todaysPrayerTimes getShuruqTime]];

@@ -10,12 +10,24 @@
 
 
 @interface PrayerTimes : NSObject {
-	float latitude;
-	float longitude;
+	double Latitude;
+	double Longitude;
+	double Altitude;
+	int Shafi;
+	int TwilightDawnAngle;
+	int TwilightSunsetAngle;
+	
+	NSCalendarDate *FajrTime;
+	NSCalendarDate *ShuruqTime;
+	NSCalendarDate *DhuhurTime;
+	NSCalendarDate *AsrTime;
+	NSCalendarDate *MaghribTime;
+	NSCalendarDate *IshaTime;
 }
 
-- (void)setLatitude:(float)lat;
-- (void)setLongitude:(float)lon;
+- (void)setLatitude:(double)n;
+- (void)setLongitude:(double)n;
+- (void)setAltitude:(double)n;
 
 - (NSCalendarDate *)getFajrTime;
 

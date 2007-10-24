@@ -7,59 +7,189 @@
 //
 
 #import "PrayerTimes.h"
+#import <math.h>
 
 
 @implementation PrayerTimes
- 
-- (void)setLatitude:(float)lat
-{
-	latitude = lat;
+
+- (id) init {
+	self = [super init];
+	if (self != nil)
+	{
+		Latitude = 0.0;
+		Longitude = 0.0;
+		Altitude = 0.0;
+		Shafi = 1;
+		TwilightDawnAngle = 18;
+		TwilightSunsetAngle = 18;
+	}
+	return self;
 }
 
-- (void)setLongitude:(float)lon
+ 
+- (void)setLatitude:(double)n
 {
-	longitude = lon;
+	Latitude = n;
 }
+
+
+- (void)setLongitude:(double)n
+{
+	Longitude = n;
+}
+
+
+- (void)setAltitude:(double)n
+{
+	Altitude = n;
+}
+
+
++ (double)rad2deg:(double)n
+{
+	return n * (180.0 / M_PI);
+}
+
+
++ (double)deg2rad:(double)n
+{
+	return n * (M_PI / 180.0);
+}
+
+
++ (int)sign:(double)n
+{
+	return abs(n)/n;
+}
+
+
++ (double)acot:(double)n
+{
+    return atan(1.0 / n);
+}
+
+
++ (NSCalendarDate *) hoursToTime:(double)n
+{
+	NSCalendarDate *midnight = [[NSCalendarDate calendarDate]
+								dateByAddingYears:0
+								months:0
+								days:0
+								hours:-[[NSCalendarDate calendarDate] hourOfDay]
+								minutes:-[[NSCalendarDate calendarDate] minuteOfHour]
+								seconds:-[[NSCalendarDate calendarDate] secondOfMinute]];
+	
+	int hours = floor(n);
+	int minutes = floor((n - hours) * 60);
+	
+	return [midnight dateByAddingYears:0 months:0 days:0 hours:hours minutes:minutes seconds:0];
+}
+
+
+- (void)calcTimes
+{
+	int day = [[NSCalendarDate calendarDate] dayOfYear];
+	NSNumberFormatter *nf = [[NSNumberFormatter alloc] init];
+	int tz = [[nf numberFromString:[[NSCalendarDate calendarDate] descriptionWithCalendarFormat:@"%z"]] intValue];
+	[nf release];
+	tz = (tz>0)?(tz/100+tz%100/60):(tz/100-tz%100/60);
+	if (Altitude == 0) Altitude = 1;
+	double beta = (2 * M_PI * day) / 365.0;
+	double d = (180.0 / M_PI * day) * (0.006918 - (0.399912 * cos(beta))
+				+ (0.07057 * sin(beta))
+				- (0.006758 * cos(2*beta))
+				+ (0.000907 * sin(2*beta))
+				- (0.002697 * cos(3*beta))
+				+ (0.001480 * sin(3*beta)));
+	double t = 229.18 * (0.000075 + (0.001868 * cos(beta))
+				- (0.032077 * sin(beta))
+				- (0.014615 * cos(2*beta))
+				- (0.040849 * sin(2*beta)));
+	
+	double r = 15.0 * tz;
+	double z = 12.0 + ((r - Longitude) / 15.0) - (t / 60.0);
+	
+	double xu = sin([PrayerTimes deg2rad:(-0.8333 - 0.0347
+				* [PrayerTimes sign:Altitude]
+				* sqrt(abs(Altitude)))]
+				- sin([PrayerTimes deg2rad:d])
+				* sin([PrayerTimes deg2rad:Latitude]))
+				/ (cos([PrayerTimes deg2rad:d])
+				* cos([PrayerTimes deg2rad:Latitude]));
+	
+	double u;
+	
+	if (xu >= -1 && xu <= 1)
+	{
+		u = [PrayerTimes rad2deg:(1/15.0 * acos(xu))];
+	}
+	else
+	{
+		if (xu < -1)
+		{
+			// no sunset
+		}
+		else
+		{
+			// no sunrise
+		}
+	}
+	
+	double xvd = (-sin([PrayerTimes deg2rad:TwilightDawnAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
+				/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
+	
+	double vd = [PrayerTimes rad2deg:1/15.0 * acos(xvd)];
+	
+	double xvn = (-sin([PrayerTimes deg2rad:TwilightSunsetAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
+				/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
+	
+	double vn = [PrayerTimes rad2deg:1/15.0 * acos(xvn)];
+	
+	double w = [PrayerTimes rad2deg:1/15.0 * cos((sin([PrayerTimes acot:Shafi + tan(abs([PrayerTimes deg2rad:Latitude] - [PrayerTimes deg2rad:d]))]) - sin([PrayerTimes deg2rad:Latitude])) / (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude])))];
+	
+	
+	FajrTime = [PrayerTimes hoursToTime: z - vd];
+	ShuruqTime = [PrayerTimes hoursToTime: z - u];
+	DhuhurTime = [PrayerTimes hoursToTime: z];
+	AsrTime = [PrayerTimes hoursToTime: z + w];
+	MaghribTime = [PrayerTimes hoursToTime: z + u];
+	IshaTime = [PrayerTimes hoursToTime: z + vn];
+}
+
  
 - (NSCalendarDate *)getFajrTime 
 {
-	NSCalendarDate *fajrTime = [NSCalendarDate calendarDate];
-	return fajrTime;
+	return FajrTime;
 }
 
 
 - (NSCalendarDate *)getShuruqTime 
 {
-	NSCalendarDate *shuruqTime = [NSCalendarDate calendarDate];
-	return shuruqTime;
+	return ShuruqTime;
 }
 
 
 - (NSCalendarDate *)getDhuhurTime 
 {
-	NSCalendarDate *dhuhurTime = [NSCalendarDate calendarDate];
-	return dhuhurTime;
+	return DhuhurTime;
 }
 
 
 - (NSCalendarDate *)getAsrTime 
 {
-	NSCalendarDate *asrTime = [NSCalendarDate calendarDate];
-	return asrTime;
+	return AsrTime;
 }
 
 
 - (NSCalendarDate *)getMaghribTime 
 {
-	NSCalendarDate *maghribTime = [NSCalendarDate calendarDate];
-	return maghribTime;
+	return MaghribTime;
 }
 
 
 - (NSCalendarDate *)getIshaTime 
 {
-	NSCalendarDate *ishaTime = [NSCalendarDate calendarDate];
-	return ishaTime;
+	return IshaTime;
 }
 
 
