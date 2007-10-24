@@ -6,7 +6,7 @@
 {
 	
 	//store today's date
-	today = [NSCalendarDate calendarDate];
+	today = [[NSCalendarDate calendarDate] retain];
 	
 	//initialize prayer objects with names
 	[self initPrayers];
@@ -104,7 +104,7 @@
 		//check salah times
 		[self handleTimer];
 		
-		//run 60 second timer to check for salah times
+		//run 60 second timer to check for salah times		
 		timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];
 		[bootstrapTimer invalidate];
 	}
@@ -119,10 +119,6 @@
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
 	Prayer *prayer;
-	
-	
-	//THIS LINE WILL NOT WORK WHEN RUN BY THE TIMER
-	[MyGrowler doGrowl : [fajrPrayer getName] : [[fajrPrayer getTime] descriptionWithCalendarFormat: @"%1I:%M %p"] : NO];
 	
 	
 	int i;
@@ -142,7 +138,7 @@
 			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : NO];
 		}
 	}
-	
+
 }
 
 

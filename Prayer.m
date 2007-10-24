@@ -13,8 +13,9 @@
 
 - (void) setTime: (NSCalendarDate *) prayerTime
 {
-	PrayerTime = [NSCalendarDate alloc];
-	PrayerTime = prayerTime;
+	[prayerTime retain];
+    [PrayerTime release];
+    PrayerTime = prayerTime;
 }
 
 - (NSCalendarDate *) getTime
@@ -54,6 +55,16 @@
 
 - (BOOL) getPlayAudio {
 	return PlayAudio;
+}
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        PrayerName = @"";
+        PrayerTime = [[NSCalendarDate calendarDate] retain];
+    }
+    return self;
 }
 
 @end
