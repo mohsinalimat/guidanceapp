@@ -155,7 +155,7 @@
     NSDictionary *options;
     NSImage *aboutImg;
 
-    aboutImg = [NSImage imageNamed: @"aboutImg"];
+    aboutImg = [NSImage imageNamed: @"guidanceIcon"];
     options = [NSDictionary dictionaryWithObjectsAndKeys:
           @"42", @"Version",
           @"Guidance", @"ApplicationName",

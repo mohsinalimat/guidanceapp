@@ -16,6 +16,7 @@
 		843C4E2C0CCBE610000DAEB4 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */; };
 		84951C650CCE3CB400A97394 /* aboutImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 84951C640CCE3CB400A97394 /* aboutImg.png */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
+		84FAC4DF0CD020370005CDA0 /* guidanceIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -57,6 +58,7 @@
 		84951C640CCE3CB400A97394 /* aboutImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aboutImg.png; sourceTree = "<group>"; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
 		84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrayerTimes.m; sourceTree = "<group>"; };
+		84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guidanceIcon.icns; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Guidance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Guidance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -147,6 +149,7 @@
 				347BEDD70CCC724B008BE40C /* Growl Registration Ticket.growlRegDict */,
 				84031FA30CCDBEE8005DA599 /* Credits.rtf */,
 				84951C640CCE3CB400A97394 /* aboutImg.png */,
+				84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				347BEDD80CCC724C008BE40C /* Growl Registration Ticket.growlRegDict in Resources */,
 				84031FA40CCDBEE8005DA599 /* Credits.rtf in Resources */,
 				84951C650CCE3CB400A97394 /* aboutImg.png in Resources */,
+				84FAC4DF0CD020370005CDA0 /* guidanceIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
