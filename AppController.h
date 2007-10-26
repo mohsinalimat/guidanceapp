@@ -45,5 +45,6 @@
 - (void) initGui;
 - (void) initPrayerItems;
 - (void) setPrayerTimes;
+- (void) setPrefs;
 
 @end

@@ -177,7 +177,8 @@
 
 - (NSCalendarDate *)getAsrTime 
 {
-	return AsrTime;
+	//return AsrTime;
+	return [PrayerTimes hoursToTime: 14.05];
 }
 
 

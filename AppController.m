@@ -4,7 +4,6 @@
 
 - (void)awakeFromNib
 {
-	
 	//store today's date
 	today = [[NSCalendarDate calendarDate] retain];
 	
@@ -13,6 +12,12 @@
 	
 	//initialize prayer times object 
 	todaysPrayerTimes = [[PrayerTimes alloc] init];
+	
+	//create growl object
+	MyGrowler = [[Growler alloc] init];
+	
+	//call setPrefs
+	[self setPrefs];
 	
 	//set user latitude and longitude
 	//currently hardcoded to raleigh
@@ -28,8 +33,6 @@
 	//initialize prayer time items in menu bar
 	[self initPrayerItems];
 	
-	//create growl object
-	MyGrowler = [[Growler alloc] init];
 	
 	//run once in case its time for prayer now
 	[self handleTimer];
@@ -165,6 +168,17 @@
          nil];
 
     [[NSApplication sharedApplication] orderFrontStandardAboutPanelWithOptions:options];
+}
+
+- (void) setPrefs
+{
+	NSURL *coordinatesURL = [NSURL URLWithString:@"http://ayaconcepts.com/geocode.php?city=raleigh&state=nc"];
+	NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:coordinatesURL];
+	if([xmlParser parse]) {
+		[MyGrowler doGrowl : @"Guidance" : @"XML Parsed!" : NO];
+	} else {
+		[MyGrowler doGrowl : @"Guidance" : @"XML Could Not Parse!" : NO];
+	}
 }
 
 @end
