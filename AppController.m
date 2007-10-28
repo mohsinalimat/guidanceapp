@@ -14,7 +14,7 @@
 	MyGrowler = [[Growler alloc] init];
 	
 	//call setPrefs
-	[self setPrefs];
+	//[self setPrefs];
 	
 	//set user latitude and longitude
 	//currently hardcoded to raleigh
@@ -100,11 +100,8 @@
 }
 
 - (void) handleTimer
-{
-	//get current time
-	currentTime = [NSCalendarDate calendarDate];
-	
-	if([currentTime secondOfMinute] == 1)
+{	
+	if([[NSCalendarDate calendarDate] secondOfMinute] == 1)
 	{
 		[self checkPrayerTimes];
 	}
@@ -112,6 +109,7 @@
 
 - (void) checkPrayerTimes
 {
+	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
 	int currentHour = [currentTime hourOfDay];
 	int currentMinute = [currentTime minuteOfHour];
 	int currentTimeDecimal = (currentHour*60) + currentMinute;

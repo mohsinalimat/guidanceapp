@@ -30,7 +30,6 @@
 	
 	Growler *MyGrowler;
 	
-	NSCalendarDate *currentTime;
 	NSTimer *timer;
 }
  
