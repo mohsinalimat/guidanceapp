@@ -173,7 +173,14 @@
 	
 
 	NSString *nextPrayerLetter = [[nextPrayer getName] substringToIndex:1];
-	NSString *nextPrayerCount = [NSString stringWithFormat:@" %d:%d",hourCount,minuteCount];
+	NSString *nextPrayerCountMinute = [NSString stringWithFormat:@"%d",minuteCount];
+	NSString *nextPrayerCount;
+	
+	if([nextPrayerCountMinute length] == 1) {
+		nextPrayerCount = [NSString stringWithFormat:@" %d:0%d",hourCount,minuteCount];
+	} else {
+		nextPrayerCount = [NSString stringWithFormat:@" %d:%d",hourCount,minuteCount];
+	}
 	
 	[menuBar setTitle:NSLocalizedString([nextPrayerLetter stringByAppendingString:nextPrayerCount],@"")];
 
