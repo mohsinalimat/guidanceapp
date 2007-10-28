@@ -45,5 +45,6 @@
 - (void) initPrayerItems;
 - (void) setPrayerTimes;
 - (void) setPrefs;
+- (void) checkPrayerTimes;
 
 @end
