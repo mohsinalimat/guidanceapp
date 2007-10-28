@@ -32,13 +32,12 @@
 	
 	//initialize prayer time items in menu bar
 	[self initPrayerItems];
-	
-	
+		
 	//run once in case its time for prayer now
-	[self handleTimer];
+	[self checkPrayerTimes];
 
-	//run bootstrapTimer so timer can run at 60 second intervals with the system clock
-	bootstrapTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleBootstrapTimer) userInfo:nil repeats:YES];
+	//run timer to check for salah times		
+	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];	
 }
 
 - (void) initGui
@@ -100,24 +99,19 @@
 	[ishaPrayer setTime: [todaysPrayerTimes getIshaTime]];
 }
 
-- (void) handleBootstrapTimer
+- (void) handleTimer
 {
-	if ([[NSCalendarDate calendarDate] secondOfMinute] == 0)
+	//get current time
+	currentTime = [NSCalendarDate calendarDate];
+	
+	if([currentTime secondOfMinute] == 1)
 	{
-		//check salah times
-		[self handleTimer];
-		
-		//run 60 second timer to check for salah times		
-		timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];
-		[bootstrapTimer invalidate];
+		[self checkPrayerTimes];
 	}
 }
 
-- (void) handleTimer
+- (void) checkPrayerTimes
 {
-	
-    //get current time
-	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
 	int currentHour = [currentTime hourOfDay];
 	int currentMinute = [currentTime minuteOfHour];
 	int currentTimeDecimal = (currentHour*60) + currentMinute;
@@ -183,11 +177,10 @@
 	}
 	
 	[menuBar setTitle:NSLocalizedString([nextPrayerLetter stringByAppendingString:nextPrayerCount],@"")];
-
 }
 
-
-- (IBAction)selectPrayer:(id)sender {
+- (IBAction)selectPrayer:(id)sender 
+{
 	//do nothing for now
 }
 

@@ -30,7 +30,7 @@
 	
 	Growler *MyGrowler;
 	
-	NSTimer *bootstrapTimer;
+	NSCalendarDate *currentTime;
 	NSTimer *timer;
 }
  
@@ -38,7 +38,6 @@
 - (IBAction)donate:(id)sender;
 - (IBAction)openAboutPanel:(id)sender;
 
-- (void) handleBootstrapTimer;
 - (void) handleTimer;
 
 - (void) initPrayers;
