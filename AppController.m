@@ -3,10 +3,7 @@
 @implementation AppController
 
 - (void)awakeFromNib
-{
-	//store today's date
-	today = [[NSCalendarDate calendarDate] retain];
-	
+{	
 	//initialize prayer objects with names
 	[self initPrayers];
 	
@@ -26,6 +23,9 @@
 	
 	//set prayer times
 	[self setPrayerTimes];
+	
+	//initialize next prayer
+	nextPrayer = fajrPrayer;
 	
 	//create menu bar
 	[self initGui];
@@ -118,11 +118,22 @@
 	
     //get current time
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
+	int currentHour = [currentTime hourOfDay];
+	int currentMinute = [currentTime minuteOfHour];
+	int currentTimeDecimal = (currentHour*60) + currentMinute;
+	
+	//if new day, update prayer times
+	if([currentTime hourOfDay] == 0 && [currentTime minuteOfHour] == 0) {
+		[self setPrayerTimes];
+	}
+	
+	BOOL nextPrayerSet = NO;
+	
 	NSCalendarDate *prayerTime;
+	int prayerHour, prayerMinute;
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
 	Prayer *prayer;
-	
 	
 	int i;
 	for (i=0; i<6; i++)
@@ -130,6 +141,15 @@
 		BOOL display = YES;
 		prayer = prayers[i];
 		prayerTime = [prayer getTime];
+		prayerHour = [prayerTime hourOfDay];
+		prayerMinute = [prayerTime minuteOfHour];
+		int prayerTimeDecimal = (prayerHour*60) + prayerMinute;
+
+		if(prayerTimeDecimal > currentTimeDecimal && nextPrayerSet == NO)
+		{
+			nextPrayer = prayer;
+			nextPrayerSet = YES;
+		}
 		
 		if ([prayerTime minuteOfHour] != [currentTime minuteOfHour]) display = NO;
 		if ([prayerTime hourOfDay] != [currentTime hourOfDay]) display = NO;
@@ -141,6 +161,21 @@
 			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : NO];
 		}
 	}
+	
+	int nextPrayerHour = [[nextPrayer getTime] hourOfDay];
+	int nextPrayerMinute = [[nextPrayer getTime] minuteOfHour];
+	int nextPrayerDecimal = (nextPrayerHour*60) + nextPrayerMinute;
+	
+	int decimalCount = nextPrayerDecimal - currentTimeDecimal;
+	
+	int hourCount = decimalCount/60;
+	int minuteCount = decimalCount-(hourCount*60);
+	
+
+	NSString *nextPrayerLetter = [[nextPrayer getName] substringToIndex:1];
+	NSString *nextPrayerCount = [NSString stringWithFormat:@" %d:%d",hourCount,minuteCount];
+	
+	[menuBar setTitle:NSLocalizedString([nextPrayerLetter stringByAppendingString:nextPrayerCount],@"")];
 
 }
 
@@ -175,9 +210,9 @@
 	NSURL *coordinatesURL = [NSURL URLWithString:@"http://ayaconcepts.com/geocode.php?city=raleigh&state=nc"];
 	NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:coordinatesURL];
 	if([xmlParser parse]) {
-		[MyGrowler doGrowl : @"Guidance" : @"XML Parsed!" : NO];
+		//[MyGrowler doGrowl : @"Guidance" : @"XML Parsed!" : NO];
 	} else {
-		[MyGrowler doGrowl : @"Guidance" : @"XML Could Not Parse!" : NO];
+		//[MyGrowler doGrowl : @"Guidance" : @"XML Could Not Parse!" : NO];
 	}
 }
 

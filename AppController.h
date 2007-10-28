@@ -24,14 +24,14 @@
 	Prayer *maghribPrayer;
 	Prayer *ishaPrayer;
 	
+	Prayer *nextPrayer;
+	
 	PrayerTimes *todaysPrayerTimes;
 	
 	Growler *MyGrowler;
 	
 	NSTimer *bootstrapTimer;
 	NSTimer *timer;
-	
-	NSCalendarDate *today;
 }
  
 - (IBAction)selectPrayer:(id)sender;
