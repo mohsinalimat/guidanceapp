@@ -95,7 +95,7 @@
 	tz = (tz>0)?(tz/100+tz%100/60):(tz/100-tz%100/60);
 	if (Altitude == 0) Altitude = 1;
 	double beta = (2 * M_PI * day) / 365.0;
-	double d = (180.0 / M_PI * day) * (0.006918 - (0.399912 * cos(beta))
+	double d = (180.0 / M_PI) * (0.006918 - (0.399912 * cos(beta))
 				+ (0.07057 * sin(beta))
 				- (0.006758 * cos(2*beta))
 				+ (0.000907 * sin(2*beta))
@@ -177,8 +177,7 @@
 
 - (NSCalendarDate *)getAsrTime 
 {
-	//return AsrTime;
-	return [PrayerTimes hoursToTime: 14.05];
+	return AsrTime;
 }
 
 
