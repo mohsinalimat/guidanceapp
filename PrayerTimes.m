@@ -86,9 +86,9 @@
 }
 
 
-- (void)calcTimes
+- (void)calcTimes:(NSCalendarDate *)calcDate
 {
-	int day = [[NSCalendarDate calendarDate] dayOfYear];
+	int day = [calcDate dayOfYear];
 	NSNumberFormatter *nf = [[NSNumberFormatter alloc] init];
 	int tz = [[nf numberFromString:[[NSCalendarDate calendarDate] descriptionWithCalendarFormat:@"%z"]] intValue];
 	[nf release];

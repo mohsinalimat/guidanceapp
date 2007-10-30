@@ -31,13 +31,13 @@
 	Growler *MyGrowler;
 	
 	NSTimer *timer;
+	NSCalendarDate *lastCheckTime;
+	NSCalendarDate *currentDate;
 }
  
 - (IBAction)selectPrayer:(id)sender;
 - (IBAction)donate:(id)sender;
 - (IBAction)openAboutPanel:(id)sender;
-
-- (IBAction)showGeneralPref:(id)sender;
 
 - (void) handleTimer;
 

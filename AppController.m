@@ -4,6 +4,10 @@
 
 - (void)awakeFromNib
 {	
+	currentDate = [[NSCalendarDate calendarDate] retain];
+	
+	lastCheckTime = [[NSCalendarDate calendarDate] retain];
+
 	//initialize prayer objects with names
 	[self initPrayers];
 	
@@ -42,12 +46,15 @@
 
 - (void) initGui
 {
+
 	NSStatusBar *bar = [NSStatusBar systemStatusBar];
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
 	[menuBar retain];
+	
+	[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
+	[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
 	[menuBar setHighlightMode:YES];
 	[menuBar setMenu:appMenu];
-	[menuBar setTitle:NSLocalizedString(@"Guidance",@"")];
 }
 
 
@@ -88,7 +95,7 @@
 
 - (void) setPrayerTimes
 {
-	[todaysPrayerTimes calcTimes];
+	[todaysPrayerTimes calcTimes:[NSCalendarDate calendarDate]];
 	
 	//set times
 	[fajrPrayer setTime: [todaysPrayerTimes getFajrTime]];
@@ -101,7 +108,28 @@
 
 - (void) handleTimer
 {	
-	if([[NSCalendarDate calendarDate] secondOfMinute] == 1)
+
+/* TESTING
+	int seconds;
+	[lastCheckTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:currentDate];
+
+	NSCalendarDate *someTime = [NSCalendarDate calendarDate];
+	[someTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
+
+
+	if([[NSCalendarDate calendarDate] secondOfMinute] % 5 == 0)
+	{
+		[self checkPrayerTimes];
+	} else {
+		int seconds;
+		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
+		if(seconds > 62) {
+			[self checkPrayerTimes];
+		}
+	}
+*/
+
+	if([[NSCalendarDate calendarDate] secondOfMinute] % 5 == 0)
 	{
 		[self checkPrayerTimes];
 	}
@@ -109,14 +137,29 @@
 
 - (void) checkPrayerTimes
 {
+	
+	/* TESTING
+	int seconds = 1;
+	//[lastCheckTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:currentDate];
+	lastCheckTime = [NSCalendarDate calendarDate];
+	
+	//[MyGrowler doGrowl : [NSString stringWithFormat:@"%d",seconds] : [lastCheckTime description] : NO];
+	*/
+	
+	
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
 	int currentHour = [currentTime hourOfDay];
 	int currentMinute = [currentTime minuteOfHour];
 	int currentTimeDecimal = (currentHour*60) + currentMinute;
 	
 	//if new day, update prayer times
-	if([currentTime hourOfDay] == 0 && [currentTime minuteOfHour] == 0) {
+	if([currentTime dayOfMonth] != [currentDate dayOfMonth]) {
 		[self setPrayerTimes];
+		[self initPrayerItems];
+		
+		//reset current day
+		[currentDate release];
+		currentDate = [NSCalendarDate calendarDate];
 	}
 	
 	BOOL nextPrayerSet = NO;
@@ -154,6 +197,7 @@
 		}
 	}
 	
+	
 	int nextPrayerHour = [[nextPrayer getTime] hourOfDay];
 	int nextPrayerMinute = [[nextPrayer getTime] minuteOfHour];
 	int nextPrayerDecimal = (nextPrayerHour*60) + nextPrayerMinute;
@@ -165,16 +209,11 @@
 	
 
 	NSString *nextPrayerLetter = [[nextPrayer getName] substringToIndex:1];
-	NSString *nextPrayerCountMinute = [NSString stringWithFormat:@"%d",minuteCount];
-	NSString *nextPrayerCount;
+	NSString *nextPrayerCount = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
 	
-	if([nextPrayerCountMinute length] == 1) {
-		nextPrayerCount = [NSString stringWithFormat:@" %d:0%d",hourCount,minuteCount];
-	} else {
-		nextPrayerCount = [NSString stringWithFormat:@" %d:%d",hourCount,minuteCount];
-	}
-	
+	[menuBar setImage: [NSImage imageNamed: @"menuBarFajr"]];
 	[menuBar setTitle:NSLocalizedString([nextPrayerLetter stringByAppendingString:nextPrayerCount],@"")];
+	
 }
 
 - (IBAction)selectPrayer:(id)sender 

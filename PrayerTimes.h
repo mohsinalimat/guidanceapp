@@ -29,7 +29,7 @@
 - (void)setLongitude:(double)n;
 - (void)setAltitude:(double)n;
 
-- (void)calcTimes;
+- (void)calcTimes:(NSCalendarDate *)calcDate;
 
 - (NSCalendarDate *)getFajrTime;
 
