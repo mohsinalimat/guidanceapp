@@ -37,6 +37,8 @@
 - (IBAction)donate:(id)sender;
 - (IBAction)openAboutPanel:(id)sender;
 
+- (IBAction)showGeneralPref:(id)sender;
+
 - (void) handleTimer;
 
 - (void) initPrayers;
