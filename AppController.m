@@ -3,7 +3,12 @@
 @implementation AppController
 
 - (void)awakeFromNib
-{	
+{
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
+	[userDefaults registerDefaults:appDefaults];
+
 	currentDate = [[NSCalendarDate calendarDate] retain];
 	
 	lastCheckTime = [[NSCalendarDate calendarDate] retain];
@@ -251,6 +256,11 @@
 	} else {
 		//[MyGrowler doGrowl : @"Guidance" : @"XML Could Not Parse!" : NO];
 	}
+}
+
+- (IBAction)openPreferencesWindow:(id)sender
+{
+	[[PrefController sharedPrefsWindowController] showWindow:nil];
 }
 
 @end

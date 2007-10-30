@@ -4,6 +4,7 @@
 #import "Growler.h"
 #import "Prayer.h"
 #import "PrayerTimes.h"
+#import "PrefController.h"
 
 @interface AppController : NSObject
 {	
@@ -47,5 +48,7 @@
 - (void) setPrayerTimes;
 - (void) setPrefs;
 - (void) checkPrayerTimes;
+
+- (IBAction)openPreferencesWindow:(id)sender;
 
 @end

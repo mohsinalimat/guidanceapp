@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		340EF9120CD7934A007280D6 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF9110CD7934A007280D6 /* UserDefaults.m */; };
+		340EF9150CD79628007280D6 /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF9140CD79628007280D6 /* DBPrefsWindowController.m */; };
+		340EF99E0CD7A7A7007280D6 /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */; };
+		340EF9A00CD7A867007280D6 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF99F0CD7A867007280D6 /* AppController.m */; };
 		347BEC330CCC5E93008BE40C /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 347BEC320CCC5E93008BE40C /* Growl.framework */; };
 		347BEC450CCC5EE8008BE40C /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347BEC320CCC5E93008BE40C /* Growl.framework */; };
 		347BEC560CCC6214008BE40C /* Growler.m in Sources */ = {isa = PBXBuildFile; fileRef = 347BEC540CCC6214008BE40C /* Growler.m */; };
@@ -20,7 +24,6 @@
 		840BA2BC0CD6C63800181205 /* menuBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 840BA2BB0CD6C63800181205 /* menuBar.png */; };
 		840BA2BE0CD6C64B00181205 /* menuBarHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 840BA2BD0CD6C64B00181205 /* menuBarHighlight.png */; };
 		840BA2C00CD6C66800181205 /* menuBarFajr.png in Resources */ = {isa = PBXBuildFile; fileRef = 840BA2BF0CD6C66800181205 /* menuBarFajr.png */; };
-		843C4E2C0CCBE610000DAEB4 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 843C4E2B0CCBE610000DAEB4 /* AppController.m */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
 		84FAC4DF0CD020370005CDA0 /* guidanceIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -49,6 +52,12 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* Guidance_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guidance_Prefix.pch; sourceTree = "<group>"; };
+		340EF9100CD7934A007280D6 /* UserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
+		340EF9110CD7934A007280D6 /* UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
+		340EF9130CD79628007280D6 /* DBPrefsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBPrefsWindowController.h; sourceTree = "<group>"; };
+		340EF9140CD79628007280D6 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
+		340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
+		340EF99F0CD7A867007280D6 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		347BEC320CCC5E93008BE40C /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		347BEC530CCC6214008BE40C /* Growler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Growler.h; sourceTree = "<group>"; };
 		347BEC540CCC6214008BE40C /* Growler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Growler.m; sourceTree = "<group>"; };
@@ -62,11 +71,10 @@
 		34E7E5620CCD2DBA0098659D /* Prayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prayer.h; sourceTree = "<group>"; };
 		34E7E5630CCD2DBA0098659D /* Prayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Prayer.m; sourceTree = "<group>"; };
 		84031FA30CCDBEE8005DA599 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
-		840BA2BB0CD6C63800181205 /* menuBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuBar.png; path = /Users/ameir/Developer/Guidance/menuBar.png; sourceTree = "<absolute>"; };
-		840BA2BD0CD6C64B00181205 /* menuBarHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuBarHighlight.png; path = /Users/ameir/Developer/Guidance/menuBarHighlight.png; sourceTree = "<absolute>"; };
-		840BA2BF0CD6C66800181205 /* menuBarFajr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuBarFajr.png; path = /Users/ameir/Developer/Guidance/menuBarFajr.png; sourceTree = "<absolute>"; };
+		840BA2BB0CD6C63800181205 /* menuBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuBar.png; sourceTree = "<group>"; };
+		840BA2BD0CD6C64B00181205 /* menuBarHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuBarHighlight.png; sourceTree = "<group>"; };
+		840BA2BF0CD6C66800181205 /* menuBarFajr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuBarFajr.png; sourceTree = "<group>"; };
 		843C4E2A0CCBE610000DAEB4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
-		843C4E2B0CCBE610000DAEB4 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
 		84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrayerTimes.m; sourceTree = "<group>"; };
 		84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guidanceIcon.icns; sourceTree = "<group>"; };
@@ -94,11 +102,13 @@
 				84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */,
 				84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */,
 				843C4E2A0CCBE610000DAEB4 /* AppController.h */,
-				843C4E2B0CCBE610000DAEB4 /* AppController.m */,
+				340EF99F0CD7A867007280D6 /* AppController.m */,
 				347BEC530CCC6214008BE40C /* Growler.h */,
 				347BEC540CCC6214008BE40C /* Growler.m */,
 				34E7E5620CCD2DBA0098659D /* Prayer.h */,
 				34E7E5630CCD2DBA0098659D /* Prayer.m */,
+				340EF9100CD7934A007280D6 /* UserDefaults.h */,
+				340EF9110CD7934A007280D6 /* UserDefaults.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -155,6 +165,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */,
 				347E3F500CD687EC0035D056 /* Sound.tiff */,
 				840BA2BB0CD6C63800181205 /* menuBar.png */,
 				840BA2BF0CD6C66800181205 /* menuBarFajr.png */,
@@ -192,6 +203,8 @@
 				34B5CC810CD6C06900CF5D14 /* Preferences.xib */,
 				34B5CC520CD6A75500CF5D14 /* PrefController.h */,
 				34B5CC530CD6A75500CF5D14 /* PrefController.m */,
+				340EF9130CD79628007280D6 /* DBPrefsWindowController.h */,
+				340EF9140CD79628007280D6 /* DBPrefsWindowController.m */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -258,6 +271,7 @@
 				840BA2BC0CD6C63800181205 /* menuBar.png in Resources */,
 				840BA2BE0CD6C64B00181205 /* menuBarHighlight.png in Resources */,
 				840BA2C00CD6C66800181205 /* menuBarFajr.png in Resources */,
+				340EF99E0CD7A7A7007280D6 /* UserDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,11 +283,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				843C4E2C0CCBE610000DAEB4 /* AppController.m in Sources */,
 				84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */,
 				347BEC560CCC6214008BE40C /* Growler.m in Sources */,
 				34E7E5650CCD2DBA0098659D /* Prayer.m in Sources */,
 				34B5CC540CD6A75500CF5D14 /* PrefController.m in Sources */,
+				340EF9120CD7934A007280D6 /* UserDefaults.m in Sources */,
+				340EF9150CD79628007280D6 /* DBPrefsWindowController.m in Sources */,
+				340EF9A00CD7A867007280D6 /* AppController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

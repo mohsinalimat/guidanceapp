@@ -1,16 +1,10 @@
 #import <Cocoa/Cocoa.h>
+#import "DBPrefsWindowController.h"
 
-@interface PrefController : NSObject {
-    IBOutlet NSToolbarItem *tbItem_general;
-    IBOutlet NSToolbarItem *tbItem_sound;
-    IBOutlet NSWindow *window_preferences;
-    IBOutlet NSMatrix *rad_asrMethod;
-    IBOutlet NSMatrix *rad_ishaMethod;
-    IBOutlet NSTextField *text_latitude;
-    IBOutlet NSTextField *text_longitude;
+@interface PrefController : DBPrefsWindowController
+{
+  IBOutlet NSView *generalPrefsView;
+  IBOutlet NSView *soundPrefsView;
 }
-- (IBAction)radAsr_changed:(id)sender;
-- (IBAction)radIsha_changed:(id)sender;
-- (IBAction)textLat_changed:(id)sender;
-- (IBAction)textLon_changed:(id)sender;
+
 @end
