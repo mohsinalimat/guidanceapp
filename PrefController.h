@@ -5,7 +5,9 @@
     IBOutlet NSView *generalPrefsView;
     IBOutlet NSView *soundPrefsView;
     IBOutlet NSButton *previewButton;
+    IBOutlet NSPopUpButton *selectSound;
 	BOOL previewState;
+	NSSound *sound;
 }
-
+- (IBAction)preview_clicked:(id)sender;
 @end

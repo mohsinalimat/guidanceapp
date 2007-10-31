@@ -3,7 +3,6 @@
 @implementation PrefController
 
 - (id)initWithWindow:(NSWindow *)window
-  // -initWithWindow: is the designated initializer for NSWindowController.
 {
 	self = [super initWithWindow:nil];
 	if (self != nil) {
@@ -16,8 +15,8 @@
 
 - (void)setupToolbar
 {
-  [self addView:generalPrefsView label:@"General"];
-  [self addView:soundPrefsView label:@"Sound"];
+	[self addView:generalPrefsView label:@"General"];
+	[self addView:soundPrefsView label:@"Sound"];
 }
 
 - (IBAction)preview_clicked:(id)sender
@@ -25,7 +24,17 @@
 	if (!previewState)
 	{
 			// play sound
-		//cmd!
+		switch ([selectSound indexOfSelectedItem])
+		{
+			case 1:		sound = [NSSound soundNamed:@"alaqsa"]; break;
+			case 2:		sound = [NSSound soundNamed:@"istanbul"]; break;
+			case 3:		sound = [NSSound soundNamed:@"yusufislam"]; break;
+			case 0:
+			default:	sound = [NSSound soundNamed:@"makkah"]; break;
+		}
+		
+		NSLog(@"INDEX: %d", [selectSound indexOfSelectedItem]);
+		[sound play];
 			// change button text to "Stop"
 		[previewButton setTitle:@"Stop"];
 		previewState = !previewState;
@@ -33,7 +42,7 @@
 	else
 	{
 			// stop sound
-		//cmd!
+		[sound stop];
 			// change button text to "Preview"
 		[previewButton setTitle:@"Preview"];
 		previewState = !previewState;
