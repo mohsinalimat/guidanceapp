@@ -7,8 +7,16 @@
 	<key>IshaMethod</key>
 	<integer>0</integer>
 	<key>Latitude</key>
-	<real>35.779747999999998</real>
+	<real>30</real>
 	<key>Longitude</key>
-	<real>-78.643414000000007</real>
+	<real>-40</real>
+	<key>EnableSound</key>
+	<integer>1</integer>
+	<key>Sound</key>
+	<integer>0</integer>
+	<key>EnableGrowl</key>
+	<integer>1</integer>
+	<key>StickyGrowl</key>
+	<integer>1</integer>
 </dict>
 </plist>
