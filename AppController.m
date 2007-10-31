@@ -9,7 +9,7 @@
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 	[userDefaults registerDefaults:appDefaults];
 
-	currentDate = [[NSCalendarDate calendarDate] retain];
+	prayerTimeDate = [[NSCalendarDate calendarDate] retain];
 	
 	lastCheckTime = [[NSCalendarDate calendarDate] retain];
 
@@ -114,58 +114,43 @@
 - (void) handleTimer
 {	
 
-/* TESTING
-	int seconds;
-	[lastCheckTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:currentDate];
-
-	NSCalendarDate *someTime = [NSCalendarDate calendarDate];
-	[someTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
-
-
-	if([[NSCalendarDate calendarDate] secondOfMinute] % 5 == 0)
+	if([[NSCalendarDate calendarDate] secondOfMinute] == 0)
 	{
 		[self checkPrayerTimes];
 	} else {
 		int seconds;
-		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
-		if(seconds > 62) {
+		[lastCheckTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:[NSCalendarDate calendarDate]];
+		//NSLog(@"Seconds since last check: %d\n",seconds);
+		
+		
+		if(seconds > 65) {
 			[self checkPrayerTimes];
 		}
-	}
-*/
-
-	if([[NSCalendarDate calendarDate] secondOfMinute] % 5 == 0)
-	{
-		[self checkPrayerTimes];
 	}
 }
 
 - (void) checkPrayerTimes
 {
-	
-	/* TESTING
-	int seconds = 1;
-	//[lastCheckTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:currentDate];
-	lastCheckTime = [NSCalendarDate calendarDate];
-	
-	//[MyGrowler doGrowl : [NSString stringWithFormat:@"%d",seconds] : [lastCheckTime description] : NO];
-	*/
-	
+	[lastCheckTime release];
+	lastCheckTime = [[NSCalendarDate calendarDate] retain];
 	
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
 	int currentHour = [currentTime hourOfDay];
 	int currentMinute = [currentTime minuteOfHour];
 	int currentTimeDecimal = (currentHour*60) + currentMinute;
 	
+	
 	//if new day, update prayer times
-	if([currentTime dayOfMonth] != [currentDate dayOfMonth]) {
+	if([currentTime dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
+		[MyGrowler doGrowl : @"w00t" : @"new day" : NO];
 		[self setPrayerTimes];
 		[self initPrayerItems];
 		
 		//reset current day
-		[currentDate release];
-		currentDate = [NSCalendarDate calendarDate];
+		[prayerTimeDate release];
+		prayerTimeDate = [[NSCalendarDate calendarDate] retain];
 	}
+	
 	
 	BOOL nextPrayerSet = NO;
 	
@@ -198,22 +183,39 @@
 		{
 			NSString *name = [prayer getName];
 			NSString *time = [prayer getFormattedTime];
+			
+			//display growl
 			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : NO];
+			
+			//play audio
+			NSSound *adhan = [NSSound soundNamed:@"yusufislam"];
+			[adhan play];
 		}
 	}
 	
 	
-	int nextPrayerHour = [[nextPrayer getTime] hourOfDay];
-	int nextPrayerMinute = [[nextPrayer getTime] minuteOfHour];
-	int nextPrayerDecimal = (nextPrayerHour*60) + nextPrayerMinute;
+	NSString *nextPrayerLetter;
+	int hourCount,minuteCount,secondsCount;
 	
-	int decimalCount = nextPrayerDecimal - currentTimeDecimal;
+	if(nextPrayerSet == NO) {
+		nextPrayerLetter = @"F";
+		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+		[[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0] years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount sinceDate:[NSCalendarDate calendarDate]];
+		
+	} else { 
+		[[nextPrayer getTime] years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount sinceDate:[NSCalendarDate calendarDate]];
+		nextPrayerLetter = [[nextPrayer getName] substringToIndex:1];
+	}
 	
-	int hourCount = decimalCount/60;
-	int minuteCount = decimalCount-(hourCount*60);
+	if(secondsCount > 0) {
+		if(minuteCount == 59) {
+			hourCount++;
+			minuteCount = 0;
+		} else {
+			minuteCount++;
+		}
+	}
 	
-
-	NSString *nextPrayerLetter = [[nextPrayer getName] substringToIndex:1];
 	NSString *nextPrayerCount = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
 	
 	[menuBar setImage: [NSImage imageNamed: @"menuBarFajr"]];

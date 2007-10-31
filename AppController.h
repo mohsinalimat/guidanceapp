@@ -33,7 +33,7 @@
 	
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
-	NSCalendarDate *currentDate;
+	NSCalendarDate *prayerTimeDate;
 }
  
 - (IBAction)selectPrayer:(id)sender;
