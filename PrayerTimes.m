@@ -44,6 +44,33 @@
 	Altitude = n;
 }
 
+- (void)setAsrMethod:(int)n
+{
+	if (n >= 0 && n < 2)
+	{
+		Shafi = n+1;
+	}
+	else
+	{
+		Shafi = 1;
+	}
+}
+
+- (void)setIshaMethod:(int)n
+{
+	switch (n)
+	{
+		case 1:
+			TwilightDawnAngle = 18;
+			TwilightDawnAngle = 18;
+			break;
+		case 0:
+		default:
+			TwilightDawnAngle = 15;
+			TwilightSunsetAngle = 15;
+			break;
+	}
+}
 
 + (double)rad2deg:(double)n
 {

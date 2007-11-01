@@ -28,6 +28,8 @@
 - (void)setLatitude:(double)n;
 - (void)setLongitude:(double)n;
 - (void)setAltitude:(double)n;
+- (void)setAsrMethod:(int)n;
+- (void)setIshaMethod:(int)n;
 
 - (void)calcTimes:(NSCalendarDate *)calcDate;
 

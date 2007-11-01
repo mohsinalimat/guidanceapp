@@ -6,8 +6,16 @@
     IBOutlet NSView *soundPrefsView;
     IBOutlet NSButton *previewButton;
     IBOutlet NSPopUpButton *selectSound;
+    IBOutlet NSButton *playAsr;
+    IBOutlet NSButton *playDhuhur;
+    IBOutlet NSButton *playFajr;
+    IBOutlet NSButton *playIsha;
+    IBOutlet NSButton *playMaghrab;
+    IBOutlet NSButton *playShuruq;
+    IBOutlet NSButton *toggleSound;
 	BOOL previewState;
 	NSSound *sound;
 }
 - (IBAction)preview_clicked:(id)sender;
+- (IBAction)sound_toggle:(id)sender;
 @end

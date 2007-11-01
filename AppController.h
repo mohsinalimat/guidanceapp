@@ -35,7 +35,6 @@
 	NSCalendarDate *lastCheckTime;
 	NSCalendarDate *prayerTimeDate;
 	
-	NSString *adhanName;
 	NSSound *adhan;
 }
  

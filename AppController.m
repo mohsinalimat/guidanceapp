@@ -5,10 +5,7 @@
 - (void)awakeFromNib
 {
 
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
-	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
-	[userDefaults registerDefaults:appDefaults];
+	[self loadDefaults];
 
 	prayerTimeDate = [[NSCalendarDate calendarDate] retain];
 	
@@ -27,17 +24,6 @@
 	if(![MyGrowler  isInstalled]) {
 		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO];
 	}
-	
-	//call setPrefs
-	//[self setPrefs];
-	adhanName = @"yusufislam";
-	[todaysPrayerTimes setLatitude: 35.776049];
-	[todaysPrayerTimes setLongitude: -78.708552];
-	
-	/* TESTING 
-	[adhan play];
-	[MyGrowler doGrowl : @"Guidance" : @"w00t!" : YES];
-	 TESTING */
 	
 	//set prayer times
 	[self setPrayerTimes];
@@ -202,7 +188,6 @@
 			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : YES];
 			
 			//play audio
-			adhan = [NSSound soundNamed:adhanName];
 			[adhan play];
 		}
 	}
@@ -267,8 +252,27 @@
     [[NSApplication sharedApplication] orderFrontStandardAboutPanelWithOptions:options];
 }
 
-- (void) setPrefs
+- (void) loadDefaults
 {
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
+	[userDefaults registerDefaults:appDefaults];
+	
+	switch ([userDefaults integerForKey:@"Sound"])
+	{
+		case 1:		adhan = [NSSound soundNamed:@"alaqsa"]; break;
+		case 2:		adhan = [NSSound soundNamed:@"istanbul"]; break;
+		case 3:		adhan = [NSSound soundNamed:@"yusufislam"]; break;
+		case 0:
+		default:	adhan = [NSSound soundNamed:@"makkah"]; break;
+	}
+	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
+	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
+	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
+	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
+	
+	/*
 	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];
 	NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:coordinatesURL];
 	if([xmlParser parse]) {
@@ -276,6 +280,7 @@
 	} else {
 		//[MyGrowler doGrowl : @"Guidance" : @"XML Could Not Parse!" : NO];
 	}
+	*/
 }
 
 - (IBAction)openPreferencesWindow:(id)sender

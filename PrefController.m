@@ -19,6 +19,32 @@
 	[self addView:soundPrefsView label:@"Sound"];
 }
 
+- (IBAction)sound_toggle:(id)sender
+{
+    if ([toggleSound state] == NSOffState)
+	{
+		[previewButton setEnabled:NO];
+		[selectSound setEnabled:NO];
+		[playAsr setEnabled:NO];
+		[playDhuhur setEnabled:NO];
+		[playFajr setEnabled:NO];
+		[playIsha setEnabled:NO];
+		[playMaghrab setEnabled:NO];
+		[playShuruq setEnabled:NO];
+	}
+	else
+	{
+		[previewButton setEnabled:YES];
+		[selectSound setEnabled:YES];
+		[playAsr setEnabled:YES];
+		[playDhuhur setEnabled:YES];
+		[playFajr setEnabled:YES];
+		[playIsha setEnabled:YES];
+		[playMaghrab setEnabled:YES];
+		[playShuruq setEnabled:YES];
+	}
+}
+
 - (IBAction)preview_clicked:(id)sender
 {
 	if (!previewState)
