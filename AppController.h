@@ -49,7 +49,7 @@
 - (void) initGui;
 - (void) initPrayerItems;
 - (void) setPrayerTimes;
-- (void) setPrefs;
+- (void) loadDefaults;
 - (void) checkPrayerTimes;
 
 - (IBAction)openPreferencesWindow:(id)sender;
