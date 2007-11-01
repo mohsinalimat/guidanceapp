@@ -57,7 +57,8 @@
 
 
 
-- (void) growlNotificationWasClicked:(id)clickContext {
+- (void) growlNotificationWasClicked:(id)clickContext 
+{
 	
 	NSAlert* alert = [NSAlert new];
     [alert setInformativeText: @"Informative text"];
@@ -65,5 +66,11 @@
     [alert runModal];
 	
 }
+
+
+ - (BOOL) checkGrowl 
+ {
+  return [GrowlApplicationBridge isGrowlInstalled];
+ }
 
 @end

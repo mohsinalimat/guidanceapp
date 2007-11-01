@@ -22,7 +22,11 @@
 	
 	//create growl object
 	MyGrowler = [[Growler alloc] init];
-	[MyGrowler doGrowl : @"Guidance" : @"XML Parsed!" : NO];
+	
+	//check if growl is installed
+	if(![MyGrowler  checkGrowl]) {
+		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO];
+	}
 	
 	//call setPrefs
 	//[self setPrefs];
