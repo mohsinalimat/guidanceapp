@@ -68,7 +68,7 @@
 }
 
 
- - (BOOL) checkGrowl 
+ - (BOOL) isInstalled 
  {
   return [GrowlApplicationBridge isGrowlInstalled];
  }

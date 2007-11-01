@@ -17,6 +17,6 @@
 
 - (void) growlNotificationWasClicked:(id)clickContext;
 
- - (BOOL) checkGrowl;
+ - (BOOL) isInstalled;
 
 @end

@@ -24,7 +24,7 @@
 	MyGrowler = [[Growler alloc] init];
 	
 	//check if growl is installed
-	if(![MyGrowler  checkGrowl]) {
+	if(![MyGrowler  isInstalled]) {
 		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO];
 	}
 	
