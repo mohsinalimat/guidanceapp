@@ -257,7 +257,7 @@
 
     aboutImg = [NSImage imageNamed: @"guidanceIcon"];
     options = [NSDictionary dictionaryWithObjectsAndKeys:
-          @"42", @"Version",
+          @"60", @"Version",
           @"Guidance", @"ApplicationName",
           aboutImg, @"ApplicationIcon",
           @"Copyright 2007, Batoul Apps", @"Copyright",
@@ -269,7 +269,7 @@
 
 - (void) setPrefs
 {
-	NSURL *coordinatesURL = [NSURL URLWithString:@"http://ayaconcepts.com/geocode.php?city=raleigh&state=nc"];
+	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];
 	NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:coordinatesURL];
 	if([xmlParser parse]) {
 		//[MyGrowler doGrowl : @"Guidance" : @"XML Parsed!" : NO];
@@ -281,6 +281,7 @@
 - (IBAction)openPreferencesWindow:(id)sender
 {
 	[[PrefController sharedPrefsWindowController] showWindow:nil];
+	[[[PrefController sharedPrefsWindowController] window] orderFrontRegardless];
 }
 
 
