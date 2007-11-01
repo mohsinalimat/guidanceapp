@@ -7,7 +7,7 @@
 //
 
 #import "Growler.h"
-#import <Growl/Growl.h>
+#import <Growl-WithInstaller/Growl.h>
 #import "Prayer.h"
 
 #define NotificationName  @"Guidance Notification"
@@ -53,6 +53,17 @@
 					priority:0
 					isSticky:sticky
 					clickContext:@""];
+}
+
+
+
+- (void) growlNotificationWasClicked:(id)clickContext {
+	
+	NSAlert* alert = [NSAlert new];
+    [alert setInformativeText: @"Informative text"];
+    [alert setMessageText:     @"Message text"];
+    [alert runModal];
+	
 }
 
 @end

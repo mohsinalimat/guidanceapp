@@ -4,6 +4,7 @@
 
 - (void)awakeFromNib
 {
+
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
@@ -21,14 +22,18 @@
 	
 	//create growl object
 	MyGrowler = [[Growler alloc] init];
+	[MyGrowler doGrowl : @"Guidance" : @"XML Parsed!" : NO];
 	
 	//call setPrefs
 	//[self setPrefs];
-	
-	//set user latitude and longitude
-	//currently hardcoded to raleigh
+	adhanName = @"yusufislam";
 	[todaysPrayerTimes setLatitude: 35.776049];
 	[todaysPrayerTimes setLongitude: -78.708552];
+	
+	/* TESTING 
+	[adhan play];
+	[MyGrowler doGrowl : @"Guidance" : @"w00t!" : YES];
+	 TESTING */
 	
 	//set prayer times
 	[self setPrayerTimes];
@@ -56,8 +61,9 @@
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
 	[menuBar retain];
 	
-	[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
-	[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
+	[menuBar setTitle:NSLocalizedString(@"☪" ,@"")];
+	//[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
+	//[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
 	[menuBar setHighlightMode:YES];
 	[menuBar setMenu:appMenu];
 }
@@ -72,6 +78,10 @@
 	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
 	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")];
 	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")];
+	
+	//[asrItem setImage: [NSImage imageNamed: @"speaker"]];
+	//[asrItem setTitle:NSLocalizedString([@"♫ " stringByAppendingString:[asrItem title]],@"")];
+	//[asrItem setAlternateImage: [NSImage imageNamed: @"altspeaker"]];
 }
 
 - (void) initPrayers
@@ -119,11 +129,9 @@
 		[self checkPrayerTimes];
 	} else {
 		int seconds;
-		[lastCheckTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:[NSCalendarDate calendarDate]];
-		//NSLog(@"Seconds since last check: %d\n",seconds);
+		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
 		
-		
-		if(seconds > 65) {
+		if(seconds > 65 || seconds < 0) {
 			[self checkPrayerTimes];
 		}
 	}
@@ -142,7 +150,6 @@
 	
 	//if new day, update prayer times
 	if([currentTime dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
-		[MyGrowler doGrowl : @"w00t" : @"new day" : NO];
 		[self setPrayerTimes];
 		[self initPrayerItems];
 		
@@ -159,11 +166,14 @@
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
 	Prayer *prayer;
+	BOOL display;
+	NSString *name;
+	NSString *time;
 	
 	int i;
 	for (i=0; i<6; i++)
 	{
-		BOOL display = YES;
+		display = YES;
 		prayer = prayers[i];
 		prayerTime = [prayer getTime];
 		prayerHour = [prayerTime hourOfDay];
@@ -181,14 +191,14 @@
 		
 		if (display)
 		{
-			NSString *name = [prayer getName];
-			NSString *time = [prayer getFormattedTime];
+			name = [prayer getName];
+			time = [prayer getFormattedTime];
 			
 			//display growl
-			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : NO];
+			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : YES];
 			
 			//play audio
-			NSSound *adhan = [NSSound soundNamed:@"yusufislam"];
+			adhan = [NSSound soundNamed:adhanName];
 			[adhan play];
 		}
 	}
@@ -218,14 +228,18 @@
 	
 	NSString *nextPrayerCount = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
 	
-	[menuBar setImage: [NSImage imageNamed: @"menuBarFajr"]];
-	[menuBar setTitle:NSLocalizedString([nextPrayerLetter stringByAppendingString:nextPrayerCount],@"")];
+	[menuBar setTitle:NSLocalizedString([@"☪ " stringByAppendingString:[nextPrayerLetter stringByAppendingString:nextPrayerCount]],@"")];
+	
+	if(display) {
+		[menuBar setTitle:NSLocalizedString([name stringByAppendingString:@" time"],@"")];
+	}
 	
 }
 
 - (IBAction)selectPrayer:(id)sender 
 {
-	//do nothing for now
+	//stop playing the adhan
+	[adhan stop];
 }
 
 - (IBAction)donate:(id)sender {
@@ -264,6 +278,8 @@
 {
 	[[PrefController sharedPrefsWindowController] showWindow:nil];
 }
+
+
 
 @end
 

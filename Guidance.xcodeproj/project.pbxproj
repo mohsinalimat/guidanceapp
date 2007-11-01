@@ -11,8 +11,6 @@
 		340EF9150CD79628007280D6 /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF9140CD79628007280D6 /* DBPrefsWindowController.m */; };
 		340EF99E0CD7A7A7007280D6 /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */; };
 		340EF9A00CD7A867007280D6 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF99F0CD7A867007280D6 /* AppController.m */; };
-		347BEC330CCC5E93008BE40C /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 347BEC320CCC5E93008BE40C /* Growl.framework */; };
-		347BEC450CCC5EE8008BE40C /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347BEC320CCC5E93008BE40C /* Growl.framework */; };
 		347BEC560CCC6214008BE40C /* Growler.m in Sources */ = {isa = PBXBuildFile; fileRef = 347BEC540CCC6214008BE40C /* Growler.m */; };
 		347E3F4F0CD681C80035D056 /* General.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 347E3F4E0CD681C80035D056 /* General.tiff */; };
 		347E3F510CD687EC0035D056 /* Sound.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 347E3F500CD687EC0035D056 /* Sound.tiff */; };
@@ -28,7 +26,9 @@
 		8421DB5F0CD8024F00BC4D4D /* istanbul.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */; };
 		8421DB600CD8024F00BC4D4D /* makkah.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */; };
 		8421DB610CD8024F00BC4D4D /* yusufislam.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */; };
+		8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
+		84AFF17C0CD9647D00D0BF00 /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
 		84FAC4DF0CD020370005CDA0 /* guidanceIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -36,13 +36,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		347BEC3D0CCC5EC7008BE40C /* CopyFiles */ = {
+		84AFF17A0CD9646100D0BF00 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				347BEC450CCC5EE8008BE40C /* Growl.framework in CopyFiles */,
+				84AFF17C0CD9647D00D0BF00 /* Growl-WithInstaller.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +62,6 @@
 		340EF9140CD79628007280D6 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
 		340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
 		340EF99F0CD7A867007280D6 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
-		347BEC320CCC5E93008BE40C /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		347BEC530CCC6214008BE40C /* Growler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Growler.h; sourceTree = "<group>"; };
 		347BEC540CCC6214008BE40C /* Growler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Growler.m; sourceTree = "<group>"; };
 		347BEC600CCC64BE008BE40C /* Growl.framework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Growl.framework-Info.plist"; sourceTree = "<group>"; };
@@ -83,6 +82,7 @@
 		8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = makkah.mp3; sourceTree = SOURCE_ROOT; };
 		8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = yusufislam.mp3; sourceTree = SOURCE_ROOT; };
 		843C4E2A0CCBE610000DAEB4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
+		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
 		84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrayerTimes.m; sourceTree = "<group>"; };
 		84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guidanceIcon.icns; sourceTree = "<group>"; };
@@ -96,7 +96,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				347BEC330CCC5E93008BE40C /* Growl.framework in Frameworks */,
+				8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,7 +124,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				347BEC320CCC5E93008BE40C /* Growl.framework */,
+				8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -239,7 +239,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				347BEC3D0CCC5EC7008BE40C /* CopyFiles */,
+				84AFF17A0CD9646100D0BF00 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -346,6 +346,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"\"$(SRCROOT)\"",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -370,6 +371,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"\"$(SRCROOT)\"",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;

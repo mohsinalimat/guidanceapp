@@ -8,11 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 @interface Growler : NSObject
 {
+
 }
 
-- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky;
+- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky ;
+
+- (void) growlNotificationWasClicked:(id)clickContext;
 
 @end

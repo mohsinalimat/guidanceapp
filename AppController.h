@@ -34,6 +34,9 @@
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
 	NSCalendarDate *prayerTimeDate;
+	
+	NSString *adhanName;
+	NSSound *adhan;
 }
  
 - (IBAction)selectPrayer:(id)sender;
