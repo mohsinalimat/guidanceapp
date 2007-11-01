@@ -4,7 +4,9 @@
 
 - (void)awakeFromNib
 {
-
+	//set application version
+	[guidanceVersion setStringValue:@"Version 0.2a"];
+	
 	[self loadDefaults];
 
 	prayerTimeDate = [[NSCalendarDate calendarDate] retain];
@@ -243,19 +245,7 @@
 
 - (IBAction)openAboutPanel:(id)sender
 {
-    NSDictionary *options;
-    NSImage *aboutImg;
-
-    aboutImg = [NSImage imageNamed: @"guidanceIcon"];
-    options = [NSDictionary dictionaryWithObjectsAndKeys:
-          @"60", @"Version",
-          @"Guidance", @"ApplicationName",
-          aboutImg, @"ApplicationIcon",
-          @"Copyright 2007, Batoul Apps", @"Copyright",
-          @"Guidance v0.1a", @"ApplicationVersion",
-         nil];
-
-    [[NSApplication sharedApplication] orderFrontStandardAboutPanelWithOptions:options];
+	[aboutGuidance orderFrontRegardless];
 }
 
 - (void) loadDefaults

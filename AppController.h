@@ -18,6 +18,10 @@
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
 	
+	IBOutlet NSTextField *guidanceVersion;
+	
+	IBOutlet NSWindow *aboutGuidance;
+	
 	Prayer *fajrPrayer;
 	Prayer *shuruqPrayer;
 	Prayer *dhuhurPrayer;
