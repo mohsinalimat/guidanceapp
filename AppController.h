@@ -40,6 +40,7 @@
  
 - (IBAction)selectPrayer:(id)sender;
 - (IBAction)donate:(id)sender;
+- (IBAction)website:(id)sender;
 - (IBAction)openAboutPanel:(id)sender;
 
 - (void) handleTimer;

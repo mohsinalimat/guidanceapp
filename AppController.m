@@ -231,8 +231,14 @@
 	[adhan stop];
 }
 
-- (IBAction)donate:(id)sender {
+- (IBAction)donate:(id)sender 
+{
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://ameir.com/ameir/donate/"]];
+}
+
+- (IBAction)website:(id)sender 
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/"]];
 }
 
 - (IBAction)openAboutPanel:(id)sender
