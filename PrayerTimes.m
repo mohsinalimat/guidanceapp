@@ -62,7 +62,7 @@
 	{
 		case 1:
 			TwilightDawnAngle = 18;
-			TwilightDawnAngle = 18;
+			TwilightSunsetAngle = 18;
 			break;
 		case 0:
 		default:

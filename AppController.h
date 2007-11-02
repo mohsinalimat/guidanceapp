@@ -14,8 +14,11 @@
 
 @interface AppController : NSObject
 {	
+
+	/* GUI */
 	NSStatusItem *menuBar;
-    IBOutlet NSMenu *appMenu;
+    
+	IBOutlet NSMenu *appMenu;
 	
 	IBOutlet NSMenuItem *fajrItem;
 	IBOutlet NSMenuItem *shuruqItem;
@@ -24,10 +27,12 @@
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
 	
-	IBOutlet NSTextField *guidanceVersion;
-	
 	IBOutlet NSWindow *aboutGuidance;
 	
+	IBOutlet NSTextField *guidanceVersion;
+	
+	
+	/* PRAYER OBJECTS */
 	Prayer *fajrPrayer;
 	Prayer *shuruqPrayer;
 	Prayer *dhuhurPrayer;
@@ -39,13 +44,20 @@
 	
 	PrayerTimes *todaysPrayerTimes;
 	
+	
+	/* NOTIFICATION */
 	Growler *MyGrowler;
 	
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
 	NSCalendarDate *prayerTimeDate;
 	
+	
+	
+	/* PREFERENCES */
 	NSSound *adhan;
+	BOOL displayGrowl;
+	BOOL stickyGrowl;
 }
  
 - (IBAction)selectPrayer:(id)sender;

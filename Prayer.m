@@ -38,16 +38,6 @@
 	return PrayerName;
 }
 
-- (void) setShowGrowl: (BOOL) showGrowl
-{
-	ShowGrowl = showGrowl;
-}
-
-- (BOOL) getShowGrowl {
-	return ShowGrowl;
-}
-
-
 - (void) setPlayAudio: (BOOL) playAudio
 {
 	PlayAudio = playAudio;

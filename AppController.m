@@ -46,7 +46,8 @@
 	/**********************************/
 			
 	//create each prayer objects and set names 
-	//and calls setPrayerTimes to set each objects prayer time
+	//calls setPrayerTimes to set each objects prayer time
+	//also sets each prayer's adhan preferences 
 	[self initPrayers]; 
 	
 	
@@ -122,6 +123,14 @@
 	[maghribPrayer setName: @"Maghrib"];
 	[ishaPrayer setName: @"Isha"];
 	
+	//set adhan defaults
+	[fajrPrayer setPlayAudio: YES];
+	[shuruqPrayer setPlayAudio: NO];
+	[dhuhurPrayer setPlayAudio: YES];
+	[asrPrayer setPlayAudio: YES];
+	[maghribPrayer setPlayAudio: YES];
+	[ishaPrayer setPlayAudio: YES];
+	
 	[self setPrayerTimes];
 }
 
@@ -178,6 +187,7 @@
 	
 	
 	BOOL nextPrayerSet = NO;
+	BOOL currentlyPrayerTime = NO;
 	
 	NSCalendarDate *prayerTime;
 	int prayerHour, prayerMinute;
@@ -207,16 +217,25 @@
 		if ([prayerTime minuteOfHour] != [currentTime minuteOfHour]) display = NO;
 		if ([prayerTime hourOfDay] != [currentTime hourOfDay]) display = NO;
 		
+		
 		if (display)
 		{
+			currentlyPrayerTime = YES;
 			name = [prayer getName];
 			time = [prayer getFormattedTime];
 			
+			
 			//display growl
-			[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : YES];
+			if(displayGrowl) 
+			{
+				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl];
+			}
 			
 			//play audio
-			[adhan play];
+			if([prayer getPlayAudio])
+			{	
+				[adhan play];
+			}
 		}
 	}
 	
@@ -226,14 +245,26 @@
 	
 	if(nextPrayerSet == NO) {
 		nextPrayerLetter = @"F";
-		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
-		[[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0] years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount sinceDate:[NSCalendarDate calendarDate]];
 		
-	} else { 
-		[[nextPrayer getTime] years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount sinceDate:[NSCalendarDate calendarDate]];
+		//calculate the time for tomorrow's fajr prayer
+		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+		
+		//get time until tomorrows fajr prayer
+		[[[todaysPrayerTimes getFajrTime] 
+			dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0] 
+			years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
+			sinceDate:[NSCalendarDate calendarDate]];
+		
+	} else {
+		//calculate time until next prayer
+		[[nextPrayer getTime] 
+			years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
+			sinceDate:[NSCalendarDate calendarDate]];
+			
 		nextPrayerLetter = [[nextPrayer getName] substringToIndex:1];
 	}
 	
+	//round the seconds up
 	if(secondsCount > 0) {
 		if(minuteCount == 59) {
 			hourCount++;
@@ -247,7 +278,9 @@
 	
 	[menuBar setTitle:NSLocalizedString([@"☪ " stringByAppendingString:[nextPrayerLetter stringByAppendingString:nextPrayerCount]],@"")];
 	
-	if(display) {
+
+	//if its time to pray change the menu bar title to "prayer name" time for that minute
+	if(currentlyPrayerTime) {
 		[menuBar setTitle:NSLocalizedString([name stringByAppendingString:@" time"],@"")];
 	}
 	
@@ -293,7 +326,8 @@
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
-	
+	displayGrowl = NO;
+	stickyGrowl = NO;
 	
 	/*
 	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];
