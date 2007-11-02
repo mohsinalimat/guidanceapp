@@ -3,7 +3,7 @@
 //  Guidance
 //
 //  Created by ameir on 10/21/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 Batoul Apps. All rights reserved.
 //
  
 #import <Cocoa/Cocoa.h>

@@ -1,47 +1,74 @@
+//
+//  AppController.m
+//  Guidance
+//
+//  Created by ameir on 10/21/07.
+//  Copyright 2007 Batoul Apps. All rights reserved.
+//
+
 #import "AppController.h"
 
 @implementation AppController
 
 - (void)awakeFromNib
 {
-	//set application version
-	[guidanceVersion setStringValue:@"Version 0.2a"];
+	/**********************/
+	/*** CREATE OBJECTS ***/
+	/**********************/
 	
-	[self loadDefaults];
+	prayerTimeDate = [[NSCalendarDate calendarDate] retain]; //set date with which to check prayer times
+	
+	lastCheckTime = [[NSCalendarDate calendarDate] retain]; //initialize last check time
 
-	prayerTimeDate = [[NSCalendarDate calendarDate] retain];
+	MyGrowler = [[Growler alloc] init]; //create growl object
 	
-	lastCheckTime = [[NSCalendarDate calendarDate] retain];
-
-	//initialize prayer objects with names
-	[self initPrayers];
-	
-	//initialize prayer times object 
-	todaysPrayerTimes = [[PrayerTimes alloc] init];
-	
-	//create growl object
-	MyGrowler = [[Growler alloc] init];
+	todaysPrayerTimes = [[PrayerTimes alloc] init]; //initialize prayer times object 
 	
 	//check if growl is installed
 	if(![MyGrowler  isInstalled]) {
 		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO];
 	}
-	
-	//set prayer times
-	[self setPrayerTimes];
-	
-	//initialize next prayer
-	nextPrayer = fajrPrayer;
-	
-	//create menu bar
-	[self initGui];
-	
-	//initialize prayer time items in menu bar
-	[self initPrayerItems];
-		
-	//run once in case its time for prayer now
-	[self checkPrayerTimes];
 
+
+
+	/****************************/
+	/*** APPLICATION SETTINGS ***/
+	/****************************/
+		
+	[guidanceVersion setStringValue:@"Version 0.2a"]; //set application version
+
+	[self loadDefaults]; //load default preferences
+
+
+	
+	/**********************************/
+	/*** PRAYER TIME INITIALIZATION ***/
+	/**********************************/
+			
+	//create each prayer objects and set names 
+	//and calls setPrayerTimes to set each objects prayer time
+	[self initPrayers]; 
+	
+	
+	
+	/******************/	
+	/*** CREATE GUI ***/
+	/******************/
+	
+	[self initGui]; //create menu bar
+	
+	[self initPrayerItems]; //initialize prayer time items in menu bar	
+
+
+
+	/***********************************/	
+	/*** BEGIN CHECKING PRAYER TIMES ***/
+	/***********************************/
+
+	nextPrayer = fajrPrayer; //initially set next prayer to fajr
+
+	[self checkPrayerTimes]; //initial prayer time check
+			
 	//run timer to check for salah times		
 	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];	
 }
@@ -54,10 +81,11 @@
 	[menuBar retain];
 	
 	[menuBar setTitle:NSLocalizedString(@"☪" ,@"")];
-	//[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
-	//[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
 	[menuBar setHighlightMode:YES];
 	[menuBar setMenu:appMenu];
+	
+	//[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
+	//[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
 }
 
 
@@ -78,9 +106,6 @@
 
 - (void) initPrayers
 {
-	//init PrayerTimes object
-	todaysPrayerTimes = [[PrayerTimes alloc] init];
-	
 	//init Prayer objects
 	fajrPrayer = [[Prayer alloc] init];
 	shuruqPrayer = [[Prayer alloc] init];
@@ -102,6 +127,7 @@
 
 - (void) setPrayerTimes
 {
+	//calculate prayer times for current date
 	[todaysPrayerTimes calcTimes:[NSCalendarDate calendarDate]];
 	
 	//set times
@@ -228,19 +254,18 @@
 }
 
 - (IBAction)selectPrayer:(id)sender 
-{
-	//stop playing the adhan
-	[adhan stop];
+{	
+	[adhan stop]; //stop playing the adhan
 }
 
 - (IBAction)donate:(id)sender 
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://ameir.com/ameir/donate/"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://ameir.com/ameir/donate/"]]; //go to donate page
 }
 
 - (IBAction)website:(id)sender 
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/"]]; //go to Guidance website
 }
 
 - (IBAction)openAboutPanel:(id)sender
@@ -267,6 +292,8 @@
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
+	
+	
 	
 	/*
 	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];
