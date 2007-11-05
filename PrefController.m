@@ -7,7 +7,6 @@
 	self = [super initWithWindow:nil];
 	if (self != nil) {
 		previewState = NO;
-		[window setDelegate:self];
 	}
 	return self;
 
@@ -80,6 +79,12 @@
 {
 	NSLog(@"WINDOW IS CLOSING!");
 	[[AppController sharedController] loadDefaults];
+}
+
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	[[self window] setDelegate:self];
 }
 
 @end

@@ -8,6 +8,8 @@
 
 #import "AppController.h"
 
+static AppController *sharedAppController = nil;
+
 @implementation AppController
 
 - (void)awakeFromNib
@@ -358,19 +360,17 @@
 ****** SINGLETON METHODS *************
 *************************************/
 
-static AppController *sharedAppController = nil;
-
 + (AppController*)sharedController
 {
-    @synchronized(self) {
-        if (sharedAppController == nil) {
-            [[self alloc] init]; // assignment not done here
-        }
-    }
+	@synchronized(self) {
+		if (sharedAppController == nil) {
+			[[self alloc] init]; // assignment not done here
+		}
+	}
     return sharedAppController;
 }
 
-/*+ (id)allocWithZone:(NSZone *)zone
++ (id)allocWithZone:(NSZone *)zone
 {
     @synchronized(self) {
         if (sharedAppController == nil) {
@@ -404,7 +404,7 @@ static AppController *sharedAppController = nil;
 - (id)autorelease
 {
     return self;
-}*/
+}
 
 @end
 

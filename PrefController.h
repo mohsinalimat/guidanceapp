@@ -19,4 +19,5 @@
 }
 - (IBAction)preview_clicked:(id)sender;
 - (IBAction)sound_toggle:(id)sender;
+- (void)windowWillClose:(NSNotification *)notification;
 @end

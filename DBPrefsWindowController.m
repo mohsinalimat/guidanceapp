@@ -404,6 +404,4 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 }
 
 
-
-
 @end
