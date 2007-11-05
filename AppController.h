@@ -55,11 +55,12 @@
 	
 	
 	/* PREFERENCES */
-	NSSound *adhan;
+	NSString *adhanFile;
 	BOOL displayGrowl;
 	BOOL stickyGrowl;
 }
- 
+
+- (IBAction)doNothing:(id)sender; 
 - (IBAction)selectPrayer:(id)sender;
 - (IBAction)donate:(id)sender;
 - (IBAction)website:(id)sender;

@@ -13,7 +13,7 @@
 
 }
 
-- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky ;
+- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky : (id) clickContext;
 
 - (void) growlNotificationWasClicked:(id)clickContext;
 

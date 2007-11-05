@@ -26,7 +26,7 @@
 	
 	//check if growl is installed
 	if(![MyGrowler  isInstalled]) {
-		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO];
+		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil];
 	}
 
 
@@ -71,7 +71,7 @@
 	[self checkPrayerTimes]; //initial prayer time check
 			
 	//run timer to check for salah times		
-	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];	
+	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];		
 }
 
 - (void) initGui
@@ -228,13 +228,13 @@
 			//display growl
 			if(displayGrowl) 
 			{
-				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl];
+				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : adhanFile];
 			}
 			
 			//play audio
 			if([prayer getPlayAudio])
 			{	
-				[adhan play];
+				[[NSSound soundNamed:adhanFile] play];
 			}
 		}
 	}
@@ -286,9 +286,14 @@
 	
 }
 
+- (IBAction)doNothing:(id)sender 
+{
+	//absolutely nothing
+}
+
 - (IBAction)selectPrayer:(id)sender 
 {	
-	[adhan stop]; //stop playing the adhan
+	[[NSSound soundNamed:adhanFile] stop];
 }
 
 - (IBAction)donate:(id)sender 
@@ -315,19 +320,19 @@
 	
 	switch ([userDefaults integerForKey:@"Sound"])
 	{
-		case 1:		adhan = [NSSound soundNamed:@"alaqsa"]; break;
-		case 2:		adhan = [NSSound soundNamed:@"istanbul"]; break;
-		case 3:		adhan = [NSSound soundNamed:@"yusufislam"]; break;
+		case 1:		adhanFile = @"alaqsa"; break;
+		case 2:		adhanFile = @"istanbul"; break;
+		case 3:		adhanFile = @"yusufislam"; break;
 		case 0:
-		default:	adhan = [NSSound soundNamed:@"makkah"]; break;
+		default:	adhanFile = @"makkah"; break;
 	}
 	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
-	displayGrowl = NO;
-	stickyGrowl = NO;
+	displayGrowl = YES;
+	stickyGrowl = YES;
 	
 	/*
 	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];

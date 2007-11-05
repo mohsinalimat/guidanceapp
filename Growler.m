@@ -44,27 +44,23 @@
 	return regDict;
 }
 
-- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky
-{
+- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky : (id) clickContext
+{ 
 	[GrowlApplicationBridge notifyWithTitle:title
 					description:desc
 					notificationName:NotificationName
 					iconData: nil
 					priority:0
 					isSticky:sticky
-					clickContext:@""];
+					clickContext:clickContext];
 }
 
 
 
 - (void) growlNotificationWasClicked:(id)clickContext 
 {
-	
-	NSAlert* alert = [NSAlert new];
-    [alert setInformativeText: @"Informative text"];
-    [alert setMessageText:     @"Message text"];
-    [alert runModal];
-	
+	NSSound *adhan = [NSSound soundNamed:clickContext];
+	[adhan stop];
 }
 
 
