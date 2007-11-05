@@ -31,7 +31,6 @@
 	
 	IBOutlet NSTextField *guidanceVersion;
 	
-	
 	/* PRAYER OBJECTS */
 	Prayer *fajrPrayer;
 	Prayer *shuruqPrayer;
@@ -76,5 +75,7 @@
 - (void) checkPrayerTimes;
 
 - (IBAction)openPreferencesWindow:(id)sender;
+
++ (AppController*) sharedController;
 
 @end

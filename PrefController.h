@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import "DBPrefsWindowController.h"
+#import "AppController.h"
 
 @interface PrefController : DBPrefsWindowController {
     IBOutlet NSView *generalPrefsView;

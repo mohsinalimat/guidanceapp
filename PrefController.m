@@ -7,6 +7,7 @@
 	self = [super initWithWindow:nil];
 	if (self != nil) {
 		previewState = NO;
+		[window setDelegate:self];
 	}
 	return self;
 
@@ -73,6 +74,12 @@
 		[previewButton setTitle:@"Preview"];
 		previewState = !previewState;
 	}
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+	NSLog(@"WINDOW IS CLOSING!");
+	[[AppController sharedController] loadDefaults];
 }
 
 @end

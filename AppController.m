@@ -29,8 +29,6 @@
 		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil];
 	}
 
-
-
 	/****************************/
 	/*** APPLICATION SETTINGS ***/
 	/****************************/
@@ -313,6 +311,8 @@
 
 - (void) loadDefaults
 {
+	NSLog(@"LOADING DEFAULTS!");
+
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
@@ -326,6 +326,7 @@
 		case 0:
 		default:	adhanFile = @"makkah"; break;
 	}
+	
 	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
@@ -351,7 +352,57 @@
 	[[[PrefController sharedPrefsWindowController] window] orderFrontRegardless];
 }
 
+/*************************************
+****** SINGLETON METHODS *************
+*************************************/
 
+static AppController *sharedAppController = nil;
+
++ (AppController*)sharedController
+{
+    @synchronized(self) {
+        if (sharedAppController == nil) {
+            [[self alloc] init]; // assignment not done here
+        }
+    }
+    return sharedAppController;
+}
+
+/*+ (id)allocWithZone:(NSZone *)zone
+{
+    @synchronized(self) {
+        if (sharedAppController == nil) {
+            sharedAppController = [super allocWithZone:zone];
+            return sharedAppController;  // assignment and return on first allocation
+        }
+    }
+    return nil; //on subsequent allocation attempts return nil
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    return self;
+}
+ 
+- (id)retain
+{
+    return self;
+}
+ 
+- (unsigned)retainCount
+{
+    return UINT_MAX;  //denotes an object that cannot be released
+}
+ 
+- (void)release
+{
+    //do nothing
+}
+ 
+- (id)autorelease
+{
+    return self;
+}*/
 
 @end
 
