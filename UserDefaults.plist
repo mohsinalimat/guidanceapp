@@ -4,19 +4,31 @@
 <dict>
 	<key>AsrMethod</key>
 	<integer>0</integer>
+	<key>EnableGrowl</key>
+	<true/>
+	<key>EnableSound</key>
+	<true/>
 	<key>IshaMethod</key>
 	<integer>0</integer>
 	<key>Latitude</key>
 	<real>35.776049</real>
 	<key>Longitude</key>
-	<real>-78.708552</real>
-	<key>EnableSound</key>
-	<integer>1</integer>
+	<real>-78.708551999999997</real>
+	<key>PlayAdhanForAsr</key>
+	<true/>
+	<key>PlayAdhanForDhuhur</key>
+	<true/>
+	<key>PlayAdhanForFajr</key>
+	<true/>
+	<key>PlayAdhanForIsha</key>
+	<true/>
+	<key>PlayAdhanForMaghrab</key>
+	<true/>
+	<key>PlayAdhanForShuruq</key>
+	<true/>
 	<key>Sound</key>
 	<integer>0</integer>
-	<key>EnableGrowl</key>
-	<integer>1</integer>
 	<key>StickyGrowl</key>
-	<integer>1</integer>
+	<true/>
 </dict>
 </plist>
