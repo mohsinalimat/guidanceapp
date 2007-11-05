@@ -28,6 +28,8 @@
 	if(![MyGrowler  isInstalled]) {
 		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil];
 	}
+	
+	[self initPrayers]; //create each prayer objects and set names 
 
 	/****************************/
 	/*** APPLICATION SETTINGS ***/
@@ -42,11 +44,9 @@
 	/**********************************/
 	/*** PRAYER TIME INITIALIZATION ***/
 	/**********************************/
-			
-	//create each prayer objects and set names 
-	//calls setPrayerTimes to set each objects prayer time
-	//also sets each prayer's adhan preferences 
-	[self initPrayers]; 
+	
+	//sets each prayer object's prayer time
+	[self setPrayerTimes];
 	
 	
 	
@@ -120,17 +120,9 @@
 	[asrPrayer setName: @"Asr"];
 	[maghribPrayer setName: @"Maghrib"];
 	[ishaPrayer setName: @"Isha"];
-	
-	//set adhan defaults
-	[fajrPrayer setPlayAudio: YES];
-	[shuruqPrayer setPlayAudio: NO];
-	[dhuhurPrayer setPlayAudio: YES];
-	[asrPrayer setPlayAudio: YES];
-	[maghribPrayer setPlayAudio: YES];
-	[ishaPrayer setPlayAudio: YES];
-	
-	[self setPrayerTimes];
 }
+
+
 
 - (void) setPrayerTimes
 {
@@ -332,8 +324,18 @@
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
-	displayGrowl = YES;
-	stickyGrowl = YES;
+	
+	//set adhan prefs
+	[fajrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForFajr"]];
+	[shuruqPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForShuruq"]];
+	[dhuhurPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForDhuhur"]];
+	[asrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForAsr"]];
+	[maghribPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForMaghrab"]];
+	[ishaPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForIsha"]];
+	
+	
+	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
+	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
 	
 	/*
 	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];
