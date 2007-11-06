@@ -59,7 +59,6 @@
 			default:	sound = [NSSound soundNamed:@"makkah"]; break;
 		}
 		
-		NSLog(@"INDEX: %d", [selectSound indexOfSelectedItem]);
 		[sound play];
 			// change button text to "Stop"
 		[previewButton setTitle:@"Stop"];
@@ -75,16 +74,21 @@
 	}
 }
 
-- (void)windowWillClose:(NSNotification *)notification
+- (IBAction)showWindow:(id)sender
 {
-	NSLog(@"WINDOW IS CLOSING!");
-	[[AppController sharedController] loadDefaults];
+	[super showWindow:sender];
+	[self sound_toggle:nil];
 }
 
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
 	[[self window] setDelegate:self];
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+	[[AppController sharedController] loadDefaults];
 }
 
 @end

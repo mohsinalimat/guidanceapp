@@ -61,13 +61,13 @@
 	switch (n)
 	{
 		case 1:
-			TwilightDawnAngle = 18;
-			TwilightSunsetAngle = 18;
+			TwilightDawnAngle = 15;
+			TwilightSunsetAngle = 15;
 			break;
 		case 0:
 		default:
-			TwilightDawnAngle = 15;
-			TwilightSunsetAngle = 15;
+			TwilightDawnAngle = 18;
+			TwilightSunsetAngle = 18;
 			break;
 	}
 }

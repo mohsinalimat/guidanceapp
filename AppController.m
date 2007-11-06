@@ -305,8 +305,6 @@ static AppController *sharedAppController = nil;
 
 - (void) loadDefaults
 {
-	NSLog(@"LOADING DEFAULTS!");
-
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
@@ -327,17 +325,47 @@ static AppController *sharedAppController = nil;
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
 	
-	//set adhan prefs
-	[fajrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForFajr"]];
-	[shuruqPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForShuruq"]];
-	[dhuhurPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForDhuhur"]];
-	[asrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForAsr"]];
-	[maghribPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForMaghrab"]];
-	[ishaPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForIsha"]];
+	NSLog(@"Latitude: %f", [userDefaults floatForKey:@"Latitude"]);
+	NSLog(@"Longitude: %f", [userDefaults floatForKey:@"Longitude"]);
+	NSLog(@"AsrMethod: %d", [userDefaults integerForKey:@"AsrMethod"]);
+	NSLog(@"IshaMethod: %d", [userDefaults integerForKey:@"IshaMethod"]);
+	
+	if ([userDefaults boolForKey:@"EnableSound"])
+	{
+		//set adhan prefs
+		[fajrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForFajr"]];
+		[shuruqPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForShuruq"]];
+		[dhuhurPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForDhuhur"]];
+		[asrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForAsr"]];
+		[maghribPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForMaghrab"]];
+		[ishaPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForIsha"]];
+	}
+	else
+	{
+		[fajrPrayer setPlayAudio:NO];
+		[shuruqPrayer setPlayAudio:NO];
+		[dhuhurPrayer setPlayAudio:NO];
+		[asrPrayer setPlayAudio:NO];
+		[maghribPrayer setPlayAudio:NO];
+		[ishaPrayer setPlayAudio:NO];
+	}
+	
+	NSLog(@"EnableSound: %d", [userDefaults boolForKey:@"EnableSound"]);
+	
+	NSLog(@"PlayAdhanForFajr: %d", [userDefaults boolForKey:@"PlayAdhanForFajr"]);
+	NSLog(@"PlayAdhanForShuruq: %d", [userDefaults boolForKey:@"PlayAdhanForShuruq"]);
+	NSLog(@"PlayAdhanForDhuhur: %d", [userDefaults boolForKey:@"PlayAdhanForDhuhur"]);
+	NSLog(@"PlayAdhanForAsr: %d", [userDefaults boolForKey:@"PlayAdhanForAsr"]);
+	NSLog(@"PlayAdhanForMaghrab: %d", [userDefaults boolForKey:@"PlayAdhanForMaghrab"]);
+	NSLog(@"PlayAdhanForIsha: %d", [userDefaults boolForKey:@"PlayAdhanForIsha"]);
 	
 	
 	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
 	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
+	
+	
+	NSLog(@"EnableGrowl: %d", [userDefaults boolForKey:@"EnableGrowl"]);
+	NSLog(@"StickyGrowl: %d", [userDefaults boolForKey:@"StickyGrowl"]);
 	
 	/*
 	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];

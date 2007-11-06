@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		340EF9120CD7934A007280D6 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF9110CD7934A007280D6 /* UserDefaults.m */; };
 		340EF9150CD79628007280D6 /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF9140CD79628007280D6 /* DBPrefsWindowController.m */; };
 		340EF99E0CD7A7A7007280D6 /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */; };
 		340EF9A00CD7A867007280D6 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340EF99F0CD7A867007280D6 /* AppController.m */; };
@@ -56,8 +55,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* Guidance_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Guidance_Prefix.pch; sourceTree = "<group>"; };
-		340EF9100CD7934A007280D6 /* UserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
-		340EF9110CD7934A007280D6 /* UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
 		340EF9130CD79628007280D6 /* DBPrefsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBPrefsWindowController.h; sourceTree = "<group>"; };
 		340EF9140CD79628007280D6 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
 		340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
@@ -115,8 +112,6 @@
 				347BEC540CCC6214008BE40C /* Growler.m */,
 				34E7E5620CCD2DBA0098659D /* Prayer.h */,
 				34E7E5630CCD2DBA0098659D /* Prayer.m */,
-				340EF9100CD7934A007280D6 /* UserDefaults.h */,
-				340EF9110CD7934A007280D6 /* UserDefaults.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -303,7 +298,6 @@
 				347BEC560CCC6214008BE40C /* Growler.m in Sources */,
 				34E7E5650CCD2DBA0098659D /* Prayer.m in Sources */,
 				34B5CC540CD6A75500CF5D14 /* PrefController.m in Sources */,
-				340EF9120CD7934A007280D6 /* UserDefaults.m in Sources */,
 				340EF9150CD79628007280D6 /* DBPrefsWindowController.m in Sources */,
 				340EF9A00CD7A867007280D6 /* AppController.m in Sources */,
 			);
