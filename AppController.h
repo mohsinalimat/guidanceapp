@@ -57,6 +57,7 @@
 	NSString *adhanFile;
 	BOOL displayGrowl;
 	BOOL stickyGrowl;
+	NSString *currentVersion;
 }
 
 - (IBAction)doNothing:(id)sender; 
@@ -73,6 +74,12 @@
 - (void) setPrayerTimes;
 - (void) loadDefaults;
 - (void) checkPrayerTimes;
+
+- (void) applyPrefs;
+
+- (void) checkForUpdate:(BOOL)quiet;
+
+- (void) setCoordinates: (NSString *) city : (NSString *) state : (NSString *) country;
 
 - (IBAction)openPreferencesWindow:(id)sender;
 

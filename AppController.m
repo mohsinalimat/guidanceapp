@@ -36,19 +36,14 @@ static AppController *sharedAppController = nil;
 	/****************************/
 	/*** APPLICATION SETTINGS ***/
 	/****************************/
+	
+	currentVersion = @"0.2";
 		
-	[guidanceVersion setStringValue:@"Version 0.2a"]; //set application version
+	[guidanceVersion setStringValue:[@"Version " stringByAppendingString:currentVersion]]; //set application version
 
 	[self loadDefaults]; //load default preferences
 
-
-	
-	/**********************************/
-	/*** PRAYER TIME INITIALIZATION ***/
-	/**********************************/
-	
-	//sets each prayer object's prayer time
-	[self setPrayerTimes];
+	[self setPrayerTimes]; //sets each prayer object's prayer time
 	
 	
 	
@@ -72,7 +67,14 @@ static AppController *sharedAppController = nil;
 			
 	//run timer to check for salah times		
 	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];		
+	
+	
+	
+	[self checkForUpdate:YES]; //check for new version
+	
+	[self setCoordinates:@"Chapel Hill":@"North Carolina":@"United States of America"]; //parse coordinates
 }
+
 
 - (void) initGui
 {
@@ -81,7 +83,8 @@ static AppController *sharedAppController = nil;
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
 	[menuBar retain];
 	
-	[menuBar setTitle:NSLocalizedString(@"☪" ,@"")];
+	//[menuBar setTitle:NSLocalizedString(@"☪" ,@"")];
+	[menuBar setTitle:NSLocalizedString(@"اGuidance" ,@"")];
 	[menuBar setHighlightMode:YES];
 	[menuBar setMenu:appMenu];
 	
@@ -269,7 +272,6 @@ static AppController *sharedAppController = nil;
 	NSString *nextPrayerCount = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
 	
 	[menuBar setTitle:NSLocalizedString([@"☪ " stringByAppendingString:[nextPrayerLetter stringByAppendingString:nextPrayerCount]],@"")];
-	
 
 	//if its time to pray change the menu bar title to "prayer name" time for that minute
 	if(currentlyPrayerTime) {
@@ -324,12 +326,6 @@ static AppController *sharedAppController = nil;
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
-	
-	NSLog(@"Latitude: %f", [userDefaults floatForKey:@"Latitude"]);
-	NSLog(@"Longitude: %f", [userDefaults floatForKey:@"Longitude"]);
-	NSLog(@"AsrMethod: %d", [userDefaults integerForKey:@"AsrMethod"]);
-	NSLog(@"IshaMethod: %d", [userDefaults integerForKey:@"IshaMethod"]);
-	
 	if ([userDefaults boolForKey:@"EnableSound"])
 	{
 		//set adhan prefs
@@ -349,33 +345,9 @@ static AppController *sharedAppController = nil;
 		[maghribPrayer setPlayAudio:NO];
 		[ishaPrayer setPlayAudio:NO];
 	}
-	
-	NSLog(@"EnableSound: %d", [userDefaults boolForKey:@"EnableSound"]);
-	
-	NSLog(@"PlayAdhanForFajr: %d", [userDefaults boolForKey:@"PlayAdhanForFajr"]);
-	NSLog(@"PlayAdhanForShuruq: %d", [userDefaults boolForKey:@"PlayAdhanForShuruq"]);
-	NSLog(@"PlayAdhanForDhuhur: %d", [userDefaults boolForKey:@"PlayAdhanForDhuhur"]);
-	NSLog(@"PlayAdhanForAsr: %d", [userDefaults boolForKey:@"PlayAdhanForAsr"]);
-	NSLog(@"PlayAdhanForMaghrab: %d", [userDefaults boolForKey:@"PlayAdhanForMaghrab"]);
-	NSLog(@"PlayAdhanForIsha: %d", [userDefaults boolForKey:@"PlayAdhanForIsha"]);
-	
-	
+		
 	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
 	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
-	
-	
-	NSLog(@"EnableGrowl: %d", [userDefaults boolForKey:@"EnableGrowl"]);
-	NSLog(@"StickyGrowl: %d", [userDefaults boolForKey:@"StickyGrowl"]);
-	
-	/*
-	NSURL *coordinatesURL = [NSURL URLWithString:@"http://guidanceapp.com/location.php?city=raleigh&state=nc"];
-	NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:coordinatesURL];
-	if([xmlParser parse]) {
-		//[MyGrowler doGrowl : @"Guidance" : @"XML Parsed!" : NO];
-	} else {
-		//[MyGrowler doGrowl : @"Guidance" : @"XML Could Not Parse!" : NO];
-	}
-	*/
 }
 
 - (IBAction)openPreferencesWindow:(id)sender
@@ -383,6 +355,70 @@ static AppController *sharedAppController = nil;
 	[[PrefController sharedPrefsWindowController] showWindow:nil];
 	[[[PrefController sharedPrefsWindowController] window] orderFrontRegardless];
 }
+
+- (void) applyPrefs
+{
+	[self loadDefaults]; //get prefrences and load them into global vars
+	
+	[self setPrayerTimes]; //recalculate and set the prayer times for each prayer object
+	
+	[self initPrayerItems]; //rewrite the prayer times to the gui
+	
+	[self checkPrayerTimes]; //recheck prayer times
+}
+
+- (void) setCoordinates: (NSString *) city : (NSString *) state : (NSString *) country
+{
+		
+	NSString *safeCity =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) city, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	NSString *safeState =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) state, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	NSString *safeCountry =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) country, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	
+	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?city=%@&state=%@&country=%@",safeCity,safeState,safeCountry];
+	
+	NSLog(@"city: %@",safeCity);
+	
+		
+	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
+    float lat = [[coordDict valueForKey:@"latitude"] doubleValue]; 
+	float lon = [[coordDict valueForKey:@"longitude"]  doubleValue]; 
+	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue]; 
+}
+
+
+- (void) checkForUpdate:(BOOL)quiet
+{
+	NSDictionary *productVersionDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:@"http://guidanceapp.com/version.xml"]];
+    NSString *latestVersionNumber = [productVersionDict valueForKey:@"version"];
+    
+	if([productVersionDict count] > 0 ) 
+	{
+		if([latestVersionNumber isEqualTo: currentVersion] && !quiet)
+		{
+			// tell user software is up to date
+			NSRunAlertPanel(NSLocalizedString(@"Your Software is up-to-date", @"Title of alert when a the user's software is up to date."),
+				NSLocalizedString(@"You have the most recent version of Guidance.", @"Alert text when the user's software is up to date."),
+				NSLocalizedString(@"OK", @"OK"), nil, nil);
+		}
+		else if( ![latestVersionNumber isEqualTo: currentVersion])
+		{
+			// tell user to download a new version
+			int button = NSRunAlertPanel(NSLocalizedString(@"A New Version is Available", @"Title of alert when a the user's software is not up to date."),
+			[NSString stringWithFormat:NSLocalizedString(@"A new version of Guidance is available (version %@). Would you like to download the new version now?", @"Alert text when the user's software is not up to date."), latestVersionNumber],
+				NSLocalizedString(@"OK", @"OK"),
+				NSLocalizedString(@"Cancel", @"Cancel"), nil);
+			if(NSOKButton == button)
+			{
+				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/"]];
+			}
+		}
+	} 
+	
+
+
+}
+
+
 
 /*************************************
 ****** SINGLETON METHODS *************

@@ -88,7 +88,7 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-	[[AppController sharedController] loadDefaults];
+	[[AppController sharedController] applyPrefs];
 }
 
 @end
