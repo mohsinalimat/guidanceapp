@@ -2,20 +2,10 @@
 
 @implementation PrefController
 
-- (id)initWithWindow:(NSWindow *)window
-{
-	self = [super initWithWindow:nil];
-	if (self != nil) {
-		previewState = NO;
-	}
-	return self;
-
-	(void)window;  // To prevent compiler warnings.
-}
-
 - (void)setupToolbar
 {
-	[self addView:generalPrefsView label:@"General"];
+	[self addView:locationPrefsView label:@"Location"];
+	[self addView:calculationsPrefsView label:@"Calculations"];
 	[self addView:soundPrefsView label:@"Sound"];
 }
 
@@ -42,6 +32,26 @@
 		[playIsha setEnabled:YES];
 		[playMaghrab setEnabled:YES];
 		[playShuruq setEnabled:YES];
+	}
+}
+
+- (IBAction)manual_toggle:(id)sender
+{
+    if ([toggleManual state] == NSOffState)
+	{
+		[latitudeText setEnabled:NO];
+		[longitudeText setEnabled:NO];
+		[cityText setEnabled:YES];
+		[stateText setEnabled:YES];
+		[countryText setEnabled:YES];
+	}
+	else
+	{
+		[latitudeText setEnabled:YES];
+		[longitudeText setEnabled:YES];
+		[cityText setEnabled:NO];
+		[stateText setEnabled:NO];
+		[countryText setEnabled:NO];
 	}
 }
 
@@ -74,16 +84,48 @@
 	}
 }
 
+- (IBAction)lookup_location:(id)sender
+{
+	NSString *city = [cityText stringValue];
+	NSString *state = [stateText stringValue];
+	NSString *country = [countryText stringValue];
+		
+	NSString *safeCity =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) city, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	NSString *safeState =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) state, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	NSString *safeCountry =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) country, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	
+	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?city=%@&state=%@&country=%@",safeCity,safeState,safeCountry];
+	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
+	
+	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
+	
+	if (valid)
+	{
+		NSLog(@"Valid lookup!");
+		[latitudeText setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
+		[longitudeText setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
+	}
+	else
+	{
+		NSLog(@"Invalid lookup...");
+		//error msg
+	}
+	
+	[self crossFadeView:locationPrefsView withView:locationPrefsView];
+}
+
 - (IBAction)showWindow:(id)sender
 {
 	[super showWindow:sender];
 	[self sound_toggle:nil];
+	[self manual_toggle:nil];
 }
 
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
 	[[self window] setDelegate:self];
+	previewState = NO;
 }
 
 - (void)windowWillClose:(NSNotification *)notification

@@ -12,6 +12,12 @@
 	<integer>0</integer>
 	<key>Latitude</key>
 	<real>35.776049</real>
+	<key>LocCity</key>
+	<string>Raleigh</string>
+	<key>LocCountry</key>
+	<string>USA</string>
+	<key>LocState</key>
+	<string>NC</string>
 	<key>Longitude</key>
 	<real>-78.708551999999997</real>
 	<key>PlayAdhanForAsr</key>

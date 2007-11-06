@@ -71,8 +71,6 @@ static AppController *sharedAppController = nil;
 	
 	
 	[self checkForUpdate:YES]; //check for new version
-	
-	[self setCoordinates:@"Chapel Hill":@"North Carolina":@"United States of America"]; //parse coordinates
 }
 
 
@@ -367,24 +365,6 @@ static AppController *sharedAppController = nil;
 	[self checkPrayerTimes]; //recheck prayer times
 }
 
-- (void) setCoordinates: (NSString *) city : (NSString *) state : (NSString *) country
-{
-		
-	NSString *safeCity =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) city, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	NSString *safeState =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) state, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	NSString *safeCountry =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) country, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	
-	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?city=%@&state=%@&country=%@",safeCity,safeState,safeCountry];
-	
-	NSLog(@"city: %@",safeCity);
-	
-		
-	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
-    float lat = [[coordDict valueForKey:@"latitude"] doubleValue]; 
-	float lon = [[coordDict valueForKey:@"longitude"]  doubleValue]; 
-	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue]; 
-}
-
 
 - (void) checkForUpdate:(BOOL)quiet
 {
@@ -412,10 +392,7 @@ static AppController *sharedAppController = nil;
 				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/"]];
 			}
 		}
-	} 
-	
-
-
+	}
 }
 
 

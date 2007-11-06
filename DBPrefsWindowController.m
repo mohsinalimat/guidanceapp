@@ -273,12 +273,11 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 
 
-
 - (void)displayViewForIdentifier:(NSString *)identifier animate:(BOOL)animate
-{	
+{
 		// Find the view we want to display.
 	NSView *newView = [toolbarViews objectForKey:identifier];
-
+	
 		// See if there are any visible views.
 	NSView *oldView = nil;
 	if ([[contentSubview subviews] count] > 0) {

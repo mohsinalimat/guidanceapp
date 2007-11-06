@@ -79,8 +79,6 @@
 
 - (void) checkForUpdate:(BOOL)quiet;
 
-- (void) setCoordinates: (NSString *) city : (NSString *) state : (NSString *) country;
-
 - (IBAction)openPreferencesWindow:(id)sender;
 
 + (AppController*) sharedController;
