@@ -22,9 +22,13 @@
 	IBOutlet NSTextField *stateText;
 	IBOutlet NSTextField *countryText;
 	IBOutlet NSButton *lookupLocation;
+	IBOutlet NSWindow *lookupProgress;
+	IBOutlet NSTextField *lookupStatus;
+	IBOutlet NSProgressIndicator *lookupIndicator;
 	BOOL previewState;
 	NSSound *sound;
 }
+- (IBAction)startatlogin_toggle:(id)sender;
 - (IBAction)preview_clicked:(id)sender;
 - (IBAction)sound_toggle:(id)sender;
 - (IBAction)manual_toggle:(id)sender;

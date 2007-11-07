@@ -5,8 +5,8 @@
 - (void)setupToolbar
 {
 	[self addView:locationPrefsView label:@"Location"];
-	[self addView:calculationsPrefsView label:@"Calculations"];
-	[self addView:soundPrefsView label:@"Sound"];
+	[self addView:calculationsPrefsView label:@"Prayer Times"];
+	[self addView:soundPrefsView label:@"Alerts"];
 }
 
 - (IBAction)sound_toggle:(id)sender
@@ -86,6 +86,9 @@
 
 - (IBAction)lookup_location:(id)sender
 {
+	[lookupStatus setStringValue:@"Looking up latitude and longitude..."];
+	[lookupIndicator startAnimation:sender];
+	[lookupProgress makeKeyAndOrderFront:nil];
 	NSString *city = [cityText stringValue];
 	NSString *state = [stateText stringValue];
 	NSString *country = [countryText stringValue];
@@ -104,11 +107,19 @@
 		NSLog(@"Valid lookup!");
 		[latitudeText setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
 		[longitudeText setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
+		[lookupProgress close];
 	}
 	else
 	{
+		[lookupStatus setStringValue:@"Error: Unable to find location."];
+		[lookupProgress close];
 		NSLog(@"Invalid lookup...");
-		//error msg
+		
+		//error message
+		NSAlert* alert = [NSAlert new];
+		[alert setInformativeText: @"Guidance was unable to lookup the location specified, please enter in a different location or set the latitude and longitude manually"];
+		[alert setMessageText:     @"Unable to find location"];
+		[alert runModal];
 	}
 	
 	[self crossFadeView:locationPrefsView withView:locationPrefsView];
@@ -132,5 +143,13 @@
 {
 	[[AppController sharedController] applyPrefs];
 }
+
+- (IBAction)startatlogin_toggle:(id)sender
+{
+
+
+}
+
+
 
 @end

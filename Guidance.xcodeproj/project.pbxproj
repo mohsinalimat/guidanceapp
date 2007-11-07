@@ -25,6 +25,11 @@
 		8421DB5F0CD8024F00BC4D4D /* istanbul.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */; };
 		8421DB600CD8024F00BC4D4D /* makkah.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */; };
 		8421DB610CD8024F00BC4D4D /* yusufislam.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */; };
+		84262DFA0CE1153E00359AA1 /* Alerts.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262DF90CE1153E00359AA1 /* Alerts.tiff */; };
+		84262E0D0CE1154F00359AA1 /* Notifications.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E0C0CE1154F00359AA1 /* Notifications.tiff */; };
+		84262E130CE1155D00359AA1 /* Calculations.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E120CE1155D00359AA1 /* Calculations.tiff */; };
+		84262E190CE1156D00359AA1 /* Location.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E180CE1156D00359AA1 /* Location.tiff */; };
+		84262E240CE1173F00359AA1 /* Prayer Times.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E230CE1173F00359AA1 /* Prayer Times.tiff */; };
 		8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
 		84AFF17C0CD9647D00D0BF00 /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
@@ -78,6 +83,11 @@
 		8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = istanbul.mp3; sourceTree = SOURCE_ROOT; };
 		8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = makkah.mp3; sourceTree = SOURCE_ROOT; };
 		8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = yusufislam.mp3; sourceTree = SOURCE_ROOT; };
+		84262DF90CE1153E00359AA1 /* Alerts.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Alerts.tiff; path = /Users/ameir/Developer/Guidance/Alerts.tiff; sourceTree = "<absolute>"; };
+		84262E0C0CE1154F00359AA1 /* Notifications.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Notifications.tiff; path = /Users/ameir/Developer/Guidance/Notifications.tiff; sourceTree = "<absolute>"; };
+		84262E120CE1155D00359AA1 /* Calculations.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Calculations.tiff; path = /Users/ameir/Developer/Guidance/Calculations.tiff; sourceTree = "<absolute>"; };
+		84262E180CE1156D00359AA1 /* Location.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Location.tiff; path = /Users/ameir/Developer/Guidance/Location.tiff; sourceTree = "<absolute>"; };
+		84262E230CE1173F00359AA1 /* Prayer Times.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = "Prayer Times.tiff"; path = "/Users/ameir/Developer/Guidance/Prayer Times.tiff"; sourceTree = "<absolute>"; };
 		843C4E2A0CCBE610000DAEB4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
@@ -171,7 +181,12 @@
 				340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */,
 				347E3F500CD687EC0035D056 /* Sound.tiff */,
 				8421DB5A0CD8024F00BC4D4D /* alaqsa.mp3 */,
+				84262E180CE1156D00359AA1 /* Location.tiff */,
+				84262E230CE1173F00359AA1 /* Prayer Times.tiff */,
 				8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */,
+				84262E120CE1155D00359AA1 /* Calculations.tiff */,
+				84262E0C0CE1154F00359AA1 /* Notifications.tiff */,
+				84262DF90CE1153E00359AA1 /* Alerts.tiff */,
 				8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */,
 				8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */,
 				840BA2BB0CD6C63800181205 /* menuBar.png */,
@@ -283,6 +298,11 @@
 				8421DB5F0CD8024F00BC4D4D /* istanbul.mp3 in Resources */,
 				8421DB600CD8024F00BC4D4D /* makkah.mp3 in Resources */,
 				8421DB610CD8024F00BC4D4D /* yusufislam.mp3 in Resources */,
+				84262DFA0CE1153E00359AA1 /* Alerts.tiff in Resources */,
+				84262E0D0CE1154F00359AA1 /* Notifications.tiff in Resources */,
+				84262E130CE1155D00359AA1 /* Calculations.tiff in Resources */,
+				84262E190CE1156D00359AA1 /* Location.tiff in Resources */,
+				84262E240CE1173F00359AA1 /* Prayer Times.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

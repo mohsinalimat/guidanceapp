@@ -324,6 +324,12 @@ static AppController *sharedAppController = nil;
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
+	NSLog(@"Latitude: %f", [userDefaults floatForKey:@"Latitude"]);
+	NSLog(@"Longitude: %f", [userDefaults floatForKey:@"Longitude"]);
+	NSLog(@"AsrMethod: %d", [userDefaults integerForKey:@"AsrMethod"]);
+	NSLog(@"IshaMethod: %d", [userDefaults integerForKey:@"IshaMethod"]);
+	
+	
 	if ([userDefaults boolForKey:@"EnableSound"])
 	{
 		//set adhan prefs
@@ -343,9 +349,23 @@ static AppController *sharedAppController = nil;
 		[maghribPrayer setPlayAudio:NO];
 		[ishaPrayer setPlayAudio:NO];
 	}
+	
+	NSLog(@"EnableSound: %d", [userDefaults boolForKey:@"EnableSound"]);
+	
+	NSLog(@"PlayAdhanForFajr: %d", [userDefaults boolForKey:@"PlayAdhanForFajr"]);
+	NSLog(@"PlayAdhanForShuruq: %d", [userDefaults boolForKey:@"PlayAdhanForShuruq"]);
+	NSLog(@"PlayAdhanForDhuhur: %d", [userDefaults boolForKey:@"PlayAdhanForDhuhur"]);
+	NSLog(@"PlayAdhanForAsr: %d", [userDefaults boolForKey:@"PlayAdhanForAsr"]);
+	NSLog(@"PlayAdhanForMaghrab: %d", [userDefaults boolForKey:@"PlayAdhanForMaghrab"]);
+	NSLog(@"PlayAdhanForIsha: %d", [userDefaults boolForKey:@"PlayAdhanForIsha"]);
+	
 		
 	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
 	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
+	
+	NSLog(@"EnableGrowl: %d", [userDefaults boolForKey:@"EnableGrowl"]);
+	NSLog(@"StickyGrowl: %d", [userDefaults boolForKey:@"StickyGrowl"]);
+	NSLog(@" ");
 }
 
 - (IBAction)openPreferencesWindow:(id)sender

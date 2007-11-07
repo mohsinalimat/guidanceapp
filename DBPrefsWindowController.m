@@ -188,10 +188,10 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 - (IBAction)showWindow:(id)sender 
 {
-		// This forces the resources in the nib to load.
+	// This forces the resources in the nib to load.
 	(void)[self window];
 
-		// Clear the last setup and get a fresh one.
+	// Clear the last setup and get a fresh one.
 	[toolbarIdentifiers removeAllObjects];
 	[toolbarViews removeAllObjects];
 	[toolbarItems removeAllObjects];
