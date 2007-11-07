@@ -54,7 +54,6 @@
 	{
 		Shafi = 1;
 	}
-	NSLog(@"Setting Asr Method to: %d",Shafi);
 }
 
 - (void)setIshaMethod:(int)n
@@ -71,7 +70,6 @@
 			TwilightSunsetAngle = 18;
 			break;
 	}
-	NSLog(@"Setting Isha Method to: %d",TwilightDawnAngle);
 }
 
 + (double)rad2deg:(double)n
@@ -116,9 +114,7 @@
 
 
 - (void)calcTimes:(NSCalendarDate *)calcDate
-{
-	NSLog(@"Asr Method is: %d",Shafi);	
-	
+{	
 	double rad_lat = [PrayerTimes deg2rad:Latitude];
 	
 	int day = [calcDate dayOfYear];

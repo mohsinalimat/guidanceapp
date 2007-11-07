@@ -44,6 +44,7 @@
 		[cityText setEnabled:YES];
 		[stateText setEnabled:YES];
 		[countryText setEnabled:YES];
+		[lookupLocation setEnabled:YES];
 	}
 	else
 	{
@@ -52,6 +53,7 @@
 		[cityText setEnabled:NO];
 		[stateText setEnabled:NO];
 		[countryText setEnabled:NO];
+		[lookupLocation setEnabled:NO];
 	}
 }
 
@@ -59,7 +61,7 @@
 {
 	if (!previewState)
 	{
-			// play sound
+		// play sound
 		switch ([selectSound indexOfSelectedItem])
 		{
 			case 1:		sound = [NSSound soundNamed:@"alaqsa"]; break;
@@ -70,15 +72,17 @@
 		}
 		
 		[sound play];
-			// change button text to "Stop"
+		
+		// change button text to "Stop"
 		[previewButton setTitle:@"Stop"];
 		previewState = !previewState;
 	}
 	else
 	{
-			// stop sound
+		// stop sound
 		[sound stop];
-			// change button text to "Preview"
+		
+		// change button text to "Preview"
 		[previewButton setTitle:@"Preview"];
 		previewState = !previewState;
 	}
@@ -107,6 +111,7 @@
 		NSLog(@"Valid lookup!");
 		[latitudeText setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
 		[longitudeText setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
+		
 		[lookupProgress close];
 	}
 	else
@@ -141,6 +146,15 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
+
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
+	[userDefaults registerDefaults:appDefaults];
+	
+	[userDefaults setFloat:[latitudeText floatValue] forKey:@"Latitude"];
+	[userDefaults setFloat:[longitudeText floatValue] forKey:@"Longitude"];
+
 	[[AppController sharedController] applyPrefs];
 }
 
