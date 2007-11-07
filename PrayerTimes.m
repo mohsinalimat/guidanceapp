@@ -54,6 +54,7 @@
 	{
 		Shafi = 1;
 	}
+	NSLog(@"Setting Asr Method to: %d",Shafi);
 }
 
 - (void)setIshaMethod:(int)n
@@ -70,6 +71,7 @@
 			TwilightSunsetAngle = 18;
 			break;
 	}
+	NSLog(@"Setting Isha Method to: %d",TwilightDawnAngle);
 }
 
 + (double)rad2deg:(double)n
@@ -86,7 +88,7 @@
 
 + (int)sign:(double)n
 {
-	return abs(n)/n;
+	return fabs(n)/n;
 }
 
 
@@ -115,6 +117,10 @@
 
 - (void)calcTimes:(NSCalendarDate *)calcDate
 {
+	NSLog(@"Asr Method is: %d",Shafi);	
+	
+	double rad_lat = [PrayerTimes deg2rad:Latitude];
+	
 	int day = [calcDate dayOfYear];
 	NSNumberFormatter *nf = [[NSNumberFormatter alloc] init];
 	int tz = [[nf numberFromString:[[NSCalendarDate calendarDate] descriptionWithCalendarFormat:@"%z"]] intValue];
@@ -128,6 +134,9 @@
 				+ (0.000907 * sin(2*beta))
 				- (0.002697 * cos(3*beta))
 				+ (0.001480 * sin(3*beta)));
+				
+	double rad_d = [PrayerTimes deg2rad:d]; 			
+				
 	double t = 229.18 * (0.000075 + (0.001868 * cos(beta))
 				- (0.032077 * sin(beta))
 				- (0.014615 * cos(2*beta))
@@ -138,7 +147,7 @@
 	
 	double xu = sin([PrayerTimes deg2rad:(-0.8333 - 0.0347
 				* [PrayerTimes sign:Altitude]
-				* sqrt(abs(Altitude)))]
+				* sqrt(fabs(Altitude)))]
 				- sin([PrayerTimes deg2rad:d])
 				* sin([PrayerTimes deg2rad:Latitude]))
 				/ (cos([PrayerTimes deg2rad:d])
@@ -172,8 +181,21 @@
 	
 	double vn = [PrayerTimes rad2deg:1/15.0 * acos(xvn)];
 	
-	double w = [PrayerTimes rad2deg:1/15.0 * cos((sin([PrayerTimes acot:Shafi + tan(abs([PrayerTimes deg2rad:Latitude] - [PrayerTimes deg2rad:d]))]) - sin([PrayerTimes deg2rad:Latitude])) / (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude])))];
 	
+	double w = [PrayerTimes rad2deg:(
+		1/15.0 * acos(
+			(
+				sin(
+					[PrayerTimes acot:(
+						Shafi + tan(
+							fabs(rad_lat - rad_d)
+						)
+					)]
+				) - sin(rad_d) * sin(rad_lat)
+			) /	
+			( cos(rad_d) * cos(rad_lat) ) 
+		)
+	)];
 	
 	FajrTime = [PrayerTimes hoursToTime: z - vd];
 	ShuruqTime = [PrayerTimes hoursToTime: z - u];
