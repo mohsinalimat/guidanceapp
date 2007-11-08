@@ -335,14 +335,6 @@ static AppController *sharedAppController = nil;
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
-	/*
-	NSLog(@"Latitude: %f", [userDefaults floatForKey:@"Latitude"]);
-	NSLog(@"Longitude: %f", [userDefaults floatForKey:@"Longitude"]);
-	NSLog(@"AsrMethod: %d", [userDefaults integerForKey:@"AsrMethod"]);
-	NSLog(@"IshaMethod: %d", [userDefaults integerForKey:@"IshaMethod"]);
-	*/
-	
-	
 	if ([userDefaults boolForKey:@"EnableSound"])
 	{
 		//set adhan prefs
@@ -363,7 +355,24 @@ static AppController *sharedAppController = nil;
 		[ishaPrayer setPlayAudio:NO];
 	}
 	
+		
+	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
+	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
+	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
+	firstRun = [userDefaults boolForKey:@"FirstRun"];
+	
+		
+	//now that app has been run, set FirstRun to false
+	[userDefaults setBool:NO forKey:@"FirstRun"];
+	
+	
 	/*
+	NSLog(@"Latitude: %f", [userDefaults floatForKey:@"Latitude"]);
+	NSLog(@"Longitude: %f", [userDefaults floatForKey:@"Longitude"]);
+	NSLog(@"AsrMethod: %d", [userDefaults integerForKey:@"AsrMethod"]);
+	NSLog(@"IshaMethod: %d", [userDefaults integerForKey:@"IshaMethod"]);
+	
+	
 	NSLog(@"EnableSound: %d", [userDefaults boolForKey:@"EnableSound"]);
 	
 	NSLog(@"PlayAdhanForFajr: %d", [userDefaults boolForKey:@"PlayAdhanForFajr"]);
@@ -372,23 +381,15 @@ static AppController *sharedAppController = nil;
 	NSLog(@"PlayAdhanForAsr: %d", [userDefaults boolForKey:@"PlayAdhanForAsr"]);
 	NSLog(@"PlayAdhanForMaghrab: %d", [userDefaults boolForKey:@"PlayAdhanForMaghrab"]);
 	NSLog(@"PlayAdhanForIsha: %d", [userDefaults boolForKey:@"PlayAdhanForIsha"]);
-	*/
-		
-	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
-	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
-	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
-	firstRun = [userDefaults boolForKey:@"FirstRun"];
 	
-	/*
+	
 	NSLog(@"EnableGrowl: %d", [userDefaults boolForKey:@"EnableGrowl"]);
 	NSLog(@"StickyGrowl: %d", [userDefaults boolForKey:@"StickyGrowl"]);
 	NSLog(@"CheckForUpdates: %d", [userDefaults boolForKey:@"CheckForUpdates"]);
 	NSLog(@"FirstRun: %d", [userDefaults boolForKey:@"FirstRun"]);
 	NSLog(@" ");
 	*/
-	
-	//now that app has been run, set FirstRun to false
-	[userDefaults setBool:NO forKey:@"FirstRun"];
+
 }
 
 - (IBAction)openPreferencesWindow:(id)sender
@@ -432,7 +433,7 @@ static AppController *sharedAppController = nil;
 				NSLocalizedString(@"Cancel", @"Cancel"), nil);
 			if(NSOKButton == button)
 			{
-				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/"]];
+				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/download/"]];
 			}
 		}
 	}
