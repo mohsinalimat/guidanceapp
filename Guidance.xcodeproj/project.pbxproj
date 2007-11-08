@@ -63,7 +63,7 @@
 		347BEC530CCC6214008BE40C /* Growler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Growler.h; sourceTree = "<group>"; };
 		347BEC540CCC6214008BE40C /* Growler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Growler.m; sourceTree = "<group>"; };
 		347BEC600CCC64BE008BE40C /* Growl.framework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Growl.framework-Info.plist"; sourceTree = "<group>"; };
-		347E3F4E0CD681C80035D056 /* General.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = General.tiff; sourceTree = SOURCE_ROOT; };
+		347E3F4E0CD681C80035D056 /* General.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = General.tiff; sourceTree = "<group>"; };
 		347E3F530CD688D30035D056 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		34B5CC520CD6A75500CF5D14 /* PrefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefController.h; sourceTree = "<group>"; };
 		34B5CC530CD6A75500CF5D14 /* PrefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrefController.m; sourceTree = "<group>"; };
@@ -73,13 +73,13 @@
 		84031FA30CCDBEE8005DA599 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		840BA2BB0CD6C63800181205 /* menuBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuBar.png; sourceTree = SOURCE_ROOT; };
 		840BA2BD0CD6C64B00181205 /* menuBarHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuBarHighlight.png; sourceTree = SOURCE_ROOT; };
-		8421DB5A0CD8024F00BC4D4D /* alaqsa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = alaqsa.mp3; sourceTree = SOURCE_ROOT; };
-		8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = istanbul.mp3; sourceTree = SOURCE_ROOT; };
-		8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = makkah.mp3; sourceTree = SOURCE_ROOT; };
-		8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = yusufislam.mp3; sourceTree = SOURCE_ROOT; };
-		84262DF90CE1153E00359AA1 /* Alerts.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Alerts.tiff; sourceTree = SOURCE_ROOT; };
-		84262E180CE1156D00359AA1 /* Location.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Location.tiff; sourceTree = SOURCE_ROOT; };
-		84262E230CE1173F00359AA1 /* Prayer Times.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Prayer Times.tiff"; sourceTree = SOURCE_ROOT; };
+		8421DB5A0CD8024F00BC4D4D /* alaqsa.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = alaqsa.mp3; sourceTree = "<group>"; };
+		8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = istanbul.mp3; sourceTree = "<group>"; };
+		8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = makkah.mp3; sourceTree = "<group>"; };
+		8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = yusufislam.mp3; sourceTree = "<group>"; };
+		84262DF90CE1153E00359AA1 /* Alerts.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Alerts.tiff; sourceTree = "<group>"; };
+		84262E180CE1156D00359AA1 /* Location.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Location.tiff; sourceTree = "<group>"; };
+		84262E230CE1173F00359AA1 /* Prayer Times.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Prayer Times.tiff"; sourceTree = "<group>"; };
 		843C4E2A0CCBE610000DAEB4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
@@ -170,21 +170,14 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3450CE210CE3B97B00B67C0B /* Icons */,
+				3450CE200CE3B96A00B67C0B /* Adhans */,
 				340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */,
-				8421DB5A0CD8024F00BC4D4D /* alaqsa.mp3 */,
-				84262E180CE1156D00359AA1 /* Location.tiff */,
-				84262E230CE1173F00359AA1 /* Prayer Times.tiff */,
-				8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */,
-				84262DF90CE1153E00359AA1 /* Alerts.tiff */,
-				8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */,
-				8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */,
 				840BA2BB0CD6C63800181205 /* menuBar.png */,
 				840BA2BD0CD6C64B00181205 /* menuBarHighlight.png */,
-				347E3F4E0CD681C80035D056 /* General.tiff */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				84031FA30CCDBEE8005DA599 /* Credits.rtf */,
-				84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -196,6 +189,29 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3450CE200CE3B96A00B67C0B /* Adhans */ = {
+			isa = PBXGroup;
+			children = (
+				8421DB5A0CD8024F00BC4D4D /* alaqsa.mp3 */,
+				8421DB5B0CD8024F00BC4D4D /* istanbul.mp3 */,
+				8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */,
+				8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */,
+			);
+			name = Adhans;
+			sourceTree = "<group>";
+		};
+		3450CE210CE3B97B00B67C0B /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */,
+				84262E180CE1156D00359AA1 /* Location.tiff */,
+				84262E230CE1173F00359AA1 /* Prayer Times.tiff */,
+				84262DF90CE1153E00359AA1 /* Alerts.tiff */,
+				347E3F4E0CD681C80035D056 /* General.tiff */,
+			);
+			name = Icons;
 			sourceTree = "<group>";
 		};
 		34B5CC440CD6A68600CF5D14 /* UI */ = {
