@@ -71,6 +71,13 @@ static AppController *sharedAppController = nil;
 	
 	
 	[self checkForUpdate:YES]; //check for new version
+	
+
+	if(firstRun) {
+		//open welcome window
+		[welcomeWindow orderFrontRegardless];
+	}
+	
 }
 
 
@@ -81,8 +88,7 @@ static AppController *sharedAppController = nil;
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
 	[menuBar retain];
 	
-	//[menuBar setTitle:NSLocalizedString(@"☪" ,@"")];
-	[menuBar setTitle:NSLocalizedString(@"اGuidance" ,@"")];
+	[menuBar setTitle:NSLocalizedString(@"☪" ,@"")];
 	[menuBar setHighlightMode:YES];
 	[menuBar setMenu:appMenu];
 	
@@ -176,6 +182,11 @@ static AppController *sharedAppController = nil;
 		//reset current day
 		[prayerTimeDate release];
 		prayerTimeDate = [[NSCalendarDate calendarDate] retain];
+		
+		//and if set, check for updates
+		if(checkForUpdates) {
+			[self checkForUpdate:YES];
+		}
 	}
 	
 	
@@ -324,10 +335,12 @@ static AppController *sharedAppController = nil;
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	
+	/*
 	NSLog(@"Latitude: %f", [userDefaults floatForKey:@"Latitude"]);
 	NSLog(@"Longitude: %f", [userDefaults floatForKey:@"Longitude"]);
 	NSLog(@"AsrMethod: %d", [userDefaults integerForKey:@"AsrMethod"]);
 	NSLog(@"IshaMethod: %d", [userDefaults integerForKey:@"IshaMethod"]);
+	*/
 	
 	
 	if ([userDefaults boolForKey:@"EnableSound"])
@@ -350,6 +363,7 @@ static AppController *sharedAppController = nil;
 		[ishaPrayer setPlayAudio:NO];
 	}
 	
+	/*
 	NSLog(@"EnableSound: %d", [userDefaults boolForKey:@"EnableSound"]);
 	
 	NSLog(@"PlayAdhanForFajr: %d", [userDefaults boolForKey:@"PlayAdhanForFajr"]);
@@ -358,14 +372,23 @@ static AppController *sharedAppController = nil;
 	NSLog(@"PlayAdhanForAsr: %d", [userDefaults boolForKey:@"PlayAdhanForAsr"]);
 	NSLog(@"PlayAdhanForMaghrab: %d", [userDefaults boolForKey:@"PlayAdhanForMaghrab"]);
 	NSLog(@"PlayAdhanForIsha: %d", [userDefaults boolForKey:@"PlayAdhanForIsha"]);
-	
+	*/
 		
 	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
 	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
+	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
+	firstRun = [userDefaults boolForKey:@"FirstRun"];
 	
+	/*
 	NSLog(@"EnableGrowl: %d", [userDefaults boolForKey:@"EnableGrowl"]);
 	NSLog(@"StickyGrowl: %d", [userDefaults boolForKey:@"StickyGrowl"]);
+	NSLog(@"CheckForUpdates: %d", [userDefaults boolForKey:@"CheckForUpdates"]);
+	NSLog(@"FirstRun: %d", [userDefaults boolForKey:@"FirstRun"]);
 	NSLog(@" ");
+	*/
+	
+	//now that app has been run, set FirstRun to false
+	[userDefaults setBool:NO forKey:@"FirstRun"];
 }
 
 - (IBAction)openPreferencesWindow:(id)sender
@@ -415,6 +438,51 @@ static AppController *sharedAppController = nil;
 	}
 }
 
+
+- (IBAction)firstRunSetup:(id)sender 
+{
+	[welcomeWindow close];
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
+	[userDefaults registerDefaults:appDefaults];
+	
+	NSString *city = [cityText stringValue];
+	NSString *state = [stateText stringValue];
+	NSString *country = [countryText stringValue];
+		
+	NSString *safeCity =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) city, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	NSString *safeState =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) state, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	NSString *safeCountry =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) country, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	
+	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?city=%@&state=%@&country=%@",safeCity,safeState,safeCountry];
+	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
+	
+	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
+	
+	[userDefaults setValue:city forKey:@"LocCity"];
+	[userDefaults setValue:state forKey:@"LocState"];
+	[userDefaults setValue:country forKey:@"LocCountry"];
+
+	
+	if (valid)
+	{
+		[userDefaults setFloat:[[coordDict valueForKey:@"latitude"] doubleValue] forKey:@"Latitude"];
+		[userDefaults setFloat:[[coordDict valueForKey:@"longitude"] doubleValue] forKey:@"Longitude"];	
+	}
+	else
+	{
+		NSAlert* alert = [NSAlert new];
+		[alert setMessageText: @"Unable to set location"];
+		[alert setInformativeText: @"Guidance was unable to set the location you provided. Please go to the preferences and sit a different location or enter in the latitude and longitude manually."];
+		[alert runModal];
+		
+		[userDefaults setFloat:0.00 forKey:@"Latitude"];
+		[userDefaults setFloat:0.00 forKey:@"Longitude"];	
+	}
+	
+	[self applyPrefs];
+}
 
 
 /*************************************

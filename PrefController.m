@@ -7,6 +7,19 @@
 	[self addView:locationPrefsView label:@"Location"];
 	[self addView:calculationsPrefsView label:@"Prayer Times"];
 	[self addView:soundPrefsView label:@"Alerts"];
+	[self addView:generalPrefsView label:@"General"];
+}
+
+- (IBAction)growl_toggle:(id)sender
+{
+    if ([toggleGrowl state] == NSOffState)
+	{
+		[stickyButton setEnabled:NO];
+	} 
+	else 
+	{
+		[stickyButton setEnabled:YES];	
+	}
 }
 
 - (IBAction)sound_toggle:(id)sender
@@ -108,23 +121,19 @@
 	
 	if (valid)
 	{
-		NSLog(@"Valid lookup!");
 		[latitudeText setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
 		[longitudeText setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
 		
-		[lookupProgress close];
+		[lookupStatus setStringValue:@"Your location has been set."];
+		[lookupIndicator stopAnimation:sender];
+		
+		NSString *cityState = [[[[cityText stringValue] stringByAppendingString:@", "] stringByAppendingString:[stateText stringValue]] stringByAppendingString:@" "];
+		[currentLocation setStringValue:[cityState stringByAppendingString:[countryText stringValue]]];
 	}
 	else
 	{
 		[lookupStatus setStringValue:@"Error: Unable to find location."];
-		[lookupProgress close];
-		NSLog(@"Invalid lookup...");
-		
-		//error message
-		NSAlert* alert = [NSAlert new];
-		[alert setInformativeText: @"Guidance was unable to lookup the location specified, please enter in a different location or set the latitude and longitude manually"];
-		[alert setMessageText:     @"Unable to find location"];
-		[alert runModal];
+		[lookupIndicator stopAnimation:sender];
 	}
 	
 	[self crossFadeView:locationPrefsView withView:locationPrefsView];
@@ -142,6 +151,8 @@
 	[super windowDidLoad];
 	[[self window] setDelegate:self];
 	previewState = NO;
+	
+	[currentLocation setStringValue:[[[[[cityText stringValue] stringByAppendingString:@", "] stringByAppendingString:[stateText stringValue]] stringByAppendingString:@" "] stringByAppendingString:[countryText stringValue]]];	
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -160,8 +171,42 @@
 
 - (IBAction)startatlogin_toggle:(id)sender
 {
+	int i = 0;
+	NSMutableArray* loginItems;
+
+    loginItems = (NSMutableArray*) CFPreferencesCopyValue((CFStringRef) @"AutoLaunchedApplicationDictionary", (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+    loginItems =  [[loginItems autorelease] mutableCopy];
+	
+	NSMutableDictionary *loginObject = [[NSMutableDictionary alloc] initWithCapacity:2];
+
+	if([toggleStartatlogin state] == NSOnState) {
+	
+		//add it to login items
+		[loginObject setObject:[[NSBundle mainBundle] bundlePath] forKey:@"Path"];
+		[loginItems addObject:loginObject];
+		
+	} else {
+		
+		//remove it from login items
+		 for (i=0;i<[loginItems count];i++)
+        {
+            if ([[[loginItems objectAtIndex:i] objectForKey:@"Path"] isEqualToString:[[NSBundle mainBundle] bundlePath]])
+                [loginItems removeObjectAtIndex:i];
+        }
+	}
+
+    CFPreferencesSetValue((CFStringRef) @"AutoLaunchedApplicationDictionary", loginItems, (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost); 
+	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+
+    [loginItems release];
 
 
+}
+
+
+- (IBAction)checkForUpdates:(id)sender
+{
+	[[AppController sharedController] checkForUpdate:NO];
 }
 
 

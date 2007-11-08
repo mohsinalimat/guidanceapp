@@ -36,5 +36,11 @@
 	<integer>0</integer>
 	<key>StickyGrowl</key>
 	<true/>
+	<key>StartAtLogin</key>
+	<false/>
+	<key>CheckForUpdates</key>
+	<true/>
+	<key>FirstRun</key>
+	<true/>
 </dict>
 </plist>

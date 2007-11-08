@@ -6,6 +6,8 @@
     IBOutlet NSView *calculationsPrefsView;
 	IBOutlet NSView *locationPrefsView;
     IBOutlet NSView *soundPrefsView;
+	IBOutlet NSView *generalPrefsView;
+	
     IBOutlet NSButton *previewButton;
     IBOutlet NSPopUpButton *selectSound;
     IBOutlet NSButton *playAsr;
@@ -16,6 +18,9 @@
     IBOutlet NSButton *playShuruq;
     IBOutlet NSButton *toggleSound;
 	IBOutlet NSButton *toggleManual;
+	IBOutlet NSButton *toggleStartatlogin;
+	IBOutlet NSButton *toggleGrowl;
+	IBOutlet NSButton *stickyButton;
 	IBOutlet NSTextField *latitudeText;
 	IBOutlet NSTextField *longitudeText;
 	IBOutlet NSTextField *cityText;
@@ -24,6 +29,7 @@
 	IBOutlet NSButton *lookupLocation;
 	IBOutlet NSWindow *lookupProgress;
 	IBOutlet NSTextField *lookupStatus;
+	IBOutlet NSTextField *currentLocation;
 	IBOutlet NSProgressIndicator *lookupIndicator;
 	BOOL previewState;
 	NSSound *sound;
@@ -32,9 +38,13 @@
 - (IBAction)preview_clicked:(id)sender;
 - (IBAction)sound_toggle:(id)sender;
 - (IBAction)manual_toggle:(id)sender;
+- (IBAction)growl_toggle:(id)sender;
 - (IBAction)lookup_location:(id)sender;
+- (IBAction)checkForUpdates:(id)sender;
 
 - (IBAction)showWindow:(id)sender;
 
 - (void)windowWillClose:(NSNotification *)notification;
+
+
 @end

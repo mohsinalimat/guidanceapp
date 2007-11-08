@@ -28,8 +28,13 @@
 	IBOutlet NSMenuItem *ishaItem;
 	
 	IBOutlet NSWindow *aboutGuidance;
+	IBOutlet NSWindow *welcomeWindow;
 	
 	IBOutlet NSTextField *guidanceVersion;
+	
+	IBOutlet NSTextField *cityText;
+	IBOutlet NSTextField *stateText;
+	IBOutlet NSTextField *countryText;
 	
 	/* PRAYER OBJECTS */
 	Prayer *fajrPrayer;
@@ -57,6 +62,8 @@
 	NSString *adhanFile;
 	BOOL displayGrowl;
 	BOOL stickyGrowl;
+	BOOL checkForUpdates;
+	BOOL firstRun;
 	NSString *currentVersion;
 }
 
@@ -65,6 +72,7 @@
 - (IBAction)donate:(id)sender;
 - (IBAction)website:(id)sender;
 - (IBAction)openAboutPanel:(id)sender;
+- (IBAction)firstRunSetup:(id)sender;
 
 - (void) handleTimer;
 
