@@ -16,10 +16,16 @@
     IBOutlet NSButton *playIsha;
     IBOutlet NSButton *playMaghrab;
     IBOutlet NSButton *playShuruq;
+	
     IBOutlet NSButton *toggleSound;
 	IBOutlet NSButton *toggleManual;
 	IBOutlet NSButton *toggleStartatlogin;
 	IBOutlet NSButton *toggleGrowl;
+	IBOutlet NSButton *toggleNextPrayer;
+	IBOutlet NSButton *toggleDisplayIcon;
+	IBOutlet NSPopUpButton *selectDisplayName;
+	IBOutlet NSPopUpButton *selectDisplayTime;
+	
 	IBOutlet NSButton *stickyButton;
 	IBOutlet NSTextField *latitudeText;
 	IBOutlet NSTextField *longitudeText;
@@ -39,6 +45,8 @@
 - (IBAction)sound_toggle:(id)sender;
 - (IBAction)manual_toggle:(id)sender;
 - (IBAction)growl_toggle:(id)sender;
+- (IBAction)displaynextprayer_toggle:(id)sender;
+
 - (IBAction)lookup_location:(id)sender;
 - (IBAction)checkForUpdates:(id)sender;
 

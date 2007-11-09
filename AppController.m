@@ -269,11 +269,7 @@ static AppController *sharedAppController = nil;
 	}
 	
 	
-	if(menuDisplayTime == 0) {
-	
-		menuBarTitle = @"";
-	
-	} else {
+	if(displayNextPrayer) {
 	
 		NSString *nextPrayerNameDisplay;
 		NSString *nextPrayerTimeDisplay;
@@ -281,16 +277,20 @@ static AppController *sharedAppController = nil;
 		
 		if(menuDisplayName == 0) {
 		
-			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1];
+			nextPrayerNameDisplay = [nextPrayer getName];	
 			
 		} else if(menuDisplayName == 1) {
 		
-			nextPrayerNameDisplay = [nextPrayer getName];
+			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1];
 		
 		}
 		
 	
-		if(menuDisplayTime == 1) {
+		if(menuDisplayTime == 0) {
+		
+			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"];
+		
+		} else if(menuDisplayTime == 1) {
 		
 			int hourCount,minuteCount,secondsCount;
 			
@@ -310,16 +310,18 @@ static AppController *sharedAppController = nil;
 			}
 			
 			nextPrayerTimeDisplay = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
-		
-		} else if(menuDisplayTime == 2) {
-			
-			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"];
 			
 		} 
 		
 		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
 		
+	} else {
+	
+			menuBarTitle = @"";
+	
 	}
+	
+
 	
 	
 	//if its time to pray change the menu bar title to "prayer name" time for that minute
@@ -411,6 +413,7 @@ static AppController *sharedAppController = nil;
 	menuDisplayTime = [userDefaults integerForKey:@"MenuDisplayTime"];
 	menuDisplayName = [userDefaults integerForKey:@"MenuDisplayName"];
 	displayIcon = [userDefaults boolForKey:@"DisplayIcon"];
+	displayNextPrayer = [userDefaults boolForKey:@"DisplayNextPrayer"];
 		
 	//now that app has been run, set FirstRun to false
 	[userDefaults setBool:NO forKey:@"FirstRun"];

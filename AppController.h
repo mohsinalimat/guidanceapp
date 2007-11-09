@@ -69,6 +69,7 @@
 	int menuDisplayTime;
 	int menuDisplayName;
 	BOOL displayIcon;
+	BOOL displayNextPrayer;
 }
 
 - (IBAction)doNothing:(id)sender; 

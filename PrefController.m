@@ -22,6 +22,23 @@
 	}
 }
 
+- (IBAction)displaynextprayer_toggle:(id)sender
+{
+    if ([toggleNextPrayer state] == NSOffState)
+	{
+		[toggleDisplayIcon setState:1];
+		[toggleDisplayIcon setEnabled:NO];
+		[selectDisplayName setEnabled:NO];
+		[selectDisplayTime setEnabled:NO];
+	} 
+	else 
+	{
+		[toggleDisplayIcon setEnabled:YES];
+		[selectDisplayName setEnabled:YES];
+		[selectDisplayTime setEnabled:YES];
+	}
+}
+
 - (IBAction)sound_toggle:(id)sender
 {
     if ([toggleSound state] == NSOffState)
@@ -144,6 +161,8 @@
 	[super showWindow:sender];
 	[self sound_toggle:nil];
 	[self manual_toggle:nil];
+	[self displaynextprayer_toggle:nil];
+	[self growl_toggle:nil];
 }
 
 - (void)windowDidLoad
@@ -165,6 +184,10 @@
 	
 	[userDefaults setFloat:[latitudeText floatValue] forKey:@"Latitude"];
 	[userDefaults setFloat:[longitudeText floatValue] forKey:@"Longitude"];
+	
+	if ([toggleNextPrayer state] == NSOffState) {
+		[userDefaults setBool:YES forKey:@"DisplayIcon"];
+	}
 
 	[[AppController sharedController] applyPrefs];
 }
