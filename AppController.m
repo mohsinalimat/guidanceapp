@@ -88,12 +88,13 @@ static AppController *sharedAppController = nil;
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
 	[menuBar retain];
 	
-	[menuBar setTitle:NSLocalizedString(@"☪" ,@"")];
 	[menuBar setHighlightMode:YES];
 	[menuBar setMenu:appMenu];
 	
-	//[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
-	//[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
+	if(displayIcon) {
+		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
+		[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
+	}
 }
 
 
@@ -201,8 +202,8 @@ static AppController *sharedAppController = nil;
 	BOOL display;
 	NSString *name;
 	NSString *time;
-	
 	int i;
+	
 	for (i=0; i<6; i++)
 	{
 		display = YES;
@@ -218,9 +219,7 @@ static AppController *sharedAppController = nil;
 			nextPrayerSet = YES;
 		}
 		
-		if ([prayerTime minuteOfHour] != [currentTime minuteOfHour]) display = NO;
-		if ([prayerTime hourOfDay] != [currentTime hourOfDay]) display = NO;
-		
+		if (([prayerTime minuteOfHour] != [currentTime minuteOfHour]) || ([prayerTime hourOfDay] != [currentTime hourOfDay])) display = NO;
 		
 		if (display)
 		{
@@ -232,7 +231,7 @@ static AppController *sharedAppController = nil;
 			//display growl
 			if(displayGrowl) 
 			{
-				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : adhanFile];
+				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time for "] stringByAppendingString:name] : stickyGrowl : adhanFile];
 			}
 			
 			//play audio
@@ -244,48 +243,94 @@ static AppController *sharedAppController = nil;
 	}
 	
 	
-	NSString *nextPrayerLetter;
-	int hourCount,minuteCount,secondsCount;
 	
 	if(nextPrayerSet == NO) {
-		nextPrayerLetter = @"F";
-		
+	
 		//calculate the time for tomorrow's fajr prayer
 		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+	
+		[nextPrayer setName:@"Fajr"];
 		
-		//get time until tomorrows fajr prayer
-		[[[todaysPrayerTimes getFajrTime] 
-			dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0] 
-			years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
-			sinceDate:[NSCalendarDate calendarDate]];
-		
+		[nextPrayer setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+	}
+	
+	
+	NSString *menuBarTitle;
+	
+	
+	/* SET MENU BAR DISPLAY */
+	
+	if(displayIcon) {
+		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
+		[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
 	} else {
-		//calculate time until next prayer
-		[[nextPrayer getTime] 
-			years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
-			sinceDate:[NSCalendarDate calendarDate]];
+		[menuBar setImage: nil];
+		[menuBar setAlternateImage: nil];
+	}
+	
+	
+	if(menuDisplayTime == 0) {
+	
+		menuBarTitle = @"";
+	
+	} else {
+	
+		NSString *nextPrayerNameDisplay;
+		NSString *nextPrayerTimeDisplay;
+		
+		
+		if(menuDisplayName == 0) {
+		
+			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1];
 			
-		nextPrayerLetter = [[nextPrayer getName] substringToIndex:1];
-	}
-	
-	//round the seconds up
-	if(secondsCount > 0) {
-		if(minuteCount == 59) {
-			hourCount++;
-			minuteCount = 0;
-		} else {
-			minuteCount++;
+		} else if(menuDisplayName == 1) {
+		
+			nextPrayerNameDisplay = [nextPrayer getName];
+		
 		}
+		
+	
+		if(menuDisplayTime == 1) {
+		
+			int hourCount,minuteCount,secondsCount;
+			
+			//calculate time until next prayer
+			[[nextPrayer getTime] 
+				years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
+				sinceDate:[NSCalendarDate calendarDate]];
+			
+			//round the seconds up
+			if(secondsCount > 0) {
+				if(minuteCount == 59) {
+					hourCount++;
+					minuteCount = 0;
+				} else {
+					minuteCount++;
+				}
+			}
+			
+			nextPrayerTimeDisplay = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
+		
+		} else if(menuDisplayTime == 2) {
+			
+			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"];
+			
+		} 
+		
+		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
+		
 	}
 	
-	NSString *nextPrayerCount = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
 	
-	[menuBar setTitle:NSLocalizedString([@"☪ " stringByAppendingString:[nextPrayerLetter stringByAppendingString:nextPrayerCount]],@"")];
-
 	//if its time to pray change the menu bar title to "prayer name" time for that minute
 	if(currentlyPrayerTime) {
-		[menuBar setTitle:NSLocalizedString([name stringByAppendingString:@" time"],@"")];
+		menuBarTitle = [name stringByAppendingString:@" time"];
 	}
+	
+	
+	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
+	
+	
 	
 }
 
@@ -363,6 +408,9 @@ static AppController *sharedAppController = nil;
 	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
 	firstRun = [userDefaults boolForKey:@"FirstRun"];
 	
+	menuDisplayTime = [userDefaults integerForKey:@"MenuDisplayTime"];
+	menuDisplayName = [userDefaults integerForKey:@"MenuDisplayName"];
+	displayIcon = [userDefaults boolForKey:@"DisplayIcon"];
 		
 	//now that app has been run, set FirstRun to false
 	[userDefaults setBool:NO forKey:@"FirstRun"];

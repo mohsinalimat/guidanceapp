@@ -66,6 +66,9 @@
 	BOOL checkForUpdates;
 	BOOL firstRun;
 	NSString *currentVersion;
+	int menuDisplayTime;
+	int menuDisplayName;
+	BOOL displayIcon;
 }
 
 - (IBAction)doNothing:(id)sender; 

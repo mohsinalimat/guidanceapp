@@ -42,5 +42,11 @@
 	<true/>
 	<key>FirstRun</key>
 	<true/>
+	<key>DisplayIcon</key>
+	<true/>
+	<key>MenuDisplayTime</key>
+	<integer>0</integer>
+	<key>MenuDisplayName</key>
+	<integer>0</integer>
 </dict>
 </plist>
