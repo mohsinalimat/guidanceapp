@@ -11,6 +11,7 @@
 #import "Prayer.h"
 #import "PrayerTimes.h"
 #import "PrefController.h"
+#import "AboutController.h"
 
 @interface AppController : NSObject
 {	

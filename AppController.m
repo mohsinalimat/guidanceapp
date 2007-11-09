@@ -312,6 +312,8 @@ static AppController *sharedAppController = nil;
 - (IBAction)openAboutPanel:(id)sender
 {
 	[aboutGuidance orderFrontRegardless];
+	[[[AboutController sharedAboutWindowController] window] orderFrontRegardless];
+	//[[AboutController sharedAboutWindowController] setVersionText:currentVersion];
 }
 
 - (void) loadDefaults

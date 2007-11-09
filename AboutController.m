@@ -1,0 +1,68 @@
+//
+//  AboutController.m
+//  Guidance
+//
+//  Created by Matthew Crenshaw on 11/8/07.
+//  Copyright 2007 BatoulApps. All rights reserved.
+//
+
+#import "AboutController.h"
+
+static AboutController *_sharedAboutWindowController = nil;
+
+@implementation AboutController
+
++ (AboutController *)sharedAboutWindowController
+{
+	if (!_sharedAboutWindowController) {
+		_sharedAboutWindowController = [[self alloc] initWithWindowNibName:[self nibName]];
+	}
+	return _sharedAboutWindowController;
+}
+
++ (NSString *)nibName
+{
+   return @"About";
+}
+
+- (id)initWithWindow:(NSWindow *)window
+{
+	self = [super initWithWindow:window];
+	if (self) {
+		toggleCredits = NO;
+	}
+	
+	return self;
+	(void)window;
+}
+
+- (void)windowDidLoad
+{
+	[creditsBox setHidden:YES];
+}
+
+- (void)setVersionText:(NSString *)version
+{
+	[versionText setStringValue:[@"v" stringByAppendingString:version]];
+}
+
+- (IBAction)toggleCredits:(NSButton *)sender
+{
+	toggleCredits = !toggleCredits;
+	
+	if (toggleCredits)
+	{
+		[creditsBox setHidden:NO];
+	}
+	else
+	{
+		[creditsBox setHidden:YES];
+	}
+}
+
+- (IBAction)goDonate:(NSButton *)sender
+{
+
+}
+
+@end
