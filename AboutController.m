@@ -43,7 +43,7 @@ static AboutController *_sharedAboutWindowController = nil;
 
 - (void)setVersionText:(NSString *)version
 {
-	[versionText setStringValue:[@"v" stringByAppendingString:version]];
+	[guidanceVersion setStringValue:[@"version " stringByAppendingString:version]];
 }
 
 - (IBAction)toggleCredits:(NSButton *)sender
@@ -62,7 +62,7 @@ static AboutController *_sharedAboutWindowController = nil;
 
 - (IBAction)goDonate:(NSButton *)sender
 {
-
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/donate/"]]; //go to the donate page
 }
 
 @end

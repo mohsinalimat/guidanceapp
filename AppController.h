@@ -28,10 +28,8 @@
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
 	
-	IBOutlet NSWindow *aboutGuidance;
 	IBOutlet NSWindow *welcomeWindow;
 	
-	IBOutlet NSTextField *guidanceVersion;
 	
 	IBOutlet NSTextField *cityText;
 	IBOutlet NSTextField *stateText;
@@ -75,8 +73,6 @@
 - (IBAction)doNothing:(id)sender; 
 - (IBAction)selectPrayer:(id)sender;
 - (IBAction)donate:(id)sender;
-- (IBAction)website:(id)sender;
-- (IBAction)openAboutPanel:(id)sender;
 - (IBAction)firstRunSetup:(id)sender;
 
 - (void) handleTimer;

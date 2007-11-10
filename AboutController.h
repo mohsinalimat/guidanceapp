@@ -13,7 +13,7 @@
 	BOOL toggleCredits;
 	
 	IBOutlet NSScrollView *creditsBox;
-	IBOutlet NSTextField *versionText;
+	IBOutlet NSTextField *guidanceVersion;
 }
 
 + (AboutController *)sharedAboutWindowController;

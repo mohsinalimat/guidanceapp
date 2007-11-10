@@ -38,8 +38,6 @@ static AppController *sharedAppController = nil;
 	/****************************/
 	
 	currentVersion = @"0.2";
-		
-	[guidanceVersion setStringValue:[@"Version " stringByAppendingString:currentVersion]]; //set application version
 
 	[self loadDefaults]; //load default preferences
 
@@ -348,19 +346,14 @@ static AppController *sharedAppController = nil;
 
 - (IBAction)donate:(id)sender 
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://ameir.com/ameir/donate/"]]; //go to donate page
-}
-
-- (IBAction)website:(id)sender 
-{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/"]]; //go to Guidance website
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/donate/"]]; //go to the donate page
 }
 
 - (IBAction)openAboutPanel:(id)sender
 {
-	[aboutGuidance orderFrontRegardless];
+	[[AboutController sharedAboutWindowController] showWindow:nil];
 	[[[AboutController sharedAboutWindowController] window] orderFrontRegardless];
-	//[[AboutController sharedAboutWindowController] setVersionText:currentVersion];
+	[[AboutController sharedAboutWindowController] setVersionText:currentVersion];
 }
 
 - (void) loadDefaults
