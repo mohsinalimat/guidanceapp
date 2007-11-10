@@ -4,10 +4,10 @@
 
 - (void)setupToolbar
 {
+	[self addView:generalPrefsView label:@"General"];
 	[self addView:locationPrefsView label:@"Location"];
 	[self addView:calculationsPrefsView label:@"Prayer Times"];
 	[self addView:soundPrefsView label:@"Alerts"];
-	[self addView:generalPrefsView label:@"General"];
 }
 
 - (IBAction)growl_toggle:(id)sender
