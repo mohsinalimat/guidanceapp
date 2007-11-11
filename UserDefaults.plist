@@ -30,8 +30,10 @@
 	<true/>
 	<key>PlayAdhanForMaghrab</key>
 	<true/>
-	<key>PlayAdhanForShuruq</key>
+	<key>ShuruqReminder</key>
 	<false/>
+	<key>MinutesBeforeShuruq</key>
+	<integer>30</integer>
 	<key>Sound</key>
 	<integer>0</integer>
 	<key>StickyGrowl</key>

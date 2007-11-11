@@ -15,7 +15,6 @@
     IBOutlet NSButton *playFajr;
     IBOutlet NSButton *playIsha;
     IBOutlet NSButton *playMaghrab;
-    IBOutlet NSButton *playShuruq;
 	
     IBOutlet NSButton *toggleSound;
 	IBOutlet NSButton *toggleManual;

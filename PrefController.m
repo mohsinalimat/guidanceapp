@@ -50,7 +50,6 @@
 		[playFajr setEnabled:NO];
 		[playIsha setEnabled:NO];
 		[playMaghrab setEnabled:NO];
-		[playShuruq setEnabled:NO];
 	}
 	else
 	{
@@ -61,7 +60,6 @@
 		[playFajr setEnabled:YES];
 		[playIsha setEnabled:YES];
 		[playMaghrab setEnabled:YES];
-		[playShuruq setEnabled:YES];
 	}
 }
 

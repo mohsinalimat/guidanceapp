@@ -27,13 +27,15 @@
 	IBOutlet NSMenuItem *asrItem;
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
+	NSDictionary *menuItems;
 	
-	IBOutlet NSWindow *welcomeWindow;
-	
+	IBOutlet NSWindow *welcomeWindow;	
 	
 	IBOutlet NSTextField *cityText;
 	IBOutlet NSTextField *stateText;
 	IBOutlet NSTextField *countryText;
+	
+	
 	
 	/* PRAYER OBJECTS */
 	Prayer *fajrPrayer;
@@ -44,6 +46,7 @@
 	Prayer *ishaPrayer;
 	
 	Prayer *nextPrayer;
+	Prayer *currentPrayer;
 	
 	PrayerTimes *todaysPrayerTimes;
 	
@@ -68,10 +71,12 @@
 	int menuDisplayName;
 	BOOL displayIcon;
 	BOOL displayNextPrayer;
+	BOOL shuruqReminder;
+	int minutesBeforeShuruq;
 }
 
 - (IBAction)doNothing:(id)sender; 
-- (IBAction)selectPrayer:(id)sender;
+- (IBAction)stopAdhan:(id)sender;
 - (IBAction)donate:(id)sender;
 - (IBAction)firstRunSetup:(id)sender;
 

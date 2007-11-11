@@ -33,6 +33,8 @@ static AppController *sharedAppController = nil;
 	
 	[self initPrayers]; //create each prayer objects and set names 
 
+
+
 	/****************************/
 	/*** APPLICATION SETTINGS ***/
 	/****************************/
@@ -68,12 +70,14 @@ static AppController *sharedAppController = nil;
 	
 	
 	
-	[self checkForUpdate:YES]; //check for new version
+	/*********************/	
+	/*** STARTUP TASKS ***/
+	/*********************/
 	
+	[self checkForUpdate:YES]; //check for new version	
 
 	if(firstRun) {
-		//open welcome window
-		[welcomeWindow orderFrontRegardless];
+		[welcomeWindow orderFrontRegardless]; //open welcome window
 	}
 	
 }
@@ -93,6 +97,16 @@ static AppController *sharedAppController = nil;
 		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
 		[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
 	}
+	
+		
+	menuItems = [[NSDictionary dictionaryWithObjectsAndKeys:
+                   fajrItem,	@"Fajr", 
+                   shuruqItem,	@"Shuruq", 
+                   dhuhurItem,	@"Dhuhur",
+				   asrItem,		@"Asr",
+				   maghribItem,	@"Maghrib",
+				   ishaItem,	@"Isha",
+                   nil] retain];
 }
 
 
@@ -105,10 +119,23 @@ static AppController *sharedAppController = nil;
 	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
 	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")];
 	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")];
-	
-	//[asrItem setImage: [NSImage imageNamed: @"speaker"]];
-	//[asrItem setTitle:NSLocalizedString([@"♫ " stringByAppendingString:[asrItem title]],@"")];
+
+
+
+	/*
+	//[fajrItem setImage: [NSImage imageNamed: @"typing"]];
+	//[shuruqItem setImage: [NSImage imageNamed: @"sound"]];
+
+	[fajrItem setImage: [NSImage imageNamed: @"status_notTime"]];
+	[shuruqItem setImage: [NSImage imageNamed: @"status_notTime"]];
+	[dhuhurItem setImage: [NSImage imageNamed: @"status_notTime"]];
+	[asrItem setImage: [NSImage imageNamed: @"status_notTime"]];
+	[maghribItem setImage: [NSImage imageNamed: @"status_notTime"]];
+	[ishaItem setImage: [NSImage imageNamed: @"status_notTime"]];
+	[asrItem setTitle:NSLocalizedString([@"♫ " stringByAppendingString:[asrItem title]],@"")];
 	//[asrItem setAlternateImage: [NSImage imageNamed: @"altspeaker"]];
+	*/
+
 }
 
 - (void) initPrayers
@@ -168,9 +195,6 @@ static AppController *sharedAppController = nil;
 	lastCheckTime = [[NSCalendarDate calendarDate] retain];
 	
 	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
-	int currentHour = [currentTime hourOfDay];
-	int currentMinute = [currentTime minuteOfHour];
-	int currentTimeDecimal = (currentHour*60) + currentMinute;
 	
 	
 	//if new day, update prayer times
@@ -193,50 +217,70 @@ static AppController *sharedAppController = nil;
 	BOOL currentlyPrayerTime = NO;
 	
 	NSCalendarDate *prayerTime;
-	int prayerHour, prayerMinute;
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
 	Prayer *prayer;
 	BOOL display;
-	NSString *name;
-	NSString *time;
-	int i;
+	NSString *name, *time;
+	int i, secondsTill, minutesTill, minuteSecondsTill;
 	
 	for (i=0; i<6; i++)
 	{
-		display = YES;
+		display = NO;
 		prayer = prayers[i];
 		prayerTime = [prayer getTime];
-		prayerHour = [prayerTime hourOfDay];
-		prayerMinute = [prayerTime minuteOfHour];
-		int prayerTimeDecimal = (prayerHour*60) + prayerMinute;
 
-		if(prayerTimeDecimal > currentTimeDecimal && nextPrayerSet == NO)
+		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
+		
+		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:&minutesTill seconds:&minuteSecondsTill sinceDate:[NSCalendarDate calendarDate]];
+		
+		if(minuteSecondsTill > 0) minutesTill++;
+		
+		NSLog(@"%d minutes till %@",minutesTill,[prayer getName]);
+		NSLog(@"remind %d min before shuruq",minutesBeforeShuruq);
+		
+		//Get next prayer
+		if(secondsTill > 0 && nextPrayerSet == NO)
 		{
 			nextPrayer = prayer;
 			nextPrayerSet = YES;
+			[[menuItems objectForKey:[prayer getName]] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+		} else {
+			[[menuItems objectForKey:[prayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
 		}
 		
-		if (([prayerTime minuteOfHour] != [currentTime minuteOfHour]) || ([prayerTime hourOfDay] != [currentTime hourOfDay])) display = NO;
 		
-		if (display)
+		//get current prayer
+		if (secondsTill >= -58 && secondsTill <= 0) display = YES;
+		
+		if (display && ![[prayer getName] isEqualTo:@"Shuruq"])
 		{
+			currentPrayer = prayer;
 			currentlyPrayerTime = YES;
 			name = [prayer getName];
 			time = [prayer getFormattedTime];
 			
-			
 			//display growl
 			if(displayGrowl) 
 			{
-				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time for "] stringByAppendingString:name] : stickyGrowl : adhanFile];
+				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : adhanFile];
 			}
 			
 			//play audio
 			if([prayer getPlayAudio])
 			{	
 				[[NSSound soundNamed:adhanFile] play];
+				[[menuItems objectForKey:name] setImage: [NSImage imageNamed: @"status_sound"]];
+				[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];
 			}
+		} 
+		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill))
+		{
+			currentPrayer = fajrPrayer;
+			[[NSSound soundNamed:adhanFile] play];
+			[MyGrowler doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : adhanFile];
+			[[menuItems objectForKey:@"Fajr"] setImage: [NSImage imageNamed: @"status_sound"]];
+			[[menuItems objectForKey:@"Fajr"] setAction:@selector(stopAdhan:)];
 		}
 	}
 	
@@ -255,7 +299,7 @@ static AppController *sharedAppController = nil;
 	
 	NSString *menuBarTitle;
 	
-	
+		
 	/* SET MENU BAR DISPLAY */
 	
 	if(displayIcon) {
@@ -337,12 +381,18 @@ static AppController *sharedAppController = nil;
 - (IBAction)doNothing:(id)sender 
 {
 	//absolutely nothing
+	[MyGrowler doGrowl : @"test" : @"im doing nothin" : NO : nil];
 }
 
-- (IBAction)selectPrayer:(id)sender 
-{	
-	[[NSSound soundNamed:adhanFile] stop];
+- (IBAction)stopAdhan:(id)sender 
+{
+	NSSound *adhanToStop = [NSSound soundNamed:adhanFile];
+	[adhanToStop stop];
+	
+	[[menuItems objectForKey:[currentPrayer getName]] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+	[[menuItems objectForKey:[currentPrayer getName]] setAction:@selector(doNothing:)];
 }
+
 
 - (IBAction)donate:(id)sender 
 {
@@ -381,20 +431,22 @@ static AppController *sharedAppController = nil;
 	{
 		//set adhan prefs
 		[fajrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForFajr"]];
-		[shuruqPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForShuruq"]];
 		[dhuhurPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForDhuhur"]];
 		[asrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForAsr"]];
 		[maghribPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForMaghrab"]];
 		[ishaPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForIsha"]];
+		shuruqReminder = [userDefaults boolForKey:@"ShuruqReminder"];
+		minutesBeforeShuruq = [userDefaults integerForKey:@"MinutesBeforeShuruq"];
 	}
 	else
 	{
 		[fajrPrayer setPlayAudio:NO];
-		[shuruqPrayer setPlayAudio:NO];
 		[dhuhurPrayer setPlayAudio:NO];
 		[asrPrayer setPlayAudio:NO];
 		[maghribPrayer setPlayAudio:NO];
 		[ishaPrayer setPlayAudio:NO];
+		shuruqReminder = NO;
+		minutesBeforeShuruq = 0;
 	}
 	
 		
@@ -422,7 +474,6 @@ static AppController *sharedAppController = nil;
 	NSLog(@"EnableSound: %d", [userDefaults boolForKey:@"EnableSound"]);
 	
 	NSLog(@"PlayAdhanForFajr: %d", [userDefaults boolForKey:@"PlayAdhanForFajr"]);
-	NSLog(@"PlayAdhanForShuruq: %d", [userDefaults boolForKey:@"PlayAdhanForShuruq"]);
 	NSLog(@"PlayAdhanForDhuhur: %d", [userDefaults boolForKey:@"PlayAdhanForDhuhur"]);
 	NSLog(@"PlayAdhanForAsr: %d", [userDefaults boolForKey:@"PlayAdhanForAsr"]);
 	NSLog(@"PlayAdhanForMaghrab: %d", [userDefaults boolForKey:@"PlayAdhanForMaghrab"]);
