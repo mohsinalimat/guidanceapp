@@ -22,6 +22,7 @@
 	IBOutlet NSButton *toggleGrowl;
 	IBOutlet NSButton *toggleNextPrayer;
 	IBOutlet NSButton *toggleDisplayIcon;
+	IBOutlet NSButton *toggleShuruq;		
 	IBOutlet NSPopUpButton *selectDisplayName;
 	IBOutlet NSPopUpButton *selectDisplayTime;
 	
@@ -35,6 +36,8 @@
 	IBOutlet NSWindow *lookupProgress;
 	IBOutlet NSTextField *lookupStatus;
 	IBOutlet NSTextField *currentLocation;
+	IBOutlet NSTextField *minutesBeforeShuruq;
+	IBOutlet NSTextField *minutesBeforeShuruqText;	
 	IBOutlet NSProgressIndicator *lookupIndicator;
 	BOOL previewState;
 	NSSound *sound;
@@ -45,6 +48,7 @@
 - (IBAction)manual_toggle:(id)sender;
 - (IBAction)growl_toggle:(id)sender;
 - (IBAction)displaynextprayer_toggle:(id)sender;
+- (IBAction)shuruq_toggle:(id)sender;
 
 - (IBAction)lookup_location:(id)sender;
 - (IBAction)checkForUpdates:(id)sender;

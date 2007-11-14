@@ -39,7 +39,7 @@ static AppController *sharedAppController = nil;
 	/*** APPLICATION SETTINGS ***/
 	/****************************/
 	
-	currentVersion = @"0.2";
+	currentVersion = @"0.1a";
 
 	[self loadDefaults]; //load default preferences
 
@@ -147,6 +147,18 @@ static AppController *sharedAppController = nil;
 	asrPrayer = [[Prayer alloc] init];
 	maghribPrayer = [[Prayer alloc] init];
 	ishaPrayer = [[Prayer alloc] init];
+	tomorrowFajrPrayer = [[Prayer alloc] init];
+	
+	//init prayers array
+	
+	prayersArray = [[NSDictionary dictionaryWithObjectsAndKeys:
+				fajrPrayer,		@"0", 
+				shuruqPrayer,	@"1", 
+				dhuhurPrayer,	@"2",
+				asrPrayer,		@"3",
+				maghribPrayer,	@"4",
+				ishaPrayer,		@"5",
+				nil] retain];
 	
 	//set names
 	[fajrPrayer setName: @"Fajr"];
@@ -155,6 +167,7 @@ static AppController *sharedAppController = nil;
 	[asrPrayer setName: @"Asr"];
 	[maghribPrayer setName: @"Maghrib"];
 	[ishaPrayer setName: @"Isha"];
+	[tomorrowFajrPrayer setName: @"Fajr"];
 }
 
 
@@ -220,14 +233,12 @@ static AppController *sharedAppController = nil;
 	
 	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
 	Prayer *prayer;
-	BOOL display;
-	NSString *name, *time;
+	NSString *name, *time, *stillTimeToPray;
 	int i, secondsTill, minutesTill, minuteSecondsTill;
 	
 	for (i=0; i<6; i++)
 	{
-		display = NO;
-		prayer = prayers[i];
+		prayer = [prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]];
 		prayerTime = [prayer getTime];
 
 		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
@@ -236,24 +247,37 @@ static AppController *sharedAppController = nil;
 		
 		if(minuteSecondsTill > 0) minutesTill++;
 		
-		NSLog(@"%d minutes till %@",minutesTill,[prayer getName]);
-		NSLog(@"remind %d min before shuruq",minutesBeforeShuruq);
+		[[menuItems objectForKey:[prayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
+		
+		
+		/*
+		NSLog(@"%@ (array val of %@ for %d) in %d seconds",[prayer getName], [prayers[i] getName], i, secondsTill);
+		*/
 		
 		//Get next prayer
 		if(secondsTill > 0 && nextPrayerSet == NO)
 		{
 			nextPrayer = prayer;
 			nextPrayerSet = YES;
-			[[menuItems objectForKey:[prayer getName]] setImage: [NSImage imageNamed: @"status_prayerTime"]];
-		} else {
-			[[menuItems objectForKey:[prayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
+			
+			/*
+			NSLog(@"the next prayer is %@",[prayers[i] getName]);
+			*/
+			
+			if(i == 0) {
+				stillTimeToPray = [prayers[5] getName];
+			} else if(i == 1) {
+				stillTimeToPray = [prayers[0] getName];
+			} else if(i == 2) {
+				stillTimeToPray = @"";
+			} else {
+				stillTimeToPray = [prayers[i-1] getName];
+			}
 		}
 		
 		
-		//get current prayer
-		if (secondsTill >= -58 && secondsTill <= 0) display = YES;
-		
-		if (display && ![[prayer getName] isEqualTo:@"Shuruq"])
+		//check if its currently prayer time
+		if ((secondsTill >= -58 && secondsTill <= 0) && ![[prayer getName] isEqualTo:@"Shuruq"])
 		{
 			currentPrayer = prayer;
 			currentlyPrayerTime = YES;
@@ -274,33 +298,38 @@ static AppController *sharedAppController = nil;
 				[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];
 			}
 		} 
-		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill))
+		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"]))
 		{
-			currentPrayer = fajrPrayer;
+			currentPrayer = prayer;
 			[[NSSound soundNamed:adhanFile] play];
 			[MyGrowler doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : adhanFile];
-			[[menuItems objectForKey:@"Fajr"] setImage: [NSImage imageNamed: @"status_sound"]];
-			[[menuItems objectForKey:@"Fajr"] setAction:@selector(stopAdhan:)];
+			[[menuItems objectForKey:@"Shuruq"] setImage: [NSImage imageNamed: @"status_sound"]];
+			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
 		}
 	}
-	
 	
 	
 	if(nextPrayerSet == NO) {
 	
 		//calculate the time for tomorrow's fajr prayer
 		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+		[tomorrowFajrPrayer setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
 	
-		[nextPrayer setName:@"Fajr"];
-		
-		[nextPrayer setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+		nextPrayer = tomorrowFajrPrayer;
+		stillTimeToPray = @"Isha";
 	}
 	
 	
-	NSString *menuBarTitle;
-	
+	//set green dot status that shows its still to pray that prayer
+	if(![stillTimeToPray isEqualTo:@""]) {
+		if(![[[[menuItems objectForKey:stillTimeToPray] image] name] isEqualTo:@"status_sound"]) {
+			[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+		}
+	}
 		
 	/* SET MENU BAR DISPLAY */
+	
+	NSString *menuBarTitle;
 	
 	if(displayIcon) {
 		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
@@ -319,18 +348,18 @@ static AppController *sharedAppController = nil;
 		
 		if(menuDisplayName == 0) {
 		
-			nextPrayerNameDisplay = [nextPrayer getName];	
+			nextPrayerNameDisplay = [nextPrayer getName]; //display whole name
 			
 		} else if(menuDisplayName == 1) {
 		
-			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1];
+			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; //display abbreviation
 		
 		}
 		
 	
 		if(menuDisplayTime == 0) {
 		
-			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"];
+			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"]; //display next prayer time
 		
 		} else if(menuDisplayTime == 1) {
 		
@@ -351,7 +380,7 @@ static AppController *sharedAppController = nil;
 				}
 			}
 			
-			nextPrayerTimeDisplay = [NSString stringWithFormat:@" %d:%02d",hourCount,minuteCount];
+			nextPrayerTimeDisplay = [NSString stringWithFormat:@" -%d:%02d",hourCount,minuteCount];
 			
 		} 
 		
@@ -381,7 +410,7 @@ static AppController *sharedAppController = nil;
 - (IBAction)doNothing:(id)sender 
 {
 	//absolutely nothing
-	[MyGrowler doGrowl : @"test" : @"im doing nothin" : NO : nil];
+	//[MyGrowler doGrowl : @"test" : @"im doing nothin" : NO : nil];
 }
 
 - (IBAction)stopAdhan:(id)sender 
@@ -389,7 +418,11 @@ static AppController *sharedAppController = nil;
 	NSSound *adhanToStop = [NSSound soundNamed:adhanFile];
 	[adhanToStop stop];
 	
-	[[menuItems objectForKey:[currentPrayer getName]] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+	if([[currentPrayer getName] isEqualTo:@"Shuruq"]) {
+		[[menuItems objectForKey:[currentPrayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
+	} else {
+		[[menuItems objectForKey:[currentPrayer getName]] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+	}
 	[[menuItems objectForKey:[currentPrayer getName]] setAction:@selector(doNothing:)];
 }
 
@@ -397,6 +430,11 @@ static AppController *sharedAppController = nil;
 - (IBAction)donate:(id)sender 
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/donate/"]]; //go to the donate page
+}
+
+- (IBAction)getHelp:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/help/"]]; //go to the help page
 }
 
 - (IBAction)openAboutPanel:(id)sender

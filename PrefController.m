@@ -10,6 +10,19 @@
 	[self addView:soundPrefsView label:@"Alerts"];
 }
 
+- (IBAction)shuruq_toggle:(id)sender
+{
+    if ([toggleShuruq state] == NSOffState)
+	{
+		[minutesBeforeShuruq setEnabled:NO];
+	} 
+	else 
+	{
+		[minutesBeforeShuruq setEnabled:YES];	
+	}
+}
+
+
 - (IBAction)growl_toggle:(id)sender
 {
     if ([toggleGrowl state] == NSOffState)
@@ -50,6 +63,9 @@
 		[playFajr setEnabled:NO];
 		[playIsha setEnabled:NO];
 		[playMaghrab setEnabled:NO];
+		[minutesBeforeShuruq setEnabled:NO];
+		[toggleShuruq setEnabled:NO];
+		[minutesBeforeShuruqText setStringValue:@" minutes before"]; //set to grey text
 	}
 	else
 	{
@@ -60,6 +76,9 @@
 		[playFajr setEnabled:YES];
 		[playIsha setEnabled:YES];
 		[playMaghrab setEnabled:YES];
+		[minutesBeforeShuruq setEnabled:YES];
+		[toggleShuruq setEnabled:YES];
+		[minutesBeforeShuruqText setStringValue:@" minutes before"];
 	}
 }
 
@@ -161,6 +180,7 @@
 	[self manual_toggle:nil];
 	[self displaynextprayer_toggle:nil];
 	[self growl_toggle:nil];
+	[self shuruq_toggle:nil];
 }
 
 - (void)windowDidLoad
@@ -186,6 +206,8 @@
 	if ([toggleNextPrayer state] == NSOffState) {
 		[userDefaults setBool:YES forKey:@"DisplayIcon"];
 	}
+	
+	[userDefaults setInteger:[minutesBeforeShuruq intValue]forKey:@"MinutesBeforeShuruq"];
 
 	[[AppController sharedController] applyPrefs];
 }
@@ -229,7 +251,6 @@
 {
 	[[AppController sharedController] checkForUpdate:NO];
 }
-
 
 
 @end

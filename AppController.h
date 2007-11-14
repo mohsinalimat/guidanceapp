@@ -28,6 +28,7 @@
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
 	NSDictionary *menuItems;
+	NSDictionary *prayersArray;
 	
 	IBOutlet NSWindow *welcomeWindow;	
 	
@@ -44,6 +45,7 @@
 	Prayer *asrPrayer;
 	Prayer *maghribPrayer;
 	Prayer *ishaPrayer;
+	Prayer *tomorrowFajrPrayer;
 	
 	Prayer *nextPrayer;
 	Prayer *currentPrayer;
@@ -78,6 +80,7 @@
 - (IBAction)doNothing:(id)sender; 
 - (IBAction)stopAdhan:(id)sender;
 - (IBAction)donate:(id)sender;
+- (IBAction)getHelp:(id)sender;
 - (IBAction)firstRunSetup:(id)sender;
 
 - (void) handleTimer;
