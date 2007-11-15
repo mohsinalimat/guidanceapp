@@ -14,6 +14,7 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {
+
 	/**********************/
 	/*** CREATE OBJECTS ***/
 	/**********************/
@@ -65,7 +66,7 @@ static AppController *sharedAppController = nil;
 
 	nextPrayer = fajrPrayer; //initially set next prayer to fajr
 
-	[self checkPrayerTimes]; //initial prayer time check
+	[self checkPrayerTimes:YES]; //initial prayer time check
 			
 	//run timer to check for salah times		
 	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];		
@@ -180,27 +181,25 @@ static AppController *sharedAppController = nil;
 
 	if([[NSCalendarDate calendarDate] secondOfMinute] == 0)
 	{
-		[self checkPrayerTimes];
+		[self checkPrayerTimes:YES];
 	} else {
 		int seconds;
 		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
 		
 		if(seconds > 65 || seconds < 0) {
-			[self checkPrayerTimes];
+			[self checkPrayerTimes:YES];
 		}
 	}
 }
 
-- (void) checkPrayerTimes
+- (void) checkPrayerTimes: (BOOL)notify
 {
+	//update last time prayer times were checked
 	[lastCheckTime release];
 	lastCheckTime = [[NSCalendarDate calendarDate] retain];
 	
-	NSCalendarDate *currentTime = [NSCalendarDate calendarDate];
-	
-	
-	//if new day, update prayer times
-	if([currentTime dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
+	//if new day, update prayer times first
+	if([[NSCalendarDate calendarDate] dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
 		[self setPrayerTimes];
 		[self initPrayerItems];
 		
@@ -213,6 +212,7 @@ static AppController *sharedAppController = nil;
 			[self checkForUpdate:YES];
 		}
 	}
+	
 	
 	
 	BOOL nextPrayerSet = NO;
@@ -274,7 +274,8 @@ static AppController *sharedAppController = nil;
 			//play audio
 			if([prayer getPlayAudio])
 			{	
-				[[NSSound soundNamed:adhanFile] play];
+				if(![self isAdhanPlaying]) [adhan play];
+	
 				[[menuItems objectForKey:name] setImage: [NSImage imageNamed: @"status_sound"]];
 				[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];
 			}
@@ -282,7 +283,7 @@ static AppController *sharedAppController = nil;
 		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"]))
 		{
 			currentPrayer = prayer;
-			[[NSSound soundNamed:adhanFile] play];
+			if(![self isAdhanPlaying]) [adhan play];
 			[self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
 			[[menuItems objectForKey:@"Shuruq"] setImage: [NSImage imageNamed: @"status_sound"]];
 			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
@@ -373,20 +374,16 @@ static AppController *sharedAppController = nil;
 	
 	}
 	
-
-	
-	
 	//if its time to pray change the menu bar title to "prayer name" time for that minute
 	if(currentlyPrayerTime) {
 		menuBarTitle = [name stringByAppendingString:@" time"];
 	}
 	
-	
 	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
-	
-	
-	
 }
+
+
+
 
 - (IBAction)doNothing:(id)sender 
 {
@@ -396,8 +393,21 @@ static AppController *sharedAppController = nil;
 
 - (IBAction)stopAdhan:(id)sender 
 {
-	NSSound *adhanToStop = [NSSound soundNamed:adhanFile];
-	[adhanToStop stop];
+
+	//create NSSound objects
+	NSSound *yusufAdhan = [NSSound soundNamed:@"yusufislam"];
+	NSSound *aqsaAdhan = [NSSound soundNamed:@"alaqsa"];
+	NSSound *istanbulAdhan = [NSSound soundNamed:@"istanbul"];
+	NSSound *makkahAdhan = [NSSound soundNamed:@"makkah"];
+	
+	//stop NSSound objects
+	[yusufAdhan stop];
+	[aqsaAdhan stop];
+	[istanbulAdhan stop];
+	[makkahAdhan stop];
+
+	
+	[adhan stop];
 	
 	if([[currentPrayer getName] isEqualTo:@"Shuruq"]) {
 		[[menuItems objectForKey:[currentPrayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
@@ -430,13 +440,13 @@ static AppController *sharedAppController = nil;
 {	
 	switch ([userDefaults integerForKey:@"Sound"])
 	{
-		case 1:		adhanFile = @"alaqsa"; break;
-		case 2:		adhanFile = @"istanbul"; break;
-		case 3:		adhanFile = @"yusufislam"; break;
+		case 1:		adhan = [NSSound soundNamed:@"alaqsa"]; break;
+		case 2:		adhan = [NSSound soundNamed:@"istanbul"]; break;
+		case 3:		adhan = [NSSound soundNamed:@"yusufislam"]; break;
 		case 0:
-		default:	adhanFile = @"makkah"; break;
+		default:	adhan = [NSSound soundNamed:@"makkah"]; break;
 	}
-	
+
 	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
@@ -504,6 +514,39 @@ static AppController *sharedAppController = nil;
 
 }
 
+- (IBAction)startAtLogin:(id)sender
+{
+	int i = 0;
+	NSMutableArray* loginItems;
+
+    loginItems = (NSMutableArray*) CFPreferencesCopyValue((CFStringRef) @"AutoLaunchedApplicationDictionary", (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+    loginItems =  [[loginItems autorelease] mutableCopy];
+	
+	NSMutableDictionary *loginObject = [[NSMutableDictionary alloc] initWithCapacity:2];
+
+	if([toggleStartatlogin state] == NSOnState) {
+	
+		//add it to login items
+		[loginObject setObject:[[NSBundle mainBundle] bundlePath] forKey:@"Path"];
+		[loginItems addObject:loginObject];
+		
+	} else {
+		
+		//remove it from login items
+		 for (i=0;i<[loginItems count];i++)
+        {
+            if ([[[loginItems objectAtIndex:i] objectForKey:@"Path"] isEqualToString:[[NSBundle mainBundle] bundlePath]])
+                [loginItems removeObjectAtIndex:i];
+        }
+	}
+
+    CFPreferencesSetValue((CFStringRef) @"AutoLaunchedApplicationDictionary", loginItems, (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost); 
+	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+
+    [loginItems release];
+
+}
+
 - (IBAction)openPreferencesWindow:(id)sender
 {	
 	[[PrefController sharedPrefsWindowController] showWindow:nil];
@@ -519,7 +562,7 @@ static AppController *sharedAppController = nil;
 	
 	[self initPrayerItems]; //rewrite the prayer times to the gui
 	
-	[self checkPrayerTimes]; //recheck prayer times
+	[self checkPrayerTimes:YES]; //recheck prayer times
 }
 
 
@@ -605,6 +648,22 @@ static AppController *sharedAppController = nil;
 	
 	[self applyPrefs];
 }
+
+
+- (BOOL) isAdhanPlaying
+{
+	BOOL adhanPlaying = NO;
+
+	if([[NSSound soundNamed:@"alaqsa"] isPlaying] ||
+	[[NSSound soundNamed:@"istanbul"] isPlaying] ||
+	[[NSSound soundNamed:@"yusufislam"] isPlaying] ||
+	[[NSSound soundNamed:@"makkah"] isPlaying]) {
+		adhanPlaying = YES;
+	}
+	
+	return adhanPlaying;
+}
+
 
 
 /*************************************
@@ -710,8 +769,6 @@ static AppController *sharedAppController = nil;
 
 - (void) growlNotificationWasClicked:(id)clickContext 
 {
-	/*NSSound *adhan = [NSSound soundNamed:clickContext];
-	[adhan stop];*/
 	[self stopAdhan:nil];
 }
 

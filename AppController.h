@@ -39,6 +39,7 @@
 	IBOutlet NSTextField *stateText;
 	IBOutlet NSTextField *countryText;
 	
+	IBOutlet NSButton *toggleStartatlogin;
 	
 	
 	/* PRAYER OBJECTS */
@@ -63,7 +64,7 @@
 	NSCalendarDate *lastCheckTime;
 	NSCalendarDate *prayerTimeDate;
 	BOOL notified;
-	
+	NSSound *adhan;
 	
 	
 	/* PREFERENCES */
@@ -95,13 +96,17 @@
 - (void) initPrayerItems;
 - (void) setPrayerTimes;
 - (void) loadDefaults;
-- (void) checkPrayerTimes;
+- (void) checkPrayerTimes: (BOOL)notify;
 
 - (void) applyPrefs;
 
 - (void) checkForUpdate:(BOOL)quiet;
 
+- (IBAction)startAtLogin:(id)sender;
+
 - (IBAction)openPreferencesWindow:(id)sender;
+
+- (BOOL) isAdhanPlaying;
 
 + (AppController*) sharedController;
 
@@ -109,9 +114,7 @@
 /* GROWL METHODS */
 
 - (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky : (id) clickContext : (NSString *)identifier;
-
 - (void) growlNotificationWasClicked:(id)clickContext;
-
  - (BOOL) isGrowlInstalled;
 
 @end
