@@ -268,7 +268,7 @@ static AppController *sharedAppController = nil;
 			//display growl
 			if(displayGrowl) 
 			{
-				//[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : adhanFile : name];
+				[self doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : @"" : name];
 			}
 			
 			//play audio
@@ -283,7 +283,7 @@ static AppController *sharedAppController = nil;
 		{
 			currentPrayer = prayer;
 			[[NSSound soundNamed:adhanFile] play];
-			//[MyGrowler doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : adhanFile : @"Shuruq"];
+			[self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
 			[[menuItems objectForKey:@"Shuruq"] setImage: [NSImage imageNamed: @"status_sound"]];
 			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
 		}
@@ -710,8 +710,9 @@ static AppController *sharedAppController = nil;
 
 - (void) growlNotificationWasClicked:(id)clickContext 
 {
-	NSSound *adhan = [NSSound soundNamed:clickContext];
-	[adhan stop];
+	/*NSSound *adhan = [NSSound soundNamed:clickContext];
+	[adhan stop];*/
+	[self stopAdhan:nil];
 }
 
 
