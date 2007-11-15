@@ -2,6 +2,16 @@
 
 @implementation PrefController
 
+- (void)awakeFromNib
+{
+	userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
+	[userDefaults registerDefaults:appDefaults];
+	
+	[currentLocation setStringValue:[[[[[userDefaults valueForKey:@"SetCity"] stringByAppendingString:@", "] stringByAppendingString:[userDefaults valueForKey:@"SetState"]] stringByAppendingString:@" "] stringByAppendingString:[userDefaults valueForKey:@"SetCountry"]]];	
+}
+
 - (void)setupToolbar
 {
 	[self addView:generalPrefsView label:@"General"];
@@ -160,9 +170,12 @@
 		
 		[lookupStatus setStringValue:@"Your location has been set."];
 		[lookupIndicator stopAnimation:sender];
-		
-		NSString *cityState = [[[[cityText stringValue] stringByAppendingString:@", "] stringByAppendingString:[stateText stringValue]] stringByAppendingString:@" "];
-		[currentLocation setStringValue:[cityState stringByAppendingString:[countryText stringValue]]];
+			
+		[userDefaults setValue:[cityText stringValue] forKey:@"SetCity"];
+		[userDefaults setValue:[stateText stringValue] forKey:@"SetState"];
+		[userDefaults setValue:[countryText stringValue] forKey:@"SetCountry"];
+
+		[currentLocation setStringValue:[[[[[userDefaults valueForKey:@"SetCity"] stringByAppendingString:@", "] stringByAppendingString:[userDefaults valueForKey:@"SetState"]] stringByAppendingString:@" "] stringByAppendingString:[userDefaults valueForKey:@"SetCountry"]]];	
 	}
 	else
 	{
@@ -188,17 +201,10 @@
 	[super windowDidLoad];
 	[[self window] setDelegate:self];
 	previewState = NO;
-	
-	[currentLocation setStringValue:[[[[[cityText stringValue] stringByAppendingString:@", "] stringByAppendingString:[stateText stringValue]] stringByAppendingString:@" "] stringByAppendingString:[countryText stringValue]]];	
 }
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
-	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
-	[userDefaults registerDefaults:appDefaults];
 	
 	[userDefaults setFloat:[latitudeText floatValue] forKey:@"Latitude"];
 	[userDefaults setFloat:[longitudeText floatValue] forKey:@"Longitude"];
@@ -208,6 +214,14 @@
 	}
 	
 	[userDefaults setInteger:[minutesBeforeShuruq intValue]forKey:@"MinutesBeforeShuruq"];
+	
+	[cityText setStringValue:[userDefaults valueForKey:@"SetCity"]];
+	[stateText setStringValue:[userDefaults valueForKey:@"SetState"]];
+	[countryText setStringValue:[userDefaults valueForKey:@"SetCountry"]];
+	
+	[userDefaults setValue:[userDefaults valueForKey:@"SetCity"] forKey:@"LocCity"];
+	[userDefaults setValue:[userDefaults valueForKey:@"SetState"] forKey:@"LocState"];
+	[userDefaults setValue:[userDefaults valueForKey:@"SetCountry"] forKey:@"LocCountry"];
 
 	[[AppController sharedController] applyPrefs];
 }

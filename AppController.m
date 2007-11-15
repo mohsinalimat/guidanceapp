@@ -18,18 +18,18 @@ static AppController *sharedAppController = nil;
 	/*** CREATE OBJECTS ***/
 	/**********************/
 	
+	//create user defaults object
+	userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
+	[userDefaults registerDefaults:appDefaults];
+	
 	prayerTimeDate = [[NSCalendarDate calendarDate] retain]; //set date with which to check prayer times
 	
 	lastCheckTime = [[NSCalendarDate calendarDate] retain]; //initialize last check time
-
-	MyGrowler = [[Growler alloc] init]; //create growl object
 	
 	todaysPrayerTimes = [[PrayerTimes alloc] init]; //initialize prayer times object 
-	
-	//check if growl is installed
-	if(![MyGrowler  isInstalled]) {
-		[MyGrowler doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil];
-	}
+
 	
 	[self initPrayers]; //create each prayer objects and set names 
 
@@ -40,6 +40,8 @@ static AppController *sharedAppController = nil;
 	/****************************/
 	
 	currentVersion = @"0.1a";
+	
+	notified = NO;
 
 	[self loadDefaults]; //load default preferences
 
@@ -74,18 +76,24 @@ static AppController *sharedAppController = nil;
 	/*** STARTUP TASKS ***/
 	/*********************/
 	
+	//check if growl is installed
+	if(![self isGrowlInstalled]) {
+		[self doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil : nil];
+	}
+	
 	[self checkForUpdate:YES]; //check for new version	
 
 	if(firstRun) {
-		[welcomeWindow orderFrontRegardless]; //open welcome window
+		[welcomeWindow makeKeyAndOrderFront:nil]; //open welcome window
+		[NSApp activateIgnoringOtherApps:YES];
 	}
 	
+
 }
 
 
 - (void) initGui
 {
-
 	NSStatusBar *bar = [NSStatusBar systemStatusBar];
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
 	[menuBar retain];
@@ -112,30 +120,12 @@ static AppController *sharedAppController = nil;
 
 - (void) initPrayerItems
 {
-
 	[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t " stringByAppendingString:[fajrPrayer getFormattedTime]],@"")];
 	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
 	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
 	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
 	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")];
 	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")];
-
-
-
-	/*
-	//[fajrItem setImage: [NSImage imageNamed: @"typing"]];
-	//[shuruqItem setImage: [NSImage imageNamed: @"sound"]];
-
-	[fajrItem setImage: [NSImage imageNamed: @"status_notTime"]];
-	[shuruqItem setImage: [NSImage imageNamed: @"status_notTime"]];
-	[dhuhurItem setImage: [NSImage imageNamed: @"status_notTime"]];
-	[asrItem setImage: [NSImage imageNamed: @"status_notTime"]];
-	[maghribItem setImage: [NSImage imageNamed: @"status_notTime"]];
-	[ishaItem setImage: [NSImage imageNamed: @"status_notTime"]];
-	[asrItem setTitle:NSLocalizedString([@"♫ " stringByAppendingString:[asrItem title]],@"")];
-	//[asrItem setAlternateImage: [NSImage imageNamed: @"altspeaker"]];
-	*/
-
 }
 
 - (void) initPrayers
@@ -149,8 +139,7 @@ static AppController *sharedAppController = nil;
 	ishaPrayer = [[Prayer alloc] init];
 	tomorrowFajrPrayer = [[Prayer alloc] init];
 	
-	//init prayers array
-	
+	//init prayers array	
 	prayersArray = [[NSDictionary dictionaryWithObjectsAndKeys:
 				fajrPrayer,		@"0", 
 				shuruqPrayer,	@"1", 
@@ -250,19 +239,11 @@ static AppController *sharedAppController = nil;
 		[[menuItems objectForKey:[prayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
 		
 		
-		/*
-		NSLog(@"%@ (array val of %@ for %d) in %d seconds",[prayer getName], [prayers[i] getName], i, secondsTill);
-		*/
-		
 		//Get next prayer
 		if(secondsTill > 0 && nextPrayerSet == NO)
 		{
 			nextPrayer = prayer;
 			nextPrayerSet = YES;
-			
-			/*
-			NSLog(@"the next prayer is %@",[prayers[i] getName]);
-			*/
 			
 			if(i == 0) {
 				stillTimeToPray = [prayers[5] getName];
@@ -287,7 +268,7 @@ static AppController *sharedAppController = nil;
 			//display growl
 			if(displayGrowl) 
 			{
-				[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : adhanFile];
+				//[MyGrowler doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : adhanFile : name];
 			}
 			
 			//play audio
@@ -302,7 +283,7 @@ static AppController *sharedAppController = nil;
 		{
 			currentPrayer = prayer;
 			[[NSSound soundNamed:adhanFile] play];
-			[MyGrowler doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : adhanFile];
+			//[MyGrowler doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : adhanFile : @"Shuruq"];
 			[[menuItems objectForKey:@"Shuruq"] setImage: [NSImage imageNamed: @"status_sound"]];
 			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
 		}
@@ -320,7 +301,7 @@ static AppController *sharedAppController = nil;
 	}
 	
 	
-	//set green dot status that shows its still to pray that prayer
+	//set green dot status that shows its still ok to pray that prayer
 	if(![stillTimeToPray isEqualTo:@""]) {
 		if(![[[[menuItems objectForKey:stillTimeToPray] image] name] isEqualTo:@"status_sound"]) {
 			[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
@@ -440,17 +421,13 @@ static AppController *sharedAppController = nil;
 - (IBAction)openAboutPanel:(id)sender
 {
 	[[AboutController sharedAboutWindowController] showWindow:nil];
-	[[[AboutController sharedAboutWindowController] window] orderFrontRegardless];
+	[[[AboutController sharedAboutWindowController] window] makeKeyAndOrderFront:nil];
+	[NSApp activateIgnoringOtherApps:YES];
 	[[AboutController sharedAboutWindowController] setVersionText:currentVersion];
 }
 
 - (void) loadDefaults
-{
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
-	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
-	[userDefaults registerDefaults:appDefaults];
-	
+{	
 	switch ([userDefaults integerForKey:@"Sound"])
 	{
 		case 1:		adhanFile = @"alaqsa"; break;
@@ -528,9 +505,10 @@ static AppController *sharedAppController = nil;
 }
 
 - (IBAction)openPreferencesWindow:(id)sender
-{
+{	
 	[[PrefController sharedPrefsWindowController] showWindow:nil];
-	[[[PrefController sharedPrefsWindowController] window] orderFrontRegardless];
+	[[[PrefController sharedPrefsWindowController] window] makeKeyAndOrderFront:nil];
+	[NSApp activateIgnoringOtherApps:YES];
 }
 
 - (void) applyPrefs
@@ -555,13 +533,15 @@ static AppController *sharedAppController = nil;
 		if([latestVersionNumber isEqualTo: currentVersion] && !quiet)
 		{
 			// tell user software is up to date
-			NSRunAlertPanel(NSLocalizedString(@"Your Software is up-to-date", @"Title of alert when a the user's software is up to date."),
+			[NSApp activateIgnoringOtherApps:YES];
+			NSRunAlertPanel(NSLocalizedString(@"Your Software is up to date", @"Title of alert when a the user's software is up to date."),
 				NSLocalizedString(@"You have the most recent version of Guidance.", @"Alert text when the user's software is up to date."),
 				NSLocalizedString(@"OK", @"OK"), nil, nil);
 		}
 		else if( ![latestVersionNumber isEqualTo: currentVersion])
 		{
 			// tell user to download a new version
+			[NSApp activateIgnoringOtherApps:YES];
 			int button = NSRunAlertPanel(NSLocalizedString(@"A New Version is Available", @"Title of alert when a the user's software is not up to date."),
 			[NSString stringWithFormat:NSLocalizedString(@"A new version of Guidance is available (version %@). Would you like to download the new version now?", @"Alert text when the user's software is not up to date."), latestVersionNumber],
 				NSLocalizedString(@"OK", @"OK"),
@@ -571,6 +551,12 @@ static AppController *sharedAppController = nil;
 				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/download/"]];
 			}
 		}
+	} else if(!quiet) {
+			// tell user unable to check for update
+			[NSApp activateIgnoringOtherApps:YES];
+			NSRunAlertPanel(NSLocalizedString(@"Unable to check for updates", @"Title of alert"),
+				NSLocalizedString(@"Guidance is currently unable to check for updates.", @"Alert text"),
+				NSLocalizedString(@"OK", @"OK"), nil, nil);
 	}
 }
 
@@ -578,10 +564,6 @@ static AppController *sharedAppController = nil;
 - (IBAction)firstRunSetup:(id)sender 
 {
 	[welcomeWindow close];
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
-	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
-	[userDefaults registerDefaults:appDefaults];
 	
 	NSString *city = [cityText stringValue];
 	NSString *state = [stateText stringValue];
@@ -595,14 +577,14 @@ static AppController *sharedAppController = nil;
 	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
 	
 	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
-	
-	[userDefaults setValue:city forKey:@"LocCity"];
-	[userDefaults setValue:state forKey:@"LocState"];
-	[userDefaults setValue:country forKey:@"LocCountry"];
-
-	
+	 
 	if (valid)
 	{
+		
+		[userDefaults setValue:city forKey:@"SetCity"];
+		[userDefaults setValue:state forKey:@"SetState"];
+		[userDefaults setValue:country forKey:@"SetCountry"];
+	
 		[userDefaults setFloat:[[coordDict valueForKey:@"latitude"] doubleValue] forKey:@"Latitude"];
 		[userDefaults setFloat:[[coordDict valueForKey:@"longitude"] doubleValue] forKey:@"Longitude"];	
 	}
@@ -616,6 +598,10 @@ static AppController *sharedAppController = nil;
 		[userDefaults setFloat:0.00 forKey:@"Latitude"];
 		[userDefaults setFloat:0.00 forKey:@"Longitude"];	
 	}
+	
+	[userDefaults setValue:[userDefaults valueForKey:@"SetCity"] forKey:@"LocCity"];
+	[userDefaults setValue:[userDefaults valueForKey:@"SetState"] forKey:@"LocState"];
+	[userDefaults setValue:[userDefaults valueForKey:@"SetCountry"] forKey:@"LocCountry"];
 	
 	[self applyPrefs];
 }
@@ -671,5 +657,79 @@ static AppController *sharedAppController = nil;
     return self;
 }
 
+
+
+
+
+
+
+/*************************************
+********** GROWL METHODS *************
+*************************************/
+
+
+- (id) init
+{
+	if ((self = [super init]))
+	{
+		[GrowlApplicationBridge setGrowlDelegate:self];
+	}
+	
+	return self;
+}
+
+
+
+- (NSDictionary *) registrationDictionaryForGrowl
+{
+		NSArray *notifications = [NSArray arrayWithObjects: NotificationName, nil];
+
+		NSDictionary *regDict = [NSDictionary dictionaryWithObjectsAndKeys:
+				@"Guidance", GROWL_APP_NAME,
+				notifications, GROWL_NOTIFICATIONS_ALL,
+				notifications, GROWL_NOTIFICATIONS_DEFAULT,
+				nil];
+
+	return regDict;
+}
+
+
+- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky : (id) clickContext : (NSString *)identifier
+{ 
+	[GrowlApplicationBridge notifyWithTitle:title
+					description:desc
+					notificationName:NotificationName
+					iconData: nil
+					priority:0
+					isSticky:sticky
+					clickContext:clickContext
+					identifier:identifier];
+}
+
+
+
+- (void) growlNotificationWasClicked:(id)clickContext 
+{
+	NSSound *adhan = [NSSound soundNamed:clickContext];
+	[adhan stop];
+}
+
+
+- (BOOL) isGrowlInstalled 
+{
+  return [GrowlApplicationBridge isGrowlInstalled];
+}
+
+
+
+
+
+
+
+
+
+
+
 @end
+
 

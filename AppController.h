@@ -7,13 +7,16 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "Growler.h"
+//#import "Growler.h"
+#import <Growl-WithInstaller/Growl.h>
 #import "Prayer.h"
 #import "PrayerTimes.h"
 #import "PrefController.h"
 #import "AboutController.h"
 
-@interface AppController : NSObject
+#define NotificationName  @"Guidance Notification"
+
+@interface AppController : NSObject <GrowlApplicationBridgeDelegate>
 {	
 
 	/* GUI */
@@ -54,15 +57,17 @@
 	
 	
 	/* NOTIFICATION */
-	Growler *MyGrowler;
+	//Growler *MyGrowler;
 	
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
 	NSCalendarDate *prayerTimeDate;
+	BOOL notified;
 	
 	
 	
 	/* PREFERENCES */
+	NSUserDefaults *userDefaults;
 	NSString *adhanFile;
 	BOOL displayGrowl;
 	BOOL stickyGrowl;
@@ -99,5 +104,14 @@
 - (IBAction)openPreferencesWindow:(id)sender;
 
 + (AppController*) sharedController;
+
+
+/* GROWL METHODS */
+
+- (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky : (id) clickContext : (NSString *)identifier;
+
+- (void) growlNotificationWasClicked:(id)clickContext;
+
+ - (BOOL) isGrowlInstalled;
 
 @end

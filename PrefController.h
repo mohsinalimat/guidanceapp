@@ -41,6 +41,8 @@
 	IBOutlet NSProgressIndicator *lookupIndicator;
 	BOOL previewState;
 	NSSound *sound;
+	
+	NSUserDefaults *userDefaults;
 }
 - (IBAction)startatlogin_toggle:(id)sender;
 - (IBAction)preview_clicked:(id)sender;
