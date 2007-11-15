@@ -396,7 +396,8 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	float windowTitleAndToolbarHeight = NSHeight(windowFrame) - NSHeight(contentRect);
 
 	windowFrame.size.height = NSHeight([view frame]) + windowTitleAndToolbarHeight;
-	windowFrame.size.width = NSWidth([view frame]);
+	//windowFrame.size.width = NSWidth([view frame]);
+	windowFrame.size.width = 350;
 	windowFrame.origin.y = NSMaxY([[self window] frame]) - NSHeight(windowFrame);
 	
 	return windowFrame;
