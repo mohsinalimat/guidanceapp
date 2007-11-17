@@ -62,8 +62,8 @@
 	
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
+	NSCalendarDate *lastNotificationTime;
 	NSCalendarDate *prayerTimeDate;
-	BOOL notified;
 	NSSound *adhan;
 	
 	
@@ -96,7 +96,9 @@
 - (void) initPrayerItems;
 - (void) setPrayerTimes;
 - (void) loadDefaults;
-- (void) checkPrayerTimes: (BOOL)notify;
+- (void) checkPrayerTimes;
+- (void) setStatusIcons;
+- (void) setMenuBar: (BOOL) currentlyPrayerTime;
 
 - (void) applyPrefs;
 

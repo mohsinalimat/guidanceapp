@@ -28,6 +28,7 @@ static AppController *sharedAppController = nil;
 	prayerTimeDate = [[NSCalendarDate calendarDate] retain]; //set date with which to check prayer times
 	
 	lastCheckTime = [[NSCalendarDate calendarDate] retain]; //initialize last check time
+	lastNotificationTime = [[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:0 hours:-1 minutes:0 seconds:0] retain]; //initialize last adhan time
 	
 	todaysPrayerTimes = [[PrayerTimes alloc] init]; //initialize prayer times object 
 
@@ -41,8 +42,6 @@ static AppController *sharedAppController = nil;
 	/****************************/
 	
 	currentVersion = @"0.1a";
-	
-	notified = NO;
 
 	[self loadDefaults]; //load default preferences
 
@@ -66,7 +65,7 @@ static AppController *sharedAppController = nil;
 
 	nextPrayer = fajrPrayer; //initially set next prayer to fajr
 
-	[self checkPrayerTimes:YES]; //initial prayer time check
+	[self checkPrayerTimes]; //initial prayer time check
 			
 	//run timer to check for salah times		
 	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(handleTimer) userInfo:nil repeats:YES];		
@@ -181,134 +180,21 @@ static AppController *sharedAppController = nil;
 
 	if([[NSCalendarDate calendarDate] secondOfMinute] == 0)
 	{
-		[self checkPrayerTimes:YES];
+		[self checkPrayerTimes];
 	} else {
 		int seconds;
 		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
 		
 		if(seconds > 65 || seconds < 0) {
-			[self checkPrayerTimes:YES];
+			[self checkPrayerTimes];
 		}
 	}
 }
 
-- (void) checkPrayerTimes: (BOOL)notify
-{
-	//update last time prayer times were checked
-	[lastCheckTime release];
-	lastCheckTime = [[NSCalendarDate calendarDate] retain];
-	
-	//if new day, update prayer times first
-	if([[NSCalendarDate calendarDate] dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
-		[self setPrayerTimes];
-		[self initPrayerItems];
-		
-		//reset current day
-		[prayerTimeDate release];
-		prayerTimeDate = [[NSCalendarDate calendarDate] retain];
-		
-		//and if set, check for updates
-		if(checkForUpdates) {
-			[self checkForUpdate:YES];
-		}
-	}
-	
-	
-	
-	BOOL nextPrayerSet = NO;
-	BOOL currentlyPrayerTime = NO;
-	
-	NSCalendarDate *prayerTime;
-	
-	Prayer *prayers[] = {fajrPrayer,shuruqPrayer,dhuhurPrayer,asrPrayer,maghribPrayer,ishaPrayer};
-	Prayer *prayer;
-	NSString *name, *time, *stillTimeToPray;
-	int i, secondsTill, minutesTill, minuteSecondsTill;
-	
-	for (i=0; i<6; i++)
-	{
-		prayer = [prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]];
-		prayerTime = [prayer getTime];
 
-		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
-		
-		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:&minutesTill seconds:&minuteSecondsTill sinceDate:[NSCalendarDate calendarDate]];
-		
-		if(minuteSecondsTill > 0) minutesTill++;
-		
-		[[menuItems objectForKey:[prayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
-		
-		
-		//Get next prayer
-		if(secondsTill > 0 && nextPrayerSet == NO)
-		{
-			nextPrayer = prayer;
-			nextPrayerSet = YES;
-			
-			if(i == 0) {
-				stillTimeToPray = [prayers[5] getName];
-			} else if(i == 1) {
-				stillTimeToPray = [prayers[0] getName];
-			} else if(i == 2) {
-				stillTimeToPray = @"";
-			} else {
-				stillTimeToPray = [prayers[i-1] getName];
-			}
-		}
-		
-		
-		//check if its currently prayer time
-		if ((secondsTill >= -58 && secondsTill <= 0) && ![[prayer getName] isEqualTo:@"Shuruq"])
-		{
-			currentPrayer = prayer;
-			currentlyPrayerTime = YES;
-			name = [prayer getName];
-			time = [prayer getFormattedTime];
-			
-			//display growl
-			if(displayGrowl) 
-			{
-				[self doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : @"" : name];
-			}
-			
-			//play audio
-			if([prayer getPlayAudio])
-			{	
-				if(![self isAdhanPlaying]) [adhan play];
-	
-				[[menuItems objectForKey:name] setImage: [NSImage imageNamed: @"status_sound"]];
-				[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];
-			}
-		} 
-		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"]))
-		{
-			currentPrayer = prayer;
-			if(![self isAdhanPlaying]) [adhan play];
-			[self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
-			[[menuItems objectForKey:@"Shuruq"] setImage: [NSImage imageNamed: @"status_sound"]];
-			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
-		}
-	}
-	
-	
-	if(nextPrayerSet == NO) {
-	
-		//calculate the time for tomorrow's fajr prayer
-		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
-		[tomorrowFajrPrayer setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
-	
-		nextPrayer = tomorrowFajrPrayer;
-		stillTimeToPray = @"Isha";
-	}
-	
-	
-	//set green dot status that shows its still ok to pray that prayer
-	if(![stillTimeToPray isEqualTo:@""]) {
-		if(![[[[menuItems objectForKey:stillTimeToPray] image] name] isEqualTo:@"status_sound"]) {
-			[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
-		}
-	}
-		
+- (void) setMenuBar: (BOOL) currentlyPrayerTime
+{
+
 	/* SET MENU BAR DISPLAY */
 	
 	NSString *menuBarTitle;
@@ -376,10 +262,182 @@ static AppController *sharedAppController = nil;
 	
 	//if its time to pray change the menu bar title to "prayer name" time for that minute
 	if(currentlyPrayerTime) {
-		menuBarTitle = [name stringByAppendingString:@" time"];
+		menuBarTitle = [[currentPrayer getName] stringByAppendingString:@" time"];
 	}
 	
 	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
+
+
+}
+
+
+- (void) setStatusIcons
+{
+
+	BOOL nextPrayerSet = NO;
+	
+	NSCalendarDate *prayerTime;
+	NSString *prayerName, *stillTimeToPray;
+	
+	int i, secondsTill;
+	
+	for (i=0; i<6; i++)
+	{
+		prayerName = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getName];
+		prayerTime = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getTime];
+
+		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
+		
+		[[menuItems objectForKey:prayerName] setImage: [NSImage imageNamed: @"status_notTime"]];
+		
+		//Get next prayer
+		if(secondsTill > 0 && nextPrayerSet == NO)
+		{
+			nextPrayerSet = YES;
+			
+				
+			if(i == 0) {
+				stillTimeToPray = @"Isha";
+			} else if(i == 1) {
+				stillTimeToPray = @"Fajr";
+			} else if(i == 2) {
+				stillTimeToPray = @"";
+			} else {
+				stillTimeToPray = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i-1]] getName];
+			}
+			
+		}
+
+	}
+	
+	if(!nextPrayerSet) {
+		stillTimeToPray = @"Isha";
+	}
+	
+	
+	[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+}
+
+
+- (void) checkPrayerTimes
+{
+	//update last time prayer times were checked
+	[lastCheckTime release];
+	lastCheckTime = [[NSCalendarDate calendarDate] retain];
+	
+	//if new day, update prayer times first
+	if([[NSCalendarDate calendarDate] dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
+		[self setPrayerTimes];
+		[self initPrayerItems];
+		
+		//reset current day
+		[prayerTimeDate release];
+		prayerTimeDate = [[NSCalendarDate calendarDate] retain];
+		
+		//and if set, check for updates
+		if(checkForUpdates) {
+			[self checkForUpdate:YES];
+		}
+	}
+	
+	
+	[self setStatusIcons];
+	
+	
+	BOOL nextPrayerSet = NO;
+	BOOL currentlyPrayerTime = NO;
+	
+	NSCalendarDate *prayerTime;
+	
+	Prayer *prayer;
+	NSString *name, *time;
+	int i, secondsTill, minutesTill, minuteSecondsTill;
+	
+	for (i=0; i<6; i++)
+	{
+		prayer = [prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]];
+		prayerTime = [prayer getTime];
+
+		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
+		
+		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:&minutesTill seconds:&minuteSecondsTill sinceDate:[NSCalendarDate calendarDate]];
+		
+		if(minuteSecondsTill > 0) minutesTill++; //round minute up
+		
+		
+		//Get next prayer
+		if(secondsTill > 0 && nextPrayerSet == NO)
+		{
+			nextPrayer = prayer;
+			nextPrayerSet = YES;
+		}
+
+		int secondsSinceNotification;
+		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsSinceNotification sinceDate:lastNotificationTime];		
+		
+		//check if its currently prayer time
+		if ((secondsTill >= -58 && secondsTill <= 0) && ![[prayer getName] isEqualTo:@"Shuruq"])
+		{
+			currentPrayer = prayer;
+			currentlyPrayerTime = YES;
+			name = [prayer getName];
+			time = [prayer getFormattedTime];
+			
+			BOOL notified = NO;
+
+			//display growl
+			if(displayGrowl  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0)) 
+			{
+				[self doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : @"" : name];
+				notified = YES;
+			}
+			
+			//play audio
+			if([prayer getPlayAudio]  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
+			{	
+				notified = YES;
+				if(![self isAdhanPlaying]) [adhan play];
+				[[menuItems objectForKey:name] setImage: [NSImage imageNamed: @"status_sound"]];
+				[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];	
+					
+			}
+			
+			if(notified) {
+				//update last time prayer times were checked
+				[lastNotificationTime release];
+				lastNotificationTime = [[NSCalendarDate calendarDate] retain];
+			}
+		} 
+		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
+		{
+			currentPrayer = prayer;
+			if(![self isAdhanPlaying]) [adhan play];
+			if(displayGrowl) [self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
+			
+			[[menuItems objectForKey:@"Shuruq"] setImage: [NSImage imageNamed: @"status_sound"]];
+			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
+			
+			//update last time prayer times were checked
+			[lastNotificationTime release];
+			lastNotificationTime = [[NSCalendarDate calendarDate] retain];
+		}
+		
+		NSLog(@"%d seconds since last notification",secondsSinceNotification);
+		NSLog(@"last notification at %@",[lastNotificationTime descriptionWithCalendarFormat: @" %1I:%M"]);
+	}
+	
+	
+	if(nextPrayerSet == NO) {
+	
+		//calculate the time for tomorrow's fajr prayer
+		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+		[tomorrowFajrPrayer setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
+	
+		nextPrayer = tomorrowFajrPrayer;
+	}
+	
+	[self setMenuBar : currentlyPrayerTime];
+
 }
 
 
@@ -406,14 +464,7 @@ static AppController *sharedAppController = nil;
 	[istanbulAdhan stop];
 	[makkahAdhan stop];
 
-	
-	[adhan stop];
-	
-	if([[currentPrayer getName] isEqualTo:@"Shuruq"]) {
-		[[menuItems objectForKey:[currentPrayer getName]] setImage: [NSImage imageNamed: @"status_notTime"]];
-	} else {
-		[[menuItems objectForKey:[currentPrayer getName]] setImage: [NSImage imageNamed: @"status_prayerTime"]];
-	}
+	[self setStatusIcons];
 	[[menuItems objectForKey:[currentPrayer getName]] setAction:@selector(doNothing:)];
 }
 
@@ -562,7 +613,7 @@ static AppController *sharedAppController = nil;
 	
 	[self initPrayerItems]; //rewrite the prayer times to the gui
 	
-	[self checkPrayerTimes:YES]; //recheck prayer times
+	[self checkPrayerTimes]; //recheck prayer times
 }
 
 
