@@ -30,6 +30,10 @@
 	IBOutlet NSMenuItem *asrItem;
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
+	
+	NSMenuItem *muteAdhan;
+	NSMenuItem *muteSeperator;
+	
 	NSDictionary *menuItems;
 	NSDictionary *prayersArray;
 	
@@ -58,13 +62,12 @@
 	
 	
 	/* NOTIFICATION */
-	//Growler *MyGrowler;
-	
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
 	NSCalendarDate *lastNotificationTime;
 	NSCalendarDate *prayerTimeDate;
 	NSSound *adhan;
+	NSString *currentlyPlayingAdhan;
 	
 	
 	/* PREFERENCES */

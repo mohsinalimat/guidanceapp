@@ -41,7 +41,9 @@ static AppController *sharedAppController = nil;
 	/*** APPLICATION SETTINGS ***/
 	/****************************/
 	
-	currentVersion = @"0.1a";
+	currentVersion = @"1.0";
+	
+	currentlyPlayingAdhan = @"";
 
 	[self loadDefaults]; //load default preferences
 
@@ -88,7 +90,6 @@ static AppController *sharedAppController = nil;
 		[NSApp activateIgnoringOtherApps:YES];
 	}
 	
-
 }
 
 
@@ -115,6 +116,12 @@ static AppController *sharedAppController = nil;
 				   maghribItem,	@"Maghrib",
 				   ishaItem,	@"Isha",
                    nil] retain];
+				   
+	[appMenu setAutoenablesItems:NO];
+	
+
+	muteAdhan = [[NSMenuItem alloc] initWithTitle:@"Mute Adhan" action:@selector(stopAdhan:) keyEquivalent:@""];
+	[muteAdhan retain];
 }
 
 
@@ -188,6 +195,10 @@ static AppController *sharedAppController = nil;
 		if(seconds > 65 || seconds < 0) {
 			[self checkPrayerTimes];
 		}
+	}
+	
+	if(![currentlyPlayingAdhan isEqualTo:@""]) {
+		if(![self isAdhanPlaying]) [self stopAdhan:nil];
 	}
 }
 
@@ -316,6 +327,7 @@ static AppController *sharedAppController = nil;
 	
 	
 	[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+	[[menuItems objectForKey:currentlyPlayingAdhan] setImage: [NSImage imageNamed: @"status_sound"]];
 }
 
 
@@ -339,9 +351,6 @@ static AppController *sharedAppController = nil;
 			[self checkForUpdate:YES];
 		}
 	}
-	
-	
-	[self setStatusIcons];
 	
 	
 	BOOL nextPrayerSet = NO;
@@ -396,14 +405,27 @@ static AppController *sharedAppController = nil;
 			if([prayer getPlayAudio]  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
 			{	
 				notified = YES;
-				if(![self isAdhanPlaying]) [adhan play];
-				[[menuItems objectForKey:name] setImage: [NSImage imageNamed: @"status_sound"]];
+				
+				if(![self isAdhanPlaying]) {
+					[adhan play];
+					
+					//set mute adhan menu item and seperator
+					[appMenu insertItem:muteAdhan atIndex:0];
+					[muteAdhan setTarget:self];
+					[muteAdhan setAction:@selector(stopAdhan:)];
+					
+					
+					[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
+					
+				}
+				
+				currentlyPlayingAdhan = name;
 				[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];	
 					
 			}
 			
 			if(notified) {
-				//update last time prayer times were checked
+				//update last time user was notified
 				[lastNotificationTime release];
 				lastNotificationTime = [[NSCalendarDate calendarDate] retain];
 			}
@@ -411,19 +433,26 @@ static AppController *sharedAppController = nil;
 		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
 		{
 			currentPrayer = prayer;
-			if(![self isAdhanPlaying]) [adhan play];
+			
+			if(![self isAdhanPlaying]) {
+				[adhan play];
+
+				//set menu adhan menu item and seperator
+				[appMenu insertItem:muteAdhan atIndex:0];
+				[muteAdhan setTarget:self];
+				[muteAdhan setAction:@selector(stopAdhan:)];
+				[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
+			}
+			
 			if(displayGrowl) [self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
 			
-			[[menuItems objectForKey:@"Shuruq"] setImage: [NSImage imageNamed: @"status_sound"]];
+			currentlyPlayingAdhan = @"Shuruq";
 			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
 			
-			//update last time prayer times were checked
+			//update last time user was notified
 			[lastNotificationTime release];
 			lastNotificationTime = [[NSCalendarDate calendarDate] retain];
 		}
-		
-		NSLog(@"%d seconds since last notification",secondsSinceNotification);
-		NSLog(@"last notification at %@",[lastNotificationTime descriptionWithCalendarFormat: @" %1I:%M"]);
 	}
 	
 	
@@ -437,7 +466,7 @@ static AppController *sharedAppController = nil;
 	}
 	
 	[self setMenuBar : currentlyPrayerTime];
-
+	[self setStatusIcons];
 }
 
 
@@ -446,7 +475,6 @@ static AppController *sharedAppController = nil;
 - (IBAction)doNothing:(id)sender 
 {
 	//absolutely nothing
-	//[MyGrowler doGrowl : @"test" : @"im doing nothin" : NO : nil];
 }
 
 - (IBAction)stopAdhan:(id)sender 
@@ -463,9 +491,17 @@ static AppController *sharedAppController = nil;
 	[aqsaAdhan stop];
 	[istanbulAdhan stop];
 	[makkahAdhan stop];
+	
+	currentlyPlayingAdhan = @"";
 
 	[self setStatusIcons];
 	[[menuItems objectForKey:[currentPrayer getName]] setAction:@selector(doNothing:)];
+	
+	//remove "Mute Adhan" option
+	if([appMenu indexOfItem:muteAdhan] > -1) {
+		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
+	}
+	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
 }
 
 
@@ -538,65 +574,8 @@ static AppController *sharedAppController = nil;
 		
 	//now that app has been run, set FirstRun to false
 	[userDefaults setBool:NO forKey:@"FirstRun"];
-	
-	
-	/*
-	NSLog(@"Latitude: %f", [userDefaults floatForKey:@"Latitude"]);
-	NSLog(@"Longitude: %f", [userDefaults floatForKey:@"Longitude"]);
-	NSLog(@"AsrMethod: %d", [userDefaults integerForKey:@"AsrMethod"]);
-	NSLog(@"IshaMethod: %d", [userDefaults integerForKey:@"IshaMethod"]);
-	
-	
-	NSLog(@"EnableSound: %d", [userDefaults boolForKey:@"EnableSound"]);
-	
-	NSLog(@"PlayAdhanForFajr: %d", [userDefaults boolForKey:@"PlayAdhanForFajr"]);
-	NSLog(@"PlayAdhanForDhuhur: %d", [userDefaults boolForKey:@"PlayAdhanForDhuhur"]);
-	NSLog(@"PlayAdhanForAsr: %d", [userDefaults boolForKey:@"PlayAdhanForAsr"]);
-	NSLog(@"PlayAdhanForMaghrab: %d", [userDefaults boolForKey:@"PlayAdhanForMaghrab"]);
-	NSLog(@"PlayAdhanForIsha: %d", [userDefaults boolForKey:@"PlayAdhanForIsha"]);
-	
-	
-	NSLog(@"EnableGrowl: %d", [userDefaults boolForKey:@"EnableGrowl"]);
-	NSLog(@"StickyGrowl: %d", [userDefaults boolForKey:@"StickyGrowl"]);
-	NSLog(@"CheckForUpdates: %d", [userDefaults boolForKey:@"CheckForUpdates"]);
-	NSLog(@"FirstRun: %d", [userDefaults boolForKey:@"FirstRun"]);
-	NSLog(@" ");
-	*/
-
 }
 
-- (IBAction)startAtLogin:(id)sender
-{
-	int i = 0;
-	NSMutableArray* loginItems;
-
-    loginItems = (NSMutableArray*) CFPreferencesCopyValue((CFStringRef) @"AutoLaunchedApplicationDictionary", (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-    loginItems =  [[loginItems autorelease] mutableCopy];
-	
-	NSMutableDictionary *loginObject = [[NSMutableDictionary alloc] initWithCapacity:2];
-
-	if([toggleStartatlogin state] == NSOnState) {
-	
-		//add it to login items
-		[loginObject setObject:[[NSBundle mainBundle] bundlePath] forKey:@"Path"];
-		[loginItems addObject:loginObject];
-		
-	} else {
-		
-		//remove it from login items
-		 for (i=0;i<[loginItems count];i++)
-        {
-            if ([[[loginItems objectAtIndex:i] objectForKey:@"Path"] isEqualToString:[[NSBundle mainBundle] bundlePath]])
-                [loginItems removeObjectAtIndex:i];
-        }
-	}
-
-    CFPreferencesSetValue((CFStringRef) @"AutoLaunchedApplicationDictionary", loginItems, (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost); 
-	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-
-    [loginItems release];
-
-}
 
 - (IBAction)openPreferencesWindow:(id)sender
 {	
@@ -655,6 +634,22 @@ static AppController *sharedAppController = nil;
 }
 
 
+- (BOOL) isAdhanPlaying
+{
+	BOOL adhanPlaying = NO;
+
+	if([[NSSound soundNamed:@"alaqsa"] isPlaying] ||
+	[[NSSound soundNamed:@"istanbul"] isPlaying] ||
+	[[NSSound soundNamed:@"yusufislam"] isPlaying] ||
+	[[NSSound soundNamed:@"makkah"] isPlaying]) {
+		adhanPlaying = YES;
+	}
+	
+	return adhanPlaying;
+}
+
+
+
 - (IBAction)firstRunSetup:(id)sender 
 {
 	[welcomeWindow close];
@@ -701,19 +696,41 @@ static AppController *sharedAppController = nil;
 }
 
 
-- (BOOL) isAdhanPlaying
+- (IBAction)startAtLogin:(id)sender
 {
-	BOOL adhanPlaying = NO;
+	int i = 0;
+	NSMutableArray* loginItems;
 
-	if([[NSSound soundNamed:@"alaqsa"] isPlaying] ||
-	[[NSSound soundNamed:@"istanbul"] isPlaying] ||
-	[[NSSound soundNamed:@"yusufislam"] isPlaying] ||
-	[[NSSound soundNamed:@"makkah"] isPlaying]) {
-		adhanPlaying = YES;
-	}
+    loginItems = (NSMutableArray*) CFPreferencesCopyValue((CFStringRef) @"AutoLaunchedApplicationDictionary", (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+    loginItems =  [[loginItems autorelease] mutableCopy];
 	
-	return adhanPlaying;
+	NSMutableDictionary *loginObject = [[NSMutableDictionary alloc] initWithCapacity:2];
+
+	if([toggleStartatlogin state] == NSOnState) {
+	
+		//add it to login items
+		[loginObject setObject:[[NSBundle mainBundle] bundlePath] forKey:@"Path"];
+		[loginItems addObject:loginObject];
+		
+	} else {
+		
+		//remove it from login items
+		 for (i=0;i<[loginItems count];i++)
+        {
+            if ([[[loginItems objectAtIndex:i] objectForKey:@"Path"] isEqualToString:[[NSBundle mainBundle] bundlePath]])
+                [loginItems removeObjectAtIndex:i];
+        }
+	}
+
+    CFPreferencesSetValue((CFStringRef) @"AutoLaunchedApplicationDictionary", loginItems, (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost); 
+	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+
+    [loginItems release];
+
 }
+
+
+
 
 
 

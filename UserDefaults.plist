@@ -41,7 +41,7 @@
 	<key>MinutesBeforeShuruq</key>
 	<integer>30</integer>
 	<key>Sound</key>
-	<integer>0</integer>
+	<integer>3</integer>
 	<key>StickyGrowl</key>
 	<true/>
 	<key>StartAtLogin</key>
@@ -55,7 +55,7 @@
 	<key>DisplayNextPrayer</key>
 	<true/>
 	<key>MenuDisplayTime</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>MenuDisplayName</key>
 	<integer>0</integer>
 </dict>
