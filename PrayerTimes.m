@@ -115,13 +115,13 @@
 
 - (void)calcTimes:(NSCalendarDate *)calcDate
 {	
+		
+	timezone =((float)[[NSTimeZone systemTimeZone] secondsFromGMT])/3600;
+
 	double rad_lat = [PrayerTimes deg2rad:Latitude];
 	
 	int day = [calcDate dayOfYear];
-	NSNumberFormatter *nf = [[NSNumberFormatter alloc] init];
-	int tz = [[nf numberFromString:[[NSCalendarDate calendarDate] descriptionWithCalendarFormat:@"%z"]] intValue];
-	[nf release];
-	tz = (tz>0)?(tz/100+tz%100/60):(tz/100-tz%100/60);
+	
 	if (Altitude == 0) Altitude = 1;
 	double beta = (2 * M_PI * day) / 365.0;
 	double d = (180.0 / M_PI) * (0.006918 - (0.399912 * cos(beta))
@@ -138,7 +138,7 @@
 				- (0.014615 * cos(2*beta))
 				- (0.040849 * sin(2*beta)));
 	
-	double r = 15.0 * tz;
+	double r = 15.0 * timezone;
 	double z = 12.0 + ((r - Longitude) / 15.0) - (t / 60.0);
 	
 	double xu = sin([PrayerTimes deg2rad:(-0.8333 - 0.0347

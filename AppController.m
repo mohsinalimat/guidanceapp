@@ -41,7 +41,7 @@ static AppController *sharedAppController = nil;
 	/*** APPLICATION SETTINGS ***/
 	/****************************/
 	
-	currentVersion = @"1.0";
+	currentVersion = @"1.0.1";
 	
 	currentlyPlayingAdhan = @"";
 

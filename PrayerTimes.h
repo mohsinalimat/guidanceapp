@@ -16,6 +16,7 @@
 	int Shafi;
 	int TwilightDawnAngle;
 	int TwilightSunsetAngle;
+	float timezone;
 	
 	NSCalendarDate *FajrTime;
 	NSCalendarDate *ShuruqTime;
