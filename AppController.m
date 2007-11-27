@@ -196,10 +196,6 @@ static AppController *sharedAppController = nil;
 			[self checkPrayerTimes];
 		}
 	}
-	
-	if(![currentlyPlayingAdhan isEqualTo:@""]) {
-		if(![self isAdhanPlaying]) [self stopAdhan:nil];
-	}
 }
 
 
@@ -479,7 +475,6 @@ static AppController *sharedAppController = nil;
 
 - (IBAction)stopAdhan:(id)sender 
 {
-
 	//create NSSound objects
 	NSSound *yusufAdhan = [NSSound soundNamed:@"yusufislam"];
 	NSSound *aqsaAdhan = [NSSound soundNamed:@"alaqsa"];
@@ -490,18 +485,7 @@ static AppController *sharedAppController = nil;
 	[yusufAdhan stop];
 	[aqsaAdhan stop];
 	[istanbulAdhan stop];
-	[makkahAdhan stop];
-	
-	currentlyPlayingAdhan = @"";
-
-	[self setStatusIcons];
-	[[menuItems objectForKey:[currentPrayer getName]] setAction:@selector(doNothing:)];
-	
-	//remove "Mute Adhan" option
-	if([appMenu indexOfItem:muteAdhan] > -1) {
-		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
-	}
-	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
+	[makkahAdhan stop];	
 }
 
 
@@ -533,6 +517,7 @@ static AppController *sharedAppController = nil;
 		case 0:
 		default:	adhan = [NSSound soundNamed:@"makkah"]; break;
 	}
+	[adhan setDelegate:self];
 
 	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
@@ -586,6 +571,7 @@ static AppController *sharedAppController = nil;
 
 - (void) applyPrefs
 {
+	NSLog(@"Prefs now being applied");
 	[self loadDefaults]; //get prefrences and load them into global vars
 	
 	[self setPrayerTimes]; //recalculate and set the prayer times for each prayer object
@@ -848,8 +834,23 @@ static AppController *sharedAppController = nil;
 
 
 
+/*************************************
+********** SOUND METHODS *************
+*************************************/
 
+- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
+{
+	currentlyPlayingAdhan = @"";
 
+	[self setStatusIcons];
+	[[menuItems objectForKey:[currentPrayer getName]] setAction:@selector(doNothing:)];
+	
+	//remove "Mute Adhan" option
+	if([appMenu indexOfItem:muteAdhan] > -1) {
+		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
+	}
+	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
+}
 
 
 

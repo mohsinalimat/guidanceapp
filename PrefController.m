@@ -98,19 +98,24 @@
 	{
 		[latitudeText setEnabled:NO];
 		[longitudeText setEnabled:NO];
+		[setManualLocation setEnabled:NO];
 		[cityText setEnabled:YES];
 		[stateText setEnabled:YES];
 		[countryText setEnabled:YES];
 		[lookupLocation setEnabled:YES];
+		[currentLocation setStringValue:[[[[[userDefaults valueForKey:@"SetCity"] stringByAppendingString:@", "] stringByAppendingString:[userDefaults valueForKey:@"SetState"]] stringByAppendingString:@" "] stringByAppendingString:[userDefaults valueForKey:@"SetCountry"]]];	
 	}
 	else
 	{
 		[latitudeText setEnabled:YES];
 		[longitudeText setEnabled:YES];
+		[setManualLocation setEnabled:YES];
 		[cityText setEnabled:NO];
 		[stateText setEnabled:NO];
 		[countryText setEnabled:NO];
 		[lookupLocation setEnabled:NO];
+		
+		[currentLocation setStringValue:[NSString stringWithFormat:@"Manually set to (%3.4f,%3.4f)",[userDefaults floatForKey:@"Latitude"],[userDefaults floatForKey:@"Longitude"]]];
 	}
 }
 
@@ -128,6 +133,7 @@
 			default:	sound = [NSSound soundNamed:@"makkah"]; break;
 		}
 		
+		[sound setDelegate:self];
 		[sound play];
 		
 		// change button text to "Stop"
@@ -138,12 +144,15 @@
 	{
 		// stop sound
 		[sound stop];
-		
-		// change button text to "Preview"
-		[previewButton setTitle:@"Preview"];
-		previewState = !previewState;
 	}
 }
+
+- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
+{
+	[previewButton setTitle:@"Preview"];
+	previewState = NO;
+}
+
 
 - (IBAction)lookup_location:(id)sender
 {
@@ -167,7 +176,7 @@
 	{
 		[latitudeText setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
 		[longitudeText setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
-		
+
 		[lookupStatus setStringValue:@"Your location has been set."];
 		[lookupIndicator stopAnimation:sender];
 			
@@ -176,14 +185,14 @@
 		[userDefaults setValue:[countryText stringValue] forKey:@"SetCountry"];
 
 		[currentLocation setStringValue:[[[[[userDefaults valueForKey:@"SetCity"] stringByAppendingString:@", "] stringByAppendingString:[userDefaults valueForKey:@"SetState"]] stringByAppendingString:@" "] stringByAppendingString:[userDefaults valueForKey:@"SetCountry"]]];	
+
+		[self saveAndApply];
 	}
 	else
 	{
 		[lookupStatus setStringValue:@"Error: Unable to find location."];
 		[lookupIndicator stopAnimation:sender];
 	}
-	
-	[self crossFadeView:locationPrefsView withView:locationPrefsView];
 }
 
 - (IBAction)showWindow:(id)sender
@@ -203,9 +212,9 @@
 	previewState = NO;
 }
 
-- (void)windowWillClose:(NSNotification *)notification
+
+- (void)saveAndApply
 {
-	
 	[userDefaults setFloat:[latitudeText floatValue] forKey:@"Latitude"];
 	[userDefaults setFloat:[longitudeText floatValue] forKey:@"Longitude"];
 	
@@ -224,6 +233,29 @@
 	[userDefaults setValue:[userDefaults valueForKey:@"SetCountry"] forKey:@"LocCountry"];
 
 	[[AppController sharedController] applyPrefs];
+
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+	[self saveAndApply];
+}
+
+- (IBAction)applyChange:(id)sender
+{
+	[self saveAndApply];
+}
+
+- (IBAction)changePrayerTimes:(id)sender
+{
+	[self saveAndApply];
+}
+
+
+- (IBAction)setCoordinates:(id)sender
+{
+	[self saveAndApply];
+ 	[currentLocation setStringValue:[NSString stringWithFormat:@"Manually set to (%3.4f,%3.4f)",[userDefaults floatForKey:@"Latitude"],[userDefaults floatForKey:@"Longitude"]]];
 }
 
 - (IBAction)startatlogin_toggle:(id)sender

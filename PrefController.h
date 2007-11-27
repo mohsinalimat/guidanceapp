@@ -33,6 +33,7 @@
 	IBOutlet NSTextField *stateText;
 	IBOutlet NSTextField *countryText;
 	IBOutlet NSButton *lookupLocation;
+	IBOutlet NSButton *setManualLocation;
 	IBOutlet NSWindow *lookupProgress;
 	IBOutlet NSTextField *lookupStatus;
 	IBOutlet NSTextField *currentLocation;
@@ -53,11 +54,14 @@
 - (IBAction)shuruq_toggle:(id)sender;
 
 - (IBAction)lookup_location:(id)sender;
+- (IBAction)setCoordinates:(id)sender;
+- (IBAction)changePrayerTimes:(id)sender;
+- (IBAction)applyChange:(id)sender;
 - (IBAction)checkForUpdates:(id)sender;
 
 - (IBAction)showWindow:(id)sender;
 
 - (void)windowWillClose:(NSNotification *)notification;
-
+- (void) saveAndApply;
 
 @end
