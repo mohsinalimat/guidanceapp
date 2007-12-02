@@ -299,4 +299,19 @@
 }
 
 
+- (IBAction)selectAdhan:(id)sender 
+{
+
+	NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
+	
+	NSOpenPanel *attachmentPanel = [NSOpenPanel openPanel];
+	[attachmentPanel beginForDirectory:nil 
+								  file:nil 
+								 types:adhanFileTypes
+					  modelessDelegate:self
+						didEndSelector:@selector(addAttachmentDidEnd:returnCode:contextInfo:)  
+						   contextInfo:NULL]; 
+}
+
+
 @end

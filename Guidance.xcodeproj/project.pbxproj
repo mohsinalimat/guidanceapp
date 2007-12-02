@@ -94,7 +94,7 @@
 		84262E230CE1173F00359AA1 /* Prayer Times.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Prayer Times.tiff"; sourceTree = "<group>"; };
 		84342AFF0CE675D900DDE111 /* status_prayerTime.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = status_prayerTime.tiff; sourceTree = SOURCE_ROOT; };
 		84342B000CE675D900DDE111 /* status_notTime.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = status_notTime.tiff; sourceTree = SOURCE_ROOT; };
-		84342B310CE68B7B00DDE111 /* status_sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = status_sound.png; path = /Users/ameir/Developer/Guidance/status_sound.png; sourceTree = "<absolute>"; };
+		84342B310CE68B7B00DDE111 /* status_sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_sound.png; sourceTree = SOURCE_ROOT; };
 		843C4E2A0CCBE610000DAEB4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		8457C4290D01201F00BFAF0C /* SoundLow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundLow.png; sourceTree = SOURCE_ROOT; };
 		8457C42A0D01201F00BFAF0C /* SoundHigh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundHigh.png; sourceTree = SOURCE_ROOT; };

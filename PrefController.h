@@ -58,6 +58,7 @@
 - (IBAction)changePrayerTimes:(id)sender;
 - (IBAction)applyChange:(id)sender;
 - (IBAction)checkForUpdates:(id)sender;
+- (IBAction)selectAdhan:(id)sender;
 
 - (IBAction)showWindow:(id)sender;
 
