@@ -303,15 +303,52 @@
 {
 
 	NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
-	
-	NSOpenPanel *attachmentPanel = [NSOpenPanel openPanel];
-	[attachmentPanel beginForDirectory:nil 
-								  file:nil 
-								 types:adhanFileTypes
-					  modelessDelegate:self
-						didEndSelector:@selector(addAttachmentDidEnd:returnCode:contextInfo:)  
-						   contextInfo:NULL]; 
+
+	NSOpenPanel * panel = [NSOpenPanel openPanel];
+
+	[panel setPrompt: @"Select"];
+	[panel setAllowsMultipleSelection: NO];
+	[panel setCanChooseFiles: YES];
+	[panel setCanChooseDirectories: NO];
+	[panel setCanCreateDirectories: NO];
+
+	[panel beginSheetForDirectory: nil 
+		file: nil 
+		types: adhanFileTypes
+		modalForWindow: [self window] 
+		modalDelegate: self 
+		didEndSelector:
+		@selector(selectAdhanClosed:returnCode:contextInfo:) 
+		contextInfo: nil];
 }
+
+
+
+
+- (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info
+{
+
+/*
+    NSString * path = [fDefaults stringForKey: @"AutoImportDirectory"];
+    if (code == NSOKButton)
+    {
+        UKKQueue * sharedQueue = [UKKQueue sharedFileWatcher];
+        if (path)
+            [sharedQueue removePathFromQueue: [path stringByExpandingTildeInPath]];
+        
+        path = [[openPanel filenames] objectAtIndex: 0];
+        [fDefaults setObject: path forKey: @"AutoImportDirectory"];
+        [sharedQueue addPath: [path stringByExpandingTildeInPath]];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName: @"AutoImportSettingChange" object: self];
+    }
+    else if (!path)
+        [fDefaults setBool: NO forKey: @"AutoImport"];
+    
+    [fImportFolderPopUp selectItemAtIndex: 0];
+*/
+}
+
 
 
 @end

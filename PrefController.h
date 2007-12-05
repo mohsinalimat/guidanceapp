@@ -59,6 +59,7 @@
 - (IBAction)applyChange:(id)sender;
 - (IBAction)checkForUpdates:(id)sender;
 - (IBAction)selectAdhan:(id)sender;
+- (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info;
 
 - (IBAction)showWindow:(id)sender;
 
