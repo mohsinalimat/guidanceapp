@@ -327,26 +327,11 @@
 
 - (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info
 {
-
-/*
-    NSString * path = [fDefaults stringForKey: @"AutoImportDirectory"];
-    if (code == NSOKButton)
-    {
-        UKKQueue * sharedQueue = [UKKQueue sharedFileWatcher];
-        if (path)
-            [sharedQueue removePathFromQueue: [path stringByExpandingTildeInPath]];
-        
-        path = [[openPanel filenames] objectAtIndex: 0];
-        [fDefaults setObject: path forKey: @"AutoImportDirectory"];
-        [sharedQueue addPath: [path stringByExpandingTildeInPath]];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName: @"AutoImportSettingChange" object: self];
-    }
-    else if (!path)
-        [fDefaults setBool: NO forKey: @"AutoImport"];
-    
-    [fImportFolderPopUp selectItemAtIndex: 0];
-*/
+	if (code == NSOKButton) {
+		NSLog(@"you have selected %@",[[openPanel filenames] objectAtIndex: 0]);
+	} else {
+		[selectSound selectItemAtIndex:[userDefaults integerForKey:@"Sound"]];
+	}
 }
 
 

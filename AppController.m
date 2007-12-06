@@ -571,7 +571,6 @@ static AppController *sharedAppController = nil;
 
 - (void) applyPrefs
 {
-	NSLog(@"Prefs now being applied");
 	[self loadDefaults]; //get prefrences and load them into global vars
 	
 	[self setPrayerTimes]; //recalculate and set the prayer times for each prayer object
