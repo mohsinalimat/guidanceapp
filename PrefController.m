@@ -329,10 +329,42 @@
 {
 	if (code == NSOKButton) {
 		NSLog(@"you have selected %@",[[openPanel filenames] objectAtIndex: 0]);
+		
+		/*NSSound *newSound = [[NSSound alloc] initWithContentsOfFile:[[openPanel filenames] objectAtIndex: 0] byReference:NO];
+		[newSound play];*/
+		
+		if([selectSound numberOfItems] <= 6) {
+			[selectSound insertItemWithTitle:[[openPanel filenames] objectAtIndex: 0] atIndex:5];
+			[[selectSound menu] insertItem:[NSMenuItem separatorItem] atIndex:6];
+			[selectSound selectItemAtIndex:5];
+		} else {
+			[selectSound removeItemAtIndex:5];
+			[selectSound insertItemWithTitle:[[openPanel filenames] objectAtIndex: 0] atIndex:5];
+			[selectSound selectItemAtIndex:5];
+		}
 	} else {
 		[selectSound selectItemAtIndex:[userDefaults integerForKey:@"Sound"]];
 	}
 }
+
+
+- (IBAction)setVolume:(id)sender 
+{
+	NSLog(@"volume is now %f",[volumeSlider floatValue]);
+}
+
+- (IBAction)setMaxVolume:(id)sender 
+{
+	[volumeSlider setFloatValue:100];
+	NSLog(@"volume is now %f",[volumeSlider floatValue]);
+}
+
+- (IBAction)setMinVolume:(id)sender 
+{
+	[volumeSlider setFloatValue:0];
+	NSLog(@"volume is now %f",[volumeSlider floatValue]);
+}
+
 
 
 

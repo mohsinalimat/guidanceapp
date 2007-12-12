@@ -40,6 +40,8 @@
 	IBOutlet NSTextField *minutesBeforeShuruq;
 	IBOutlet NSTextField *minutesBeforeShuruqText;	
 	IBOutlet NSProgressIndicator *lookupIndicator;
+	IBOutlet NSSlider *volumeSlider;
+	
 	BOOL previewState;
 	NSSound *sound;
 	
@@ -60,6 +62,9 @@
 - (IBAction)checkForUpdates:(id)sender;
 - (IBAction)selectAdhan:(id)sender;
 - (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info;
+- (IBAction)setVolume:(id)sender;
+- (IBAction)setMaxVolume:(id)sender;
+- (IBAction)setMinVolume:(id)sender;
 
 - (IBAction)showWindow:(id)sender;
 

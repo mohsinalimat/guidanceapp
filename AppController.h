@@ -109,6 +109,7 @@
 
 - (IBAction)startAtLogin:(id)sender;
 
+- (IBAction)openAboutPanel:(id)sender;
 - (IBAction)openPreferencesWindow:(id)sender;
 
 - (BOOL) isAdhanPlaying;
