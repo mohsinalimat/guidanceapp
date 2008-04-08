@@ -60,17 +60,36 @@
 {
 	switch (n)
 	{
+		case 2:
+			TwilightSunsetAngle = 18;
+			break;
 		case 1:
-			TwilightDawnAngle = 15;
-			TwilightSunsetAngle = 15;
+			TwilightSunsetAngle = 17.5;
 			break;
 		case 0:
 		default:
-			TwilightDawnAngle = 18;
-			TwilightSunsetAngle = 18;
+			TwilightSunsetAngle = 15;
 			break;
 	}
 }
+
+- (void)setFajrMethod:(int)n
+{
+	switch (n)
+	{
+		case 2:
+			TwilightDawnAngle = 19;
+			break;
+		case 1:
+			TwilightDawnAngle = 18;
+			break;
+		case 0:
+		default:
+			TwilightDawnAngle = 15;
+			break;
+	}
+}
+
 
 + (double)rad2deg:(double)n
 {

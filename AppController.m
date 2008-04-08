@@ -14,7 +14,6 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {
-
 	/**********************/
 	/*** CREATE OBJECTS ***/
 	/**********************/
@@ -86,7 +85,8 @@ static AppController *sharedAppController = nil;
 	[self checkForUpdate:YES]; //check for new version	
 
 	if(firstRun) {
-		[welcomeWindow makeKeyAndOrderFront:nil]; //open welcome window
+		[[WelcomeController sharedWelcomeWindowController] showWindow:nil];
+		[[[WelcomeController sharedWelcomeWindowController] window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
 	}
 	
@@ -199,6 +199,7 @@ static AppController *sharedAppController = nil;
 }
 
 
+
 - (void) setMenuBar: (BOOL) currentlyPrayerTime
 {
 
@@ -229,6 +230,8 @@ static AppController *sharedAppController = nil;
 		
 			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; //display abbreviation
 		
+		} else if(menuDisplayName == 2) {
+			nextPrayerNameDisplay = @"";
 		}
 		
 	
@@ -257,7 +260,9 @@ static AppController *sharedAppController = nil;
 			
 			nextPrayerTimeDisplay = [NSString stringWithFormat:@" -%d:%02d",hourCount,minuteCount];
 			
-		} 
+		} else if(menuDisplayTime == 2) {
+			nextPrayerTimeDisplay = @"";
+		}
 		
 		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
 		
@@ -275,6 +280,18 @@ static AppController *sharedAppController = nil;
 	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
 
 
+	/* RED FONT IN MENU BAR
+	//NSFont *stringFont = [NSFont fontWithName:@"Times" size:17.0];
+	//NSDictionary *stringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:stringFont, NSFontAttributeName, stringColor, NSForegroundColorAttributeName, nil];
+	
+	NSFont *stringFont = [NSFont menuBarFontOfSize:15.0]; 
+	NSColor *stringColor = [NSColor redColor];
+	NSDictionary *stringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:stringFont, NSFontAttributeName, stringColor, NSForegroundColorAttributeName, nil];
+
+	NSAttributedString *wootString = [[NSAttributedString alloc] initWithString:@"Fajr 5:28" attributes:stringAttributes];
+
+	[menuBar setAttributedTitle:wootString];
+	*/
 }
 
 
@@ -449,6 +466,29 @@ static AppController *sharedAppController = nil;
 			[lastNotificationTime release];
 			lastNotificationTime = [[NSCalendarDate calendarDate] retain];
 		}
+		else if(tahajudReminder && (minutesBeforeTahajud == minutesTill) && ([[prayer getName] isEqualTo:@"Fajr"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
+		{
+			currentPrayer = prayer;
+			
+			if(![self isAdhanPlaying]) {
+				[adhan play];
+
+				//set menu adhan menu item and seperator
+				[appMenu insertItem:muteAdhan atIndex:0];
+				[muteAdhan setTarget:self];
+				[muteAdhan setAction:@selector(stopAdhan:)];
+				[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
+			}
+			
+			if(displayGrowl) [self doGrowl : @"Tahajud" : [[NSString stringWithFormat:@"%d",minutesBeforeTahajud] stringByAppendingString:@" minutes left until Fajr"] : stickyGrowl : @"" : @"Tahajud"];
+			
+			currentlyPlayingAdhan = @"Fajr";
+			[[menuItems objectForKey:@"Fajr"] setAction:@selector(stopAdhan:)];
+			
+			//update last time user was notified
+			[lastNotificationTime release];
+			lastNotificationTime = [[NSCalendarDate calendarDate] retain];
+		}
 	}
 	
 	
@@ -475,17 +515,22 @@ static AppController *sharedAppController = nil;
 
 - (IBAction)stopAdhan:(id)sender 
 {
-	//create NSSound objects
-	NSSound *yusufAdhan = [NSSound soundNamed:@"yusufislam"];
-	NSSound *aqsaAdhan = [NSSound soundNamed:@"alaqsa"];
-	NSSound *istanbulAdhan = [NSSound soundNamed:@"istanbul"];
-	NSSound *makkahAdhan = [NSSound soundNamed:@"makkah"];
+	if(userAdhan) {
+		NSSound *useradhanobject = [[NSSound alloc] initWithContentsOfFile:adhanFile byReference:YES];
+		[useradhanobject stop];
+	} else {
+		//create NSSound objects
+		NSSound *yusufAdhan = [NSSound soundNamed:@"yusufislam"];
+		NSSound *aqsaAdhan = [NSSound soundNamed:@"alaqsa"];
+		NSSound *istanbulAdhan = [NSSound soundNamed:@"istanbul"];
+		NSSound *makkahAdhan = [NSSound soundNamed:@"makkah"];
 	
-	//stop NSSound objects
-	[yusufAdhan stop];
-	[aqsaAdhan stop];
-	[istanbulAdhan stop];
-	[makkahAdhan stop];	
+		//stop NSSound objects
+		[yusufAdhan stop];
+		[aqsaAdhan stop];
+		[istanbulAdhan stop];
+		[makkahAdhan stop];	
+	}
 }
 
 
@@ -509,20 +554,31 @@ static AppController *sharedAppController = nil;
 
 - (void) loadDefaults
 {	
-	switch ([userDefaults integerForKey:@"Sound"])
+	switch ([userDefaults integerForKey:@"SoundFile"])
 	{
-		case 1:		adhan = [NSSound soundNamed:@"alaqsa"]; break;
-		case 2:		adhan = [NSSound soundNamed:@"istanbul"]; break;
-		case 3:		adhan = [NSSound soundNamed:@"yusufislam"]; break;
+		case 1:		adhan = [NSSound soundNamed:@"makkah"]; break;
+		case 2:		adhan = [NSSound soundNamed:@"alaqsa"]; break;
+		case 3:		adhan = [NSSound soundNamed:@"istanbul"]; break;
 		case 0:
-		default:	adhan = [NSSound soundNamed:@"makkah"]; break;
+		default:	adhan = [NSSound soundNamed:@"yusufislam"]; break;
 	}
+	
+	if([userDefaults boolForKey:@"UserSound"]) {
+		adhanFile = [userDefaults stringForKey:@"UserSoundFile"];
+		adhan = [[NSSound alloc] initWithContentsOfFile:adhanFile byReference:YES];
+		userAdhan = YES;
+		NSLog(@"init user adhan");
+	} else {
+		userAdhan = NO;
+	}
+	
 	[adhan setDelegate:self];
 
 	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
 	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
+	[todaysPrayerTimes setFajrMethod: [userDefaults integerForKey:@"FajrMethod"]];
 	
 	if ([userDefaults boolForKey:@"EnableSound"])
 	{
@@ -530,10 +586,12 @@ static AppController *sharedAppController = nil;
 		[fajrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForFajr"]];
 		[dhuhurPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForDhuhur"]];
 		[asrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForAsr"]];
-		[maghribPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForMaghrab"]];
+		[maghribPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForMaghrib"]];
 		[ishaPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForIsha"]];
 		shuruqReminder = [userDefaults boolForKey:@"ShuruqReminder"];
 		minutesBeforeShuruq = [userDefaults integerForKey:@"MinutesBeforeShuruq"];
+		tahajudReminder = [userDefaults boolForKey:@"FajrReminder"];
+		minutesBeforeTahajud = [userDefaults integerForKey:@"MinutesBeforeFajr"];
 	}
 	else
 	{
@@ -544,6 +602,8 @@ static AppController *sharedAppController = nil;
 		[ishaPrayer setPlayAudio:NO];
 		shuruqReminder = NO;
 		minutesBeforeShuruq = 0;
+		tahajudReminder = NO;
+		minutesBeforeTahajud = 0;		
 	}
 	
 		
@@ -552,8 +612,8 @@ static AppController *sharedAppController = nil;
 	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
 	firstRun = [userDefaults boolForKey:@"FirstRun"];
 	
-	menuDisplayTime = [userDefaults integerForKey:@"MenuDisplayTime"];
-	menuDisplayName = [userDefaults integerForKey:@"MenuDisplayName"];
+	menuDisplayTime = [userDefaults integerForKey:@"DisplayNextPrayerTime"];
+	menuDisplayName = [userDefaults integerForKey:@"DisplayNextPrayerName"];
 	displayIcon = [userDefaults boolForKey:@"DisplayIcon"];
 	displayNextPrayer = [userDefaults boolForKey:@"DisplayNextPrayer"];
 		
@@ -635,50 +695,7 @@ static AppController *sharedAppController = nil;
 
 
 
-- (IBAction)firstRunSetup:(id)sender 
-{
-	[welcomeWindow close];
-	
-	NSString *city = [cityText stringValue];
-	NSString *state = [stateText stringValue];
-	NSString *country = [countryText stringValue];
-		
-	NSString *safeCity =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) city, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	NSString *safeState =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) state, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	NSString *safeCountry =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) country, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	
-	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?city=%@&state=%@&country=%@",safeCity,safeState,safeCountry];
-	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
-	
-	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
-	 
-	if (valid)
-	{
-		
-		[userDefaults setValue:city forKey:@"SetCity"];
-		[userDefaults setValue:state forKey:@"SetState"];
-		[userDefaults setValue:country forKey:@"SetCountry"];
-	
-		[userDefaults setFloat:[[coordDict valueForKey:@"latitude"] doubleValue] forKey:@"Latitude"];
-		[userDefaults setFloat:[[coordDict valueForKey:@"longitude"] doubleValue] forKey:@"Longitude"];	
-	}
-	else
-	{
-		NSAlert* alert = [NSAlert new];
-		[alert setMessageText: @"Unable to set location"];
-		[alert setInformativeText: @"Guidance was unable to set the location you provided. Please go to the preferences and sit a different location or enter in the latitude and longitude manually."];
-		[alert runModal];
-		
-		[userDefaults setFloat:0.00 forKey:@"Latitude"];
-		[userDefaults setFloat:0.00 forKey:@"Longitude"];	
-	}
-	
-	[userDefaults setValue:[userDefaults valueForKey:@"SetCity"] forKey:@"LocCity"];
-	[userDefaults setValue:[userDefaults valueForKey:@"SetState"] forKey:@"LocState"];
-	[userDefaults setValue:[userDefaults valueForKey:@"SetCountry"] forKey:@"LocCountry"];
-	
-	[self applyPrefs];
-}
+
 
 
 - (IBAction)startAtLogin:(id)sender

@@ -35,8 +35,11 @@
 		8457C42B0D01201F00BFAF0C /* SoundLow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8457C4290D01201F00BFAF0C /* SoundLow.png */; };
 		8457C42C0D01201F00BFAF0C /* SoundHigh.png in Resources */ = {isa = PBXBuildFile; fileRef = 8457C42A0D01201F00BFAF0C /* SoundHigh.png */; };
 		8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
+		84985D880D63FA92008447D3 /* WelcomeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84985D870D63FA92008447D3 /* WelcomeController.m */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
 		84AFF17C0CD9647D00D0BF00 /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
+		84BEB0E90DAAEC1600F2BB87 /* Advanced.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84BEB0E80DAAEC1600F2BB87 /* Advanced.tiff */; };
+		84ED0CAF0D64023500654A1D /* Welcome.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84ED0CAD0D64023500654A1D /* Welcome.xib */; };
 		84FAC4DF0CD020370005CDA0 /* guidanceIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -99,8 +102,12 @@
 		8457C4290D01201F00BFAF0C /* SoundLow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundLow.png; sourceTree = SOURCE_ROOT; };
 		8457C42A0D01201F00BFAF0C /* SoundHigh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundHigh.png; sourceTree = SOURCE_ROOT; };
 		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
+		84985D860D63FA92008447D3 /* WelcomeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeController.h; path = /Users/ameir/Developer/Guidance/WelcomeController.h; sourceTree = "<absolute>"; };
+		84985D870D63FA92008447D3 /* WelcomeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WelcomeController.m; path = /Users/ameir/Developer/Guidance/WelcomeController.m; sourceTree = "<absolute>"; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
 		84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrayerTimes.m; sourceTree = "<group>"; };
+		84BEB0E80DAAEC1600F2BB87 /* Advanced.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Advanced.tiff; sourceTree = "<group>"; };
+		84ED0CAE0D64023500654A1D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = /Users/ameir/Developer/Guidance/English.lproj/Welcome.xib; sourceTree = "<absolute>"; };
 		84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guidanceIcon.icns; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Guidance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Guidance.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -224,6 +231,7 @@
 				84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */,
 				8457C4290D01201F00BFAF0C /* SoundLow.png */,
 				8457C42A0D01201F00BFAF0C /* SoundHigh.png */,
+				84BEB0E80DAAEC1600F2BB87 /* Advanced.tiff */,
 				84342B310CE68B7B00DDE111 /* status_sound.png */,
 				84342AFF0CE675D900DDE111 /* status_prayerTime.tiff */,
 				84342B000CE675D900DDE111 /* status_notTime.tiff */,
@@ -258,6 +266,7 @@
 		34B5CC440CD6A68600CF5D14 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				8400AC4F0D63F80B005BBF18 /* Welcome */,
 				3499B1340CE3F4D70044010B /* About */,
 				34B5CC5E0CD6C02700CF5D14 /* Main Menu */,
 				34B5CC450CD6A68E00CF5D14 /* Preferences */,
@@ -283,6 +292,16 @@
 				347E3F520CD688D30035D056 /* MainMenu.xib */,
 			);
 			name = "Main Menu";
+			sourceTree = "<group>";
+		};
+		8400AC4F0D63F80B005BBF18 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				84985D860D63FA92008447D3 /* WelcomeController.h */,
+				84985D870D63FA92008447D3 /* WelcomeController.m */,
+				84ED0CAD0D64023500654A1D /* Welcome.xib */,
+			);
+			name = Welcome;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,6 +371,8 @@
 				84342B320CE68B7B00DDE111 /* status_sound.png in Resources */,
 				8457C42B0D01201F00BFAF0C /* SoundLow.png in Resources */,
 				8457C42C0D01201F00BFAF0C /* SoundHigh.png in Resources */,
+				84ED0CAF0D64023500654A1D /* Welcome.xib in Resources */,
+				84BEB0E90DAAEC1600F2BB87 /* Advanced.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +391,7 @@
 				340EF9A00CD7A867007280D6 /* AppController.m in Sources */,
 				3499B15F0CE3F76D0044010B /* AboutController.m in Sources */,
 				34F57F320CE4C8520001F800 /* AboutBackgroundView.m in Sources */,
+				84985D880D63FA92008447D3 /* WelcomeController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +420,14 @@
 				34B5CC820CD6C06900CF5D14 /* English */,
 			);
 			name = Preferences.xib;
+			sourceTree = "<group>";
+		};
+		84ED0CAD0D64023500654A1D /* Welcome.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84ED0CAE0D64023500654A1D /* English */,
+			);
+			name = Welcome.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

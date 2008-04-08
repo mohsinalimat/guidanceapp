@@ -2,61 +2,77 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AsrMethod</key>
-	<integer>0</integer>
-	<key>EnableGrowl</key>
+
+	<key>FirstRun</key>
 	<true/>
-	<key>EnableSound</key>
+
+	<key>DisplayNextPrayer</key>
 	<true/>
-	<key>IshaMethod</key>
+	<key>DisplayNextPrayerName</key>
 	<integer>0</integer>
-	<key>LocCity</key>
-	<string>Raleigh</string>
-	<key>LocCountry</key>
-	<string>USA</string>
-	<key>LocState</key>
-	<string>NC</string>
-	<key>SetCity</key>
-	<string>Raleigh</string>
-	<key>SetCountry</key>
-	<string>USA</string>
-	<key>SetState</key>
-	<string>NC</string>
+	<key>DisplayNextPrayerTime</key>
+	<integer>1</integer>
+	<key>DisplayIcon</key>
+	<true/>	
+	<key>StartAtLogin</key>
+	<false/>
+	<key>CheckForUpdates</key>
+	<true/>	
+	
+	<key>Location</key>
+	<string>Raleigh, NC</string>
 	<key>Latitude</key>
 	<real>35.776049</real>
 	<key>Longitude</key>
 	<real>-78.708551999999997</real>
-	<key>PlayAdhanForAsr</key>
+	
+	<key>AsrMethod</key>
+	<integer>0</integer>
+	<key>FarMethod</key>
+	<integer>1</integer>
+	<key>IshaMethod</key>
+	<integer>3</integer>
+	<key>FajrOffset</key>
+	<integer>15</integer>
+	<key>DhuhurOffset</key>
+	<integer>15</integer>
+	<key>AsrOffset</key>
+	<integer>15</integer>
+	<key>MaghribOffset</key>
+	<integer>15</integer>
+	<key>IshaOffset</key>
+	<integer>15</integer>
+	
+	<key>EnableSound</key>
+	<true/>
+	<key>SoundFile</key>
+	<integer>0</integer>
+	<key>UserSound</key>
+	<false/>
+	<key>UserSoundFile</key>
+	<string></string>
+	<key>PlayAdhanForFajr</key>
 	<true/>
 	<key>PlayAdhanForDhuhur</key>
 	<true/>
-	<key>PlayAdhanForFajr</key>
+	<key>PlayAdhanForAsr</key>
+	<true/>
+	<key>PlayAdhanForMaghrib</key>
 	<true/>
 	<key>PlayAdhanForIsha</key>
-	<true/>
-	<key>PlayAdhanForMaghrab</key>
 	<true/>
 	<key>ShuruqReminder</key>
 	<false/>
 	<key>MinutesBeforeShuruq</key>
 	<integer>30</integer>
-	<key>Sound</key>
-	<integer>3</integer>
-	<key>StickyGrowl</key>
-	<true/>
-	<key>StartAtLogin</key>
+	<key>FajrReminder</key>
 	<false/>
-	<key>CheckForUpdates</key>
+	<key>MinutesBeforeFajr</key>
+	<integer>45</integer>
+	<key>EnableGrowl</key>
 	<true/>
-	<key>FirstRun</key>
-	<true/>
-	<key>DisplayIcon</key>
-	<true/>
-	<key>DisplayNextPrayer</key>
-	<true/>
-	<key>MenuDisplayTime</key>
-	<integer>1</integer>
-	<key>MenuDisplayName</key>
-	<integer>0</integer>
+	<key>StickyGrowl</key>
+	<false/>
+
 </dict>
 </plist>

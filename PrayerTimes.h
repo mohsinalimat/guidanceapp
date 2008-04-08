@@ -14,8 +14,8 @@
 	double Longitude;
 	double Altitude;
 	int Shafi;
-	int TwilightDawnAngle;
-	int TwilightSunsetAngle;
+	double TwilightDawnAngle;
+	double TwilightSunsetAngle;
 	float timezone;
 	
 	NSCalendarDate *FajrTime;
@@ -31,6 +31,7 @@
 - (void)setAltitude:(double)n;
 - (void)setAsrMethod:(int)n;
 - (void)setIshaMethod:(int)n;
+- (void)setFajrMethod:(int)n;
 
 - (void)calcTimes:(NSCalendarDate *)calcDate;
 

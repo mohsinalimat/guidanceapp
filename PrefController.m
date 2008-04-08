@@ -2,6 +2,10 @@
 
 @implementation PrefController
 
+/****************/
+/* UI FUNCTIONS */
+/****************/
+
 - (void)awakeFromNib
 {
 	userDefaults = [NSUserDefaults standardUserDefaults];
@@ -9,7 +13,19 @@
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 	[userDefaults registerDefaults:appDefaults];
 	
-	[currentLocation setStringValue:[[[[[userDefaults valueForKey:@"SetCity"] stringByAppendingString:@", "] stringByAppendingString:[userDefaults valueForKey:@"SetState"]] stringByAppendingString:@" "] stringByAppendingString:[userDefaults valueForKey:@"SetCountry"]]];	
+	
+	[displayNextPrayerName setAutoenablesItems:NO];
+	[displayNextPrayerTime setAutoenablesItems:NO];
+	[self selectDisplayNextPrayerOption:self];
+	
+	//gray out any options that need to be grayed out
+	[self locationToggle];
+	[self enableSoundToggle:self];
+	[self enableGrowlToggle:self];
+	[self displayNextPrayerToggle:self];
+	
+	[self shuruqReminderToggle:self];
+	[self fajrReminderToggle:self];
 }
 
 - (void)setupToolbar
@@ -18,222 +34,22 @@
 	[self addView:locationPrefsView label:@"Location"];
 	[self addView:calculationsPrefsView label:@"Prayer Times"];
 	[self addView:soundPrefsView label:@"Alerts"];
-}
-
-- (IBAction)shuruq_toggle:(id)sender
-{
-    if ([toggleShuruq state] == NSOffState)
-	{
-		[minutesBeforeShuruq setEnabled:NO];
-	} 
-	else 
-	{
-		[minutesBeforeShuruq setEnabled:YES];	
-	}
-}
-
-
-- (IBAction)growl_toggle:(id)sender
-{
-    if ([toggleGrowl state] == NSOffState)
-	{
-		[stickyButton setEnabled:NO];
-	} 
-	else 
-	{
-		[stickyButton setEnabled:YES];	
-	}
-}
-
-- (IBAction)displaynextprayer_toggle:(id)sender
-{
-    if ([toggleNextPrayer state] == NSOffState)
-	{
-		[toggleDisplayIcon setState:1];
-		[toggleDisplayIcon setEnabled:NO];
-		[selectDisplayName setEnabled:NO];
-		[selectDisplayTime setEnabled:NO];
-	} 
-	else 
-	{
-		[toggleDisplayIcon setEnabled:YES];
-		[selectDisplayName setEnabled:YES];
-		[selectDisplayTime setEnabled:YES];
-	}
-}
-
-- (IBAction)sound_toggle:(id)sender
-{
-    if ([toggleSound state] == NSOffState)
-	{
-		[previewButton setEnabled:NO];
-		[selectSound setEnabled:NO];
-		[playAsr setEnabled:NO];
-		[playDhuhur setEnabled:NO];
-		[playFajr setEnabled:NO];
-		[playIsha setEnabled:NO];
-		[playMaghrab setEnabled:NO];
-		[minutesBeforeShuruq setEnabled:NO];
-		[toggleShuruq setEnabled:NO];
-		[minutesBeforeShuruqText setStringValue:@" minutes before"]; //set to grey text
-	}
-	else
-	{
-		[previewButton setEnabled:YES];
-		[selectSound setEnabled:YES];
-		[playAsr setEnabled:YES];
-		[playDhuhur setEnabled:YES];
-		[playFajr setEnabled:YES];
-		[playIsha setEnabled:YES];
-		[playMaghrab setEnabled:YES];
-		[minutesBeforeShuruq setEnabled:YES];
-		[toggleShuruq setEnabled:YES];
-		[minutesBeforeShuruqText setStringValue:@" minutes before"];
-	}
-}
-
-- (IBAction)manual_toggle:(id)sender
-{
-    if ([toggleManual state] == NSOffState)
-	{
-		[latitudeText setEnabled:NO];
-		[longitudeText setEnabled:NO];
-		[setManualLocation setEnabled:NO];
-		[cityText setEnabled:YES];
-		[stateText setEnabled:YES];
-		[countryText setEnabled:YES];
-		[lookupLocation setEnabled:YES];
-		[currentLocation setStringValue:[[[[[userDefaults valueForKey:@"SetCity"] stringByAppendingString:@", "] stringByAppendingString:[userDefaults valueForKey:@"SetState"]] stringByAppendingString:@" "] stringByAppendingString:[userDefaults valueForKey:@"SetCountry"]]];	
-	}
-	else
-	{
-		[latitudeText setEnabled:YES];
-		[longitudeText setEnabled:YES];
-		[setManualLocation setEnabled:YES];
-		[cityText setEnabled:NO];
-		[stateText setEnabled:NO];
-		[countryText setEnabled:NO];
-		[lookupLocation setEnabled:NO];
-		
-		[currentLocation setStringValue:[NSString stringWithFormat:@"Manually set to (%3.4f,%3.4f)",[userDefaults floatForKey:@"Latitude"],[userDefaults floatForKey:@"Longitude"]]];
-	}
-}
-
-- (IBAction)preview_clicked:(id)sender
-{
-	if (!previewState)
-	{
-		// play sound
-		switch ([selectSound indexOfSelectedItem])
-		{
-			case 1:		sound = [NSSound soundNamed:@"alaqsa"]; break;
-			case 2:		sound = [NSSound soundNamed:@"istanbul"]; break;
-			case 3:		sound = [NSSound soundNamed:@"yusufislam"]; break;
-			case 0:
-			default:	sound = [NSSound soundNamed:@"makkah"]; break;
-		}
-		
-		[sound setDelegate:self];
-		[sound play];
-		
-		// change button text to "Stop"
-		[previewButton setTitle:@"Stop"];
-		previewState = !previewState;
-	}
-	else
-	{
-		// stop sound
-		[sound stop];
-	}
-}
-
-- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
-{
-	[previewButton setTitle:@"Preview"];
-	previewState = NO;
-}
-
-
-- (IBAction)lookup_location:(id)sender
-{
-	[lookupStatus setStringValue:@"Looking up latitude and longitude..."];
-	[lookupIndicator startAnimation:sender];
-	[lookupProgress makeKeyAndOrderFront:nil];
-	NSString *city = [cityText stringValue];
-	NSString *state = [stateText stringValue];
-	NSString *country = [countryText stringValue];
-		
-	NSString *safeCity =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) city, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	NSString *safeState =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) state, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	NSString *safeCountry =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) country, NULL, NULL, kCFStringEncodingUTF8) autorelease];
-	
-	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?city=%@&state=%@&country=%@",safeCity,safeState,safeCountry];
-	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
-	
-	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
-	
-	if (valid)
-	{
-		[latitudeText setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
-		[longitudeText setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
-
-		[lookupStatus setStringValue:@"Your location has been set."];
-		[lookupIndicator stopAnimation:sender];
-			
-		[userDefaults setValue:[cityText stringValue] forKey:@"SetCity"];
-		[userDefaults setValue:[stateText stringValue] forKey:@"SetState"];
-		[userDefaults setValue:[countryText stringValue] forKey:@"SetCountry"];
-
-		[currentLocation setStringValue:[[[[[userDefaults valueForKey:@"SetCity"] stringByAppendingString:@", "] stringByAppendingString:[userDefaults valueForKey:@"SetState"]] stringByAppendingString:@" "] stringByAppendingString:[userDefaults valueForKey:@"SetCountry"]]];	
-
-		[self saveAndApply];
-	}
-	else
-	{
-		[lookupStatus setStringValue:@"Error: Unable to find location."];
-		[lookupIndicator stopAnimation:sender];
-	}
+	[self addView:advancedPrefsView label:@"Advanced"];
 }
 
 - (IBAction)showWindow:(id)sender
 {
 	[super showWindow:sender];
-	[self sound_toggle:nil];
-	[self manual_toggle:nil];
-	[self displaynextprayer_toggle:nil];
-	[self growl_toggle:nil];
-	[self shuruq_toggle:nil];
+	
+	[lookupStatus setStringValue:@""];
+	[lookupIndicator setDisplayedWhenStopped:NO];
+	[location setStringValue:[userDefaults stringForKey:@"Location"]];
 }
 
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
 	[[self window] setDelegate:self];
-	previewState = NO;
-}
-
-
-- (void)saveAndApply
-{
-	[userDefaults setFloat:[latitudeText floatValue] forKey:@"Latitude"];
-	[userDefaults setFloat:[longitudeText floatValue] forKey:@"Longitude"];
-	
-	if ([toggleNextPrayer state] == NSOffState) {
-		[userDefaults setBool:YES forKey:@"DisplayIcon"];
-	}
-	
-	[userDefaults setInteger:[minutesBeforeShuruq intValue]forKey:@"MinutesBeforeShuruq"];
-	
-	[cityText setStringValue:[userDefaults valueForKey:@"SetCity"]];
-	[stateText setStringValue:[userDefaults valueForKey:@"SetState"]];
-	[countryText setStringValue:[userDefaults valueForKey:@"SetCountry"]];
-	
-	[userDefaults setValue:[userDefaults valueForKey:@"SetCity"] forKey:@"LocCity"];
-	[userDefaults setValue:[userDefaults valueForKey:@"SetState"] forKey:@"LocState"];
-	[userDefaults setValue:[userDefaults valueForKey:@"SetCountry"] forKey:@"LocCountry"];
-
-	[[AppController sharedController] applyPrefs];
-
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -241,24 +57,67 @@
 	[self saveAndApply];
 }
 
-- (IBAction)applyChange:(id)sender
+
+/*********************/
+/* GENERAL FUNCTIONS */
+/*********************/
+
+- (IBAction)displayNextPrayerToggle:(id)sender
 {
+    if ([displayNextPrayer state] == NSOffState)
+	{
+		[displayIcon setState:1];
+		[userDefaults setBool:YES forKey:@"DisplayIcon"];
+		[displayNextPrayerName setEnabled:NO];
+		[displayNextPrayerNameTitleText setTextColor:[NSColor grayColor]];
+		[displayNextPrayerTime setEnabled:NO];
+		[displayNextPrayerTimeTitleText setTextColor:[NSColor grayColor]];
+	} 
+	else 
+	{
+		[displayNextPrayerName setEnabled:YES];
+		[displayNextPrayerNameTitleText setTextColor:[NSColor blackColor]];
+		[displayNextPrayerTime setEnabled:YES];		
+		[displayNextPrayerTimeTitleText setTextColor:[NSColor blackColor]];
+	}
+	
 	[self saveAndApply];
 }
 
-- (IBAction)changePrayerTimes:(id)sender
+- (IBAction)displayIconToggle:(id)sender
 {
+    if ([displayIcon state] == NSOffState)
+	{
+		[displayNextPrayer setState:1];
+		[userDefaults setBool:YES forKey:@"DisplayNextPrayer"];
+		[self displayNextPrayerToggle:nil];
+	} 
+
 	[self saveAndApply];
 }
 
-
-- (IBAction)setCoordinates:(id)sender
+- (IBAction)selectDisplayNextPrayerOption:(id)sender
 {
+	if([displayNextPrayerName indexOfSelectedItem] == 2) {
+	// if name is not displayed, disable option to not display time
+		[[displayNextPrayerTime itemAtIndex:2] setEnabled:NO];
+		[[displayNextPrayerName itemAtIndex:2] setEnabled:YES];
+		
+	} else if([displayNextPrayerTime indexOfSelectedItem] == 2) {
+	// if time is not displayed, disable option to not display name
+		[[displayNextPrayerName itemAtIndex:2] setEnabled:NO];
+		[[displayNextPrayerTime itemAtIndex:2] setEnabled:YES];	
+			
+	} else {
+	// otherwise, enable the ability to not display either one
+		[[displayNextPrayerName itemAtIndex:2] setEnabled:YES];
+		[[displayNextPrayerTime itemAtIndex:2] setEnabled:YES];		
+	}
+	
 	[self saveAndApply];
- 	[currentLocation setStringValue:[NSString stringWithFormat:@"Manually set to (%3.4f,%3.4f)",[userDefaults floatForKey:@"Latitude"],[userDefaults floatForKey:@"Longitude"]]];
 }
 
-- (IBAction)startatlogin_toggle:(id)sender
+- (IBAction)startAtLoginToggle:(id)sender
 {
 	int i = 0;
 	NSMutableArray* loginItems;
@@ -268,8 +127,8 @@
 	
 	NSMutableDictionary *loginObject = [[NSMutableDictionary alloc] initWithCapacity:2];
 
-	if([toggleStartatlogin state] == NSOnState) {
-	
+	if([startAtLogin state] == NSOnState) {
+
 		//add it to login items
 		[loginObject setObject:[[NSBundle mainBundle] bundlePath] forKey:@"Path"];
 		[loginItems addObject:loginObject];
@@ -288,10 +147,7 @@
 	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 
     [loginItems release];
-
-
 }
-
 
 - (IBAction)checkForUpdates:(id)sender
 {
@@ -299,73 +155,282 @@
 }
 
 
-- (IBAction)selectAdhan:(id)sender 
+/**********************/
+/* LOCATION FUNCTIONS */
+/**********************/
+
+- (IBAction)manualLocationToggle:(id)sender
 {
-
-	NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
-
-	NSOpenPanel * panel = [NSOpenPanel openPanel];
-
-	[panel setPrompt: @"Select"];
-	[panel setAllowsMultipleSelection: NO];
-	[panel setCanChooseFiles: YES];
-	[panel setCanChooseDirectories: NO];
-	[panel setCanCreateDirectories: NO];
-
-	[panel beginSheetForDirectory: nil 
-		file: nil 
-		types: adhanFileTypes
-		modalForWindow: [self window] 
-		modalDelegate: self 
-		didEndSelector:
-		@selector(selectAdhanClosed:returnCode:contextInfo:) 
-		contextInfo: nil];
+    if ([manualLocation state] == NSOffState)
+	{
+		[self lookupLocation:self];
+	}
+	
+	[self locationToggle];
 }
 
-
-
-
-- (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info
+- (void)locationToggle 
 {
-	if (code == NSOKButton) {
-		NSLog(@"you have selected %@",[[openPanel filenames] objectAtIndex: 0]);
+    if ([manualLocation state] == NSOffState)
+	{
+		[latitude setEnabled:NO];
+		[latitudeLabel setTextColor:[NSColor grayColor]];
+		[longitude setEnabled:NO];
+		[longitudeLabel setTextColor:[NSColor grayColor]];
+		[setManualLocation setEnabled:NO];
+		[location setEnabled:YES];
+		[locationTitleText setTextColor:[NSColor blackColor]];
+		[setLocation setEnabled:YES];
+	}
+	else
+	{
+		[latitude setEnabled:YES];
+		[latitudeLabel setTextColor:[NSColor blackColor]];
+		[longitude setEnabled:YES];
+		[longitudeLabel setTextColor:[NSColor blackColor]];
+		[setManualLocation setEnabled:YES];
+		[location setEnabled:NO];
+		[locationTitleText setTextColor:[NSColor grayColor]];
+		[setLocation setEnabled:NO];
+		[lookupStatus setStringValue:@""];
+		[lookupIndicator setDisplayedWhenStopped:NO];
+	}
+}
+
+- (IBAction)lookupLocation:(id)sender 
+{
+
+	[lookupIndicator setDisplayedWhenStopped:YES];
+	[lookupStatus setStringValue:@"Looking up latitude and longitude..."];
+	[lookupStatus setTextColor:[NSColor blackColor]];
+	[locationPrefsView display];
+
+	[lookupIndicator startAnimation:sender];
+	
+
+	NSString *userLocation = [location stringValue];
 		
-		/*NSSound *newSound = [[NSSound alloc] initWithContentsOfFile:[[openPanel filenames] objectAtIndex: 0] byReference:NO];
-		[newSound play];*/
+	NSString *urlSafeUserLocation =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) userLocation, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	
+	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?loc=%@",urlSafeUserLocation];
+	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
+	
+	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
+	
+	if (valid)
+	{
+		[latitude setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
+		[longitude setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
 		
-		if([selectSound numberOfItems] <= 6) {
-			[selectSound insertItemWithTitle:[[openPanel filenames] objectAtIndex: 0] atIndex:5];
-			[[selectSound menu] insertItem:[NSMenuItem separatorItem] atIndex:6];
-			[selectSound selectItemAtIndex:5];
-		} else {
-			[selectSound removeItemAtIndex:5];
-			[selectSound insertItemWithTitle:[[openPanel filenames] objectAtIndex: 0] atIndex:5];
-			[selectSound selectItemAtIndex:5];
-		}
-	} else {
-		[selectSound selectItemAtIndex:[userDefaults integerForKey:@"Sound"]];
+
+		[lookupStatus setStringValue:@"Your location has been set"];
+		[lookupStatus setTextColor:[NSColor blackColor]];
+		[lookupIndicator stopAnimation:sender];
+		
+		[userDefaults setValue:[location stringValue] forKey:@"Location"];	
+
+		[self saveAndApply];
+	}
+	else
+	{
+		[lookupStatus setStringValue:@"Error: Unable to find location"];
+		[lookupStatus setTextColor:[NSColor redColor]];
+		[lookupIndicator stopAnimation:sender];
 	}
 }
 
 
-- (IBAction)setVolume:(id)sender 
+/*************************/
+/* CALCULATION FUNCTIONS */
+/*************************/
+
+- (IBAction)advancedToggle:(id)sender
 {
-	NSLog(@"volume is now %f",[volumeSlider floatValue]);
+	NSWindow *calcWindow = [calculationsPrefsView window];
+	
+	
+	NSRect expandedWindowSize = {(NSPoint){0,0},(NSSize){375,500}};
+	NSRect collapsedWindowSize = {(NSPoint){0,0},(NSSize){375,270}};
+	
+	NSRect expandedWindowRect = NSMakeRect([calcWindow frame].origin.x - 
+		(expandedWindowSize.size.width - [calcWindow frame].size.width), [calcWindow frame].origin.y - 
+        (expandedWindowSize.size.height - [calcWindow frame].size.height), expandedWindowSize.size.width, expandedWindowSize.size.height);
+	
+	NSRect collapsedWindowRect = NSMakeRect([calcWindow frame].origin.x - 
+		(collapsedWindowSize.size.width - [calcWindow frame].size.width), [calcWindow frame].origin.y - 
+        (collapsedWindowSize.size.height - [calcWindow frame].size.height), collapsedWindowSize.size.width, collapsedWindowSize.size.height);
+	
+    if ([expandAdvanced state] == NSOffState)
+	{
+		[advancedCalculationsPrefsView setHidden:YES];
+		[calcWindow setFrame:collapsedWindowRect display:YES animate:YES];
+	} 
+	else 
+	{
+		[advancedCalculationsPrefsView setHidden:NO];
+
+
+		[advancedCalculationsPrefsView setFrameSize:(NSSize){350,300}];
+		[advancedCalculationsPrefsView setFrameOrigin:(NSPoint){10,-190}];
+		
+		[advancedCalculationsPrefsView display];
+		[calcWindow setFrame:expandedWindowRect display:YES animate:YES];
+
+	}
 }
 
-- (IBAction)setMaxVolume:(id)sender 
+
+/*******************/
+/* ALERT FUNCTIONS */
+/*******************/
+
+- (IBAction)shuruqReminderToggle:(id)sender
 {
-	[volumeSlider setFloatValue:100];
-	NSLog(@"volume is now %f",[volumeSlider floatValue]);
+    if ([shuruqReminder state] == NSOffState)
+	{
+		[minutesBeforeShuruq setEnabled:NO];
+	} 
+	else 
+	{
+		[minutesBeforeShuruq setEnabled:YES];	
+	}
 }
 
-- (IBAction)setMinVolume:(id)sender 
+- (IBAction)fajrReminderToggle:(id)sender
 {
-	[volumeSlider setFloatValue:0];
-	NSLog(@"volume is now %f",[volumeSlider floatValue]);
+    if ([fajrReminder state] == NSOffState)
+	{
+		[minutesBeforeFajr setEnabled:NO];
+	} 
+	else 
+	{
+		[minutesBeforeFajr setEnabled:YES];	
+	}
+}
+
+- (IBAction)enableGrowlToggle:(id)sender
+{
+    if ([enableGrowl state] == NSOffState)
+	{
+		[stickyGrowl setEnabled:NO];
+	} 
+	else 
+	{
+		[stickyGrowl setEnabled:YES];	
+	}
+}
+
+- (IBAction)enableSoundToggle:(id)sender
+{
+    if ([enableSound state] == NSOffState)
+	{
+		[previewSound setEnabled:NO];
+		[soundFile setEnabled:NO];
+		[soundFileTitleText setTextColor:[NSColor grayColor]];
+		[playFajr setEnabled:NO];
+		[playFajrTitleText setTextColor:[NSColor grayColor]];
+		[playDhuhur setEnabled:NO];
+		[playDhuhurTitleText setTextColor:[NSColor grayColor]];
+		[playAsr setEnabled:NO];
+		[playAsrTitleText setTextColor:[NSColor grayColor]];
+		[playMaghrib setEnabled:NO];
+		[playMaghribTitleText setTextColor:[NSColor grayColor]];
+		[playIsha setEnabled:NO];
+		[playIshaTitleText setTextColor:[NSColor grayColor]];
+		
+		[shuruqReminder setEnabled:NO];
+		[minutesBeforeShuruq setEnabled:NO];
+		[minutesBeforeShuruqText setTextColor:[NSColor grayColor]];
+		
+		[fajrReminder setEnabled:NO];
+		[minutesBeforeFajr setEnabled:NO];
+		[minutesBeforeFajrText setTextColor:[NSColor grayColor]];
+	}
+	else
+	{
+		[previewSound setEnabled:YES];
+		[soundFile setEnabled:YES];
+		[soundFileTitleText setTextColor:[NSColor blackColor]];
+		[playFajr setEnabled:YES];
+		[playFajrTitleText setTextColor:[NSColor blackColor]];
+		[playDhuhur setEnabled:YES];
+		[playDhuhurTitleText setTextColor:[NSColor blackColor]];
+		[playAsr setEnabled:YES];	
+		[playAsrTitleText setTextColor:[NSColor blackColor]];	
+		[playMaghrib setEnabled:YES];
+		[playMaghribTitleText setTextColor:[NSColor blackColor]];
+		[playIsha setEnabled:YES];
+		[playIshaTitleText setTextColor:[NSColor blackColor]];
+				
+		[shuruqReminder setEnabled:YES];
+			if([shuruqReminder state] == NSOnState) { 
+				[minutesBeforeShuruq setEnabled:YES];
+			}	
+		[minutesBeforeShuruqText setTextColor:[NSColor blackColor]];
+		
+		
+		[fajrReminder setEnabled:YES];
+			if([fajrReminder state] == NSOnState) { 
+				[minutesBeforeFajr setEnabled:YES];
+			}
+		[minutesBeforeFajrText setTextColor:[NSColor blackColor]];
+	}
+}
+
+- (IBAction)playPreview:(id)sender
+{
+	if (!playingPreview)
+	{
+		// play sound
+		switch ([soundFile indexOfSelectedItem])
+		{
+			case 1:		sound = [NSSound soundNamed:@"makkah"]; break;
+			case 2:		sound = [NSSound soundNamed:@"alaqsa"]; break;
+			case 3:		sound = [NSSound soundNamed:@"istanbul"]; break;
+			case 5:		sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:YES]; break;
+			case 0:
+			default:	sound = [NSSound soundNamed:@"yusufislam"]; break;
+		}
+		
+		[sound setDelegate:self];
+		[sound play];
+		
+		// change button text to "Stop"
+		[previewSound setTitle:@"Stop"];
+		playingPreview = !playingPreview;
+	}
+	else
+	{
+		// stop sound
+		[sound stop];
+	}
+}
+
+- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
+{
+	[previewSound setTitle:@"Preview"];
+	playingPreview = NO;
 }
 
 
+/******************/
+/* MISC FUNCTIONS */
+/******************/
+
+- (void)saveAndApply
+{	
+	//save latitude and longitude
+	[userDefaults setFloat:[latitude floatValue] forKey:@"Latitude"];
+	[userDefaults setFloat:[longitude floatValue] forKey:@"Longitude"];	
+
+	//tell appcontroller to check and apply prefs
+	[[AppController sharedController] applyPrefs];
+}
+
+- (IBAction)applyChange:(id)sender
+{
+	[self saveAndApply];
+}
 
 
 @end

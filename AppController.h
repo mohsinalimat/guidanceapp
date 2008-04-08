@@ -7,12 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-//#import "Growler.h"
 #import <Growl-WithInstaller/Growl.h>
 #import "Prayer.h"
 #import "PrayerTimes.h"
 #import "PrefController.h"
 #import "AboutController.h"
+#import "WelcomeController.h"
 
 #define NotificationName  @"Guidance Notification"
 
@@ -46,7 +46,7 @@
 	IBOutlet NSButton *toggleStartatlogin;
 	
 	
-	/* PRAYER OBJECTS */
+	/* PRAYER OBJECTS */	
 	Prayer *fajrPrayer;
 	Prayer *shuruqPrayer;
 	Prayer *dhuhurPrayer;
@@ -60,7 +60,6 @@
 	
 	PrayerTimes *todaysPrayerTimes;
 	
-	
 	/* NOTIFICATION */
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
@@ -73,6 +72,7 @@
 	/* PREFERENCES */
 	NSUserDefaults *userDefaults;
 	NSString *adhanFile;
+	BOOL userAdhan;
 	BOOL displayGrowl;
 	BOOL stickyGrowl;
 	BOOL checkForUpdates;
@@ -84,13 +84,14 @@
 	BOOL displayNextPrayer;
 	BOOL shuruqReminder;
 	int minutesBeforeShuruq;
+	BOOL tahajudReminder;
+	int minutesBeforeTahajud;
 }
 
 - (IBAction)doNothing:(id)sender; 
 - (IBAction)stopAdhan:(id)sender;
 - (IBAction)donate:(id)sender;
 - (IBAction)getHelp:(id)sender;
-- (IBAction)firstRunSetup:(id)sender;
 
 - (void) handleTimer;
 
