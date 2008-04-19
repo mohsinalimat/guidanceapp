@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "AboutBackgroundView.h"
 
 @interface AboutController : NSWindowController {
 	BOOL toggleCredits;

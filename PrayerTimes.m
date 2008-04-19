@@ -44,6 +44,37 @@
 	Altitude = n;
 }
 
+- (void)setFajrOffset:(int)n
+{
+	FajrOffset = n;
+	NSLog(@"fajr offset set to %d",FajrOffset);
+}
+
+- (void)setShuruqOffset:(int)n
+{
+	ShuruqOffset = n;
+}
+
+- (void)setDhuhurOffset:(int)n
+{
+	DhuhurOffset = n;
+}
+
+- (void)setAsrOffset:(int)n
+{
+	AsrOffset = n;
+}
+
+- (void)setMaghribOffset:(int)n
+{
+	MaghribOffset = n;
+}
+
+- (void)setIshaOffset:(int)n
+{
+	IshaOffset = n;
+}
+
 - (void)setAsrMethod:(int)n
 {
 	if (n >= 0 && n < 2)
@@ -60,11 +91,14 @@
 {
 	switch (n)
 	{
-		case 2:
+		case 3:
 			TwilightSunsetAngle = 18;
 			break;
-		case 1:
+		case 2:
 			TwilightSunsetAngle = 17.5;
+			break;
+		case 1:
+			TwilightSunsetAngle = 17;
 			break;
 		case 0:
 		default:
@@ -77,6 +111,9 @@
 {
 	switch (n)
 	{
+		case 3:
+			TwilightDawnAngle = 19.5;
+			break;
 		case 2:
 			TwilightDawnAngle = 19;
 			break;
@@ -223,37 +260,37 @@
  
 - (NSCalendarDate *)getFajrTime 
 {
-	return FajrTime;
+	return [FajrTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:FajrOffset seconds:0];	
 }
 
 
 - (NSCalendarDate *)getShuruqTime 
 {
-	return ShuruqTime;
+	return [ShuruqTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:ShuruqOffset seconds:0];	
 }
 
 
 - (NSCalendarDate *)getDhuhurTime 
 {
-	return DhuhurTime;
+	return [DhuhurTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:DhuhurOffset seconds:0];	
 }
 
 
 - (NSCalendarDate *)getAsrTime 
 {
-	return AsrTime;
+	return [AsrTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:AsrOffset seconds:0];	
 }
 
 
 - (NSCalendarDate *)getMaghribTime 
 {
-	return MaghribTime;
+	return [MaghribTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:MaghribOffset seconds:0];	
 }
 
 
 - (NSCalendarDate *)getIshaTime 
 {
-	return IshaTime;
+	return [IshaTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:IshaOffset seconds:0];	
 }
 
 

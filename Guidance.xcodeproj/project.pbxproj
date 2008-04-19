@@ -18,7 +18,6 @@
 		34B5CC540CD6A75500CF5D14 /* PrefController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B5CC530CD6A75500CF5D14 /* PrefController.m */; };
 		34B5CC830CD6C06900CF5D14 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 34B5CC810CD6C06900CF5D14 /* Preferences.xib */; };
 		34E7E5650CCD2DBA0098659D /* Prayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E7E5630CCD2DBA0098659D /* Prayer.m */; };
-		34F57F320CE4C8520001F800 /* AboutBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F57F310CE4C8520001F800 /* AboutBackgroundView.m */; };
 		84031FA40CCDBEE8005DA599 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 84031FA30CCDBEE8005DA599 /* Credits.rtf */; };
 		840BA2BC0CD6C63800181205 /* menuBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 840BA2BB0CD6C63800181205 /* menuBar.png */; };
 		840BA2BE0CD6C64B00181205 /* menuBarHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 840BA2BD0CD6C64B00181205 /* menuBarHighlight.png */; };
@@ -83,8 +82,6 @@
 		34B5CC820CD6C06900CF5D14 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		34E7E5620CCD2DBA0098659D /* Prayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prayer.h; sourceTree = "<group>"; };
 		34E7E5630CCD2DBA0098659D /* Prayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Prayer.m; sourceTree = "<group>"; };
-		34F57F300CE4C8520001F800 /* AboutBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutBackgroundView.h; sourceTree = "<group>"; };
-		34F57F310CE4C8520001F800 /* AboutBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutBackgroundView.m; sourceTree = "<group>"; };
 		84031FA30CCDBEE8005DA599 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		840BA2BB0CD6C63800181205 /* menuBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuBar.png; sourceTree = "<group>"; };
 		840BA2BD0CD6C64B00181205 /* menuBarHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuBarHighlight.png; sourceTree = "<group>"; };
@@ -249,8 +246,6 @@
 				3499B1350CE3F5330044010B /* About.xib */,
 				3499B15D0CE3F76D0044010B /* AboutController.h */,
 				3499B15E0CE3F76D0044010B /* AboutController.m */,
-				34F57F300CE4C8520001F800 /* AboutBackgroundView.h */,
-				34F57F310CE4C8520001F800 /* AboutBackgroundView.m */,
 			);
 			name = About;
 			sourceTree = "<group>";
@@ -390,7 +385,6 @@
 				340EF9150CD79628007280D6 /* DBPrefsWindowController.m in Sources */,
 				340EF9A00CD7A867007280D6 /* AppController.m in Sources */,
 				3499B15F0CE3F76D0044010B /* AboutController.m in Sources */,
-				34F57F320CE4C8520001F800 /* AboutBackgroundView.m in Sources */,
 				84985D880D63FA92008447D3 /* WelcomeController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

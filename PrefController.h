@@ -76,66 +76,48 @@
 
 
 	NSUserDefaults *userDefaults;
+	NSFileManager *fileManager;
 }
 
 
 /* UI FUNCTIONS */
-
 - (void)awakeFromNib;
-
 - (void)setupToolbar;
-
 - (IBAction)showWindow:(id)sender;
-
 - (void)windowDidLoad;
 
 
 /* GENERAL FUNCTIONS */
-
 - (IBAction)displayNextPrayerToggle:(id)sender;
-
 - (IBAction)displayIconToggle:(id)sender;
-
 - (IBAction)selectDisplayNextPrayerOption:(id)sender;
-
 - (IBAction)startAtLoginToggle:(id)sender;
-
 - (IBAction)checkForUpdates:(id)sender;
 
 
 /* LOCATION FUNCTIONS */
-
 - (IBAction)manualLocationToggle:(id)sender;
-
 - (void)locationToggle;
-
 - (IBAction)lookupLocation:(id)sender;
 
 
 /* LOCATION FUNCTIONS */
-
 - (IBAction)advancedToggle:(id)sender;
 
 
 /* ALERT FUNCTIONS */
-
 - (IBAction)shuruqReminderToggle:(id)sender;
-
 - (IBAction)fajrReminderToggle:(id)sender;
-
 - (IBAction)enableGrowlToggle:(id)sender;
-
 - (IBAction)enableSoundToggle:(id)sender;
-
 - (IBAction)playPreview:(id)sender;
-
 - (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful;
-
+- (IBAction)selectAdhan:(id)sender;
+- (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info;
+- (void) insertUserAdhan:(NSString *) userSoundFileName;
 
 /* MISC FUNCTIONS */
-
 - (IBAction)applyChange:(id)sender;
-
 - (void)saveAndApply;
 
 

@@ -13,6 +13,8 @@
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 	[userDefaults registerDefaults:appDefaults];
 	
+	fileManager = [NSFileManager defaultManager];
+	
 	
 	[displayNextPrayerName setAutoenablesItems:NO];
 	[displayNextPrayerTime setAutoenablesItems:NO];
@@ -26,6 +28,23 @@
 	
 	[self shuruqReminderToggle:self];
 	[self fajrReminderToggle:self];
+	
+	if([fileManager fileExistsAtPath:[userDefaults stringForKey:@"UserSoundFile"]]) {
+		NSLog(@"file exists");
+		[self insertUserAdhan:[userDefaults stringForKey:@"UserSoundFile"]];
+		if([userDefaults boolForKey:@"UserSound"]) {
+			NSLog(@"select the user file");
+			[soundFile selectItemAtIndex:5];
+		}
+	} else {
+		NSLog(@"file doesn't exist");
+		if([userDefaults boolForKey:@"UserSound"]) {
+			NSLog(@"user had sound file selected");
+			[userDefaults setBool:NO forKey:@"UserSound"];
+			[userDefaults setInteger:0 forKey:@"SoundFile"];
+			[soundFile selectItemAtIndex:0];
+		}
+	}
 }
 
 - (void)setupToolbar
@@ -387,7 +406,7 @@
 			case 1:		sound = [NSSound soundNamed:@"makkah"]; break;
 			case 2:		sound = [NSSound soundNamed:@"alaqsa"]; break;
 			case 3:		sound = [NSSound soundNamed:@"istanbul"]; break;
-			case 5:		sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:YES]; break;
+			case 5:		sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:NO]; break;
 			case 0:
 			default:	sound = [NSSound soundNamed:@"yusufislam"]; break;
 		}
@@ -396,8 +415,11 @@
 		[sound play];
 		
 		// change button text to "Stop"
-		[previewSound setTitle:@"Stop"];
-		playingPreview = !playingPreview;
+		if([sound isPlaying]) 
+		{
+			[previewSound setTitle:@"Stop"];
+			playingPreview = !playingPreview;
+		}
 	}
 	else
 	{
@@ -410,6 +432,59 @@
 {
 	[previewSound setTitle:@"Preview"];
 	playingPreview = NO;
+}
+
+- (IBAction)selectAdhan:(id)sender 
+{
+	if([[soundFile titleOfSelectedItem] isEqualToString:@"Select..."]) {
+	
+	[userDefaults setBool:YES forKey:@"UserSound"];
+	NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
+
+	NSOpenPanel * panel = [NSOpenPanel openPanel];
+
+	[panel setPrompt: @"Select"];
+	[panel setAllowsMultipleSelection: NO];
+	[panel setCanChooseFiles: YES];
+	[panel setCanChooseDirectories: NO];
+	[panel setCanCreateDirectories: NO];
+
+	[panel beginSheetForDirectory: nil 
+		file: nil 
+		types: adhanFileTypes
+		modalForWindow: [self window] 
+		modalDelegate: self 
+		didEndSelector:
+		@selector(selectAdhanClosed:returnCode:contextInfo:) 
+		contextInfo: nil];
+	} else {
+		[userDefaults setBool:NO forKey:@"UserSound"];
+		NSLog(@"no user sound");
+	}
+	[self saveAndApply];
+}
+
+- (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info
+{
+	if (code == NSOKButton) {
+		[userDefaults setObject:[[openPanel filenames] objectAtIndex: 0] forKey:@"UserSoundFile"];
+		[self insertUserAdhan:[[openPanel filenames] objectAtIndex: 0]];
+		[soundFile selectItemAtIndex:5];
+	} else {
+		[soundFile selectItemAtIndex:[userDefaults integerForKey:@"Sound"]];
+	}
+	[self saveAndApply];
+}
+
+- (void) insertUserAdhan: (NSString *) userSoundFileName {
+	NSString *onlyName = [[NSString alloc] initWithString:[userSoundFileName lastPathComponent]];
+	if([soundFile numberOfItems] <= 6) {
+		[soundFile insertItemWithTitle:onlyName atIndex:5];
+		[[soundFile menu] insertItem:[NSMenuItem separatorItem] atIndex:6];
+	} else {
+		[soundFile removeItemAtIndex:5];
+		[soundFile insertItemWithTitle:onlyName atIndex:5];
+	}
 }
 
 

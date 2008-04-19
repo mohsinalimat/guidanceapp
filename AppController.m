@@ -580,6 +580,14 @@ static AppController *sharedAppController = nil;
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	[todaysPrayerTimes setFajrMethod: [userDefaults integerForKey:@"FajrMethod"]];
 	
+	[todaysPrayerTimes setFajrOffset: [userDefaults integerForKey:@"FajrOffset"] - 15];
+	[todaysPrayerTimes setShuruqOffset: [userDefaults integerForKey:@"ShuruqOffset"] - 15];
+	[todaysPrayerTimes setDhuhurOffset: [userDefaults integerForKey:@"DhuhurOffset"] - 15];
+	[todaysPrayerTimes setAsrOffset: [userDefaults integerForKey:@"AsrOffset"] - 15];
+	[todaysPrayerTimes setMaghribOffset: [userDefaults integerForKey:@"MaghribOffset"] - 15];
+	[todaysPrayerTimes setIshaOffset: [userDefaults integerForKey:@"IshaOffset"] - 15];
+	
+	
 	if ([userDefaults boolForKey:@"EnableSound"])
 	{
 		//set adhan prefs

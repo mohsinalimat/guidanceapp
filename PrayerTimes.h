@@ -17,6 +17,14 @@
 	double TwilightDawnAngle;
 	double TwilightSunsetAngle;
 	float timezone;
+
+	int FajrOffset;
+	int ShuruqOffset;
+	int DhuhurOffset;
+	int AsrOffset;
+	int MaghribOffset;
+	int IshaOffset;
+	
 	
 	NSCalendarDate *FajrTime;
 	NSCalendarDate *ShuruqTime;
@@ -25,6 +33,14 @@
 	NSCalendarDate *MaghribTime;
 	NSCalendarDate *IshaTime;
 }
+
+
+- (void)setFajrOffset:(int)n;
+- (void)setShuruqOffset:(int)n;
+- (void)setDhuhurOffset:(int)n;
+- (void)setAsrOffset:(int)n;
+- (void)setMaghribOffset:(int)n;
+- (void)setIshaOffset:(int)n;
 
 - (void)setLatitude:(double)n;
 - (void)setLongitude:(double)n;

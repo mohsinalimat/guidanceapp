@@ -33,7 +33,6 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 	[welcomeMsg setStringValue:@"thanks!"];
 }
 
-
 @end
 
 

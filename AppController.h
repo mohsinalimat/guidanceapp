@@ -88,6 +88,7 @@
 	int minutesBeforeTahajud;
 }
 
+
 - (IBAction)doNothing:(id)sender; 
 - (IBAction)stopAdhan:(id)sender;
 - (IBAction)donate:(id)sender;
