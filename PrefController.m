@@ -24,27 +24,23 @@
 	[self locationToggle];
 	[self enableSoundToggle:self];
 	[self enableGrowlToggle:self];
-	[self displayNextPrayerToggle:self];
-	
+	[self displayNextPrayerToggle:self];	
 	[self shuruqReminderToggle:self];
 	[self fajrReminderToggle:self];
 	
+
 	if([fileManager fileExistsAtPath:[userDefaults stringForKey:@"UserSoundFile"]]) {
-		NSLog(@"file exists");
 		[self insertUserAdhan:[userDefaults stringForKey:@"UserSoundFile"]];
-		if([userDefaults boolForKey:@"UserSound"]) {
-			NSLog(@"select the user file");
-			[soundFile selectItemAtIndex:5];
-		}
 	} else {
-		NSLog(@"file doesn't exist");
 		if([userDefaults boolForKey:@"UserSound"]) {
-			NSLog(@"user had sound file selected");
 			[userDefaults setBool:NO forKey:@"UserSound"];
 			[userDefaults setInteger:0 forKey:@"SoundFile"];
-			[soundFile selectItemAtIndex:0];
+			[self saveAndApply];
 		}
 	}
+	
+	[soundFile selectItemAtIndex:[userDefaults integerForKey:@"SoundFile"]];
+
 }
 
 - (void)setupToolbar
@@ -436,43 +432,58 @@
 
 - (IBAction)selectAdhan:(id)sender 
 {
+
 	if([[soundFile titleOfSelectedItem] isEqualToString:@"Select..."]) {
 	
-	[userDefaults setBool:YES forKey:@"UserSound"];
-	NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
-
-	NSOpenPanel * panel = [NSOpenPanel openPanel];
-
-	[panel setPrompt: @"Select"];
-	[panel setAllowsMultipleSelection: NO];
-	[panel setCanChooseFiles: YES];
-	[panel setCanChooseDirectories: NO];
-	[panel setCanCreateDirectories: NO];
-
-	[panel beginSheetForDirectory: nil 
-		file: nil 
-		types: adhanFileTypes
-		modalForWindow: [self window] 
-		modalDelegate: self 
-		didEndSelector:
-		@selector(selectAdhanClosed:returnCode:contextInfo:) 
-		contextInfo: nil];
-	} else {
+		NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
+		NSOpenPanel * panel = [NSOpenPanel openPanel];
+		[panel setPrompt: @"Select"];
+		[panel setAllowsMultipleSelection: NO];
+		[panel setCanChooseFiles: YES];
+		[panel setCanChooseDirectories: NO];
+		[panel setCanCreateDirectories: NO];
+		[panel beginSheetForDirectory: nil 
+			file: nil 
+			types: adhanFileTypes
+			modalForWindow: [self window] 
+			modalDelegate: self 
+			didEndSelector:
+			@selector(selectAdhanClosed:returnCode:contextInfo:) 
+			contextInfo: nil];
+			
+	} else if([soundFile indexOfSelectedItem] < 4) {
+	
+		[userDefaults setInteger:[soundFile indexOfSelectedItem] forKey:@"SoundFile"];
 		[userDefaults setBool:NO forKey:@"UserSound"];
-		NSLog(@"no user sound");
+		
+	} else if([soundFile indexOfSelectedItem] == 5) {
+	
+		[userDefaults setInteger:5 forKey:@"SoundFile"];
+		[userDefaults setBool:YES forKey:@"UserSound"];
+
 	}
+	
 	[self saveAndApply];
 }
 
 - (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info
 {
 	if (code == NSOKButton) {
+
 		[userDefaults setObject:[[openPanel filenames] objectAtIndex: 0] forKey:@"UserSoundFile"];
 		[self insertUserAdhan:[[openPanel filenames] objectAtIndex: 0]];
+
+		[userDefaults setBool:YES forKey:@"UserSound"];		
+		[userDefaults setInteger:5 forKey:@"SoundFile"];
 		[soundFile selectItemAtIndex:5];
+		
 	} else {
-		[soundFile selectItemAtIndex:[userDefaults integerForKey:@"Sound"]];
+	
+		[userDefaults setBool:NO forKey:@"UserSound"];
+		[soundFile selectItemAtIndex:[userDefaults integerForKey:@"SoundFile"]];
+		
 	}
+	
 	[self saveAndApply];
 }
 
@@ -498,6 +509,9 @@
 	[userDefaults setFloat:[latitude floatValue] forKey:@"Latitude"];
 	[userDefaults setFloat:[longitude floatValue] forKey:@"Longitude"];	
 
+	//write user preferences to pref file
+	[userDefaults synchronize];
+
 	//tell appcontroller to check and apply prefs
 	[[AppController sharedController] applyPrefs];
 }
@@ -507,5 +521,5 @@
 	[self saveAndApply];
 }
 
-/* w00t */
+
 @end
