@@ -47,7 +47,6 @@
 - (void)setFajrOffset:(int)n
 {
 	FajrOffset = n;
-	NSLog(@"fajr offset set to %d",FajrOffset);
 }
 
 - (void)setShuruqOffset:(int)n

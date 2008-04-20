@@ -567,7 +567,6 @@ static AppController *sharedAppController = nil;
 		adhanFile = [userDefaults stringForKey:@"UserSoundFile"];
 		adhan = [[NSSound alloc] initWithContentsOfFile:adhanFile byReference:YES];
 		userAdhan = YES;
-		NSLog(@"init user adhan");
 	} else {
 		userAdhan = NO;
 	}
