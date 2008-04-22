@@ -64,7 +64,6 @@
 	BOOL stickyGrowl;
 	BOOL checkForUpdates;
 	BOOL firstRun;
-	NSString *currentVersion;
 	int menuDisplayTime;
 	int menuDisplayName;
 	BOOL displayIcon;
@@ -73,6 +72,8 @@
 	int minutesBeforeShuruq;
 	BOOL tahajudReminder;
 	int minutesBeforeTahajud;
+	
+	NSSound *testSound;
 }
 
 

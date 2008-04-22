@@ -10,14 +10,17 @@
 
 @interface WelcomeController : NSWindowController {
 	
-	IBOutlet NSButton *myButton;
-	IBOutlet NSTextField *welcomeMsg;
+	IBOutlet NSTextField *locationLookupMessage;
+	IBOutlet NSProgressIndicator *locationLookupIndicator;
+	IBOutlet NSWindow *welcomeWindow;
 }
 
 + (WelcomeController *)sharedWelcomeWindowController;
 + (NSString *)nibName;
 
 
-- (IBAction)goDonate:(NSButton *)sender;
+- (IBAction)done:(id)sender;
+- (IBAction)lookup:(id)sender;
+- (IBAction)startAtLogin:(id)sender;
 
 @end

@@ -14,7 +14,6 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {
-
 	//create user defaults object
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
@@ -56,7 +55,7 @@ static AppController *sharedAppController = nil;
 	
 	[self checkForUpdate:YES]; //check for new version	
 
-	if(firstRun) {
+	if(firstRun || true) {
 		[[WelcomeController sharedWelcomeWindowController] showWindow:nil];
 		[[[WelcomeController sharedWelcomeWindowController] window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];

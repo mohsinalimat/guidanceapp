@@ -26,12 +26,30 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
    return @"Welcome";
 }
 
-
-- (IBAction)goDonate:(NSButton *)sender
+- (void)awakeFromNib
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/donate/"]]; //go to the donate page
-	[welcomeMsg setStringValue:@"thanks!"];
+	[locationLookupMessage setStringValue:@""];
+	[locationLookupIndicator setDisplayedWhenStopped:NO];
 }
+
+- (IBAction)done:(id)sender
+{
+	//save and apply prefs
+	[welcomeWindow close];
+}
+
+
+- (IBAction)lookup:(id)sender
+{
+	[locationLookupMessage setStringValue:@"Looking up latitude and longitude..."];
+	[locationLookupIndicator startAnimation:sender];	
+}
+
+- (IBAction)startAtLogin:(id)sender
+{
+	NSLog(@"Yo, start this thing at login!");
+}
+
 
 @end
 
