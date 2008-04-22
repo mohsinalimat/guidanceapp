@@ -43,7 +43,7 @@ static AboutController *_sharedAboutWindowController = nil;
 
 - (void)setVersionText:(NSString *)version
 {
-	[guidanceVersion setStringValue:[@"version " stringByAppendingString:version]];
+	[guidanceVersion setStringValue:[@"Version " stringByAppendingString:version]];
 }
 
 - (IBAction)toggleCredits:(NSButton *)sender

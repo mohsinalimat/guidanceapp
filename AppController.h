@@ -21,29 +21,17 @@
 
 	/* GUI */
 	NSStatusItem *menuBar;
-    
 	IBOutlet NSMenu *appMenu;
-	
 	IBOutlet NSMenuItem *fajrItem;
 	IBOutlet NSMenuItem *shuruqItem;
 	IBOutlet NSMenuItem *dhuhurItem;
 	IBOutlet NSMenuItem *asrItem;
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
-	
 	NSMenuItem *muteAdhan;
 	NSMenuItem *muteSeperator;
-	
 	NSDictionary *menuItems;
 	NSDictionary *prayersArray;
-	
-	IBOutlet NSWindow *welcomeWindow;	
-	
-	IBOutlet NSTextField *cityText;
-	IBOutlet NSTextField *stateText;
-	IBOutlet NSTextField *countryText;
-	
-	IBOutlet NSButton *toggleStartatlogin;
 	
 	
 	/* PRAYER OBJECTS */	
@@ -54,11 +42,10 @@
 	Prayer *maghribPrayer;
 	Prayer *ishaPrayer;
 	Prayer *tomorrowFajrPrayer;
-	
 	Prayer *nextPrayer;
 	Prayer *currentPrayer;
-	
 	PrayerTimes *todaysPrayerTimes;
+	
 	
 	/* NOTIFICATION */
 	NSTimer *timer;
@@ -89,40 +76,43 @@
 }
 
 
++ (AppController*) sharedController;
+
+
+/* APP STARTUP */
+- (void) initPrayers;
+- (void) setPrayerTimes;
+- (void) initAppMenu;
+- (void) setMenuTimes;
+
+- (void) loadDefaults;
+- (void) applyPrefs;
+
+
+/* APP ACTIONS */
+- (void) runLoop;
+- (void) checkPrayerTimes;
+- (void) setStatusIcons;
+- (void) setMenuBar: (BOOL) currentlyPrayerTime;
+- (void) checkForUpdate:(BOOL)quiet;
+- (NSString *) getVersion;
+- (BOOL) isAdhanPlaying;
+
+
+/* USER ACTIONS */
 - (IBAction)doNothing:(id)sender; 
 - (IBAction)stopAdhan:(id)sender;
 - (IBAction)donate:(id)sender;
 - (IBAction)getHelp:(id)sender;
-
-- (void) handleTimer;
-
-- (void) initPrayers;
-- (void) initGui;
-- (void) initPrayerItems;
-- (void) setPrayerTimes;
-- (void) loadDefaults;
-- (void) checkPrayerTimes;
-- (void) setStatusIcons;
-- (void) setMenuBar: (BOOL) currentlyPrayerTime;
-
-- (void) applyPrefs;
-
-- (void) checkForUpdate:(BOOL)quiet;
-
-- (IBAction)startAtLogin:(id)sender;
-
 - (IBAction)openAboutPanel:(id)sender;
 - (IBAction)openPreferencesWindow:(id)sender;
 
-- (BOOL) isAdhanPlaying;
-
-+ (AppController*) sharedController;
-
 
 /* GROWL METHODS */
-
 - (void) doGrowl : (NSString *) title : (NSString *) desc : (BOOL) sticky : (id) clickContext : (NSString *)identifier;
 - (void) growlNotificationWasClicked:(id)clickContext;
- - (BOOL) isGrowlInstalled;
+- (BOOL) isGrowlInstalled;
+
+
 
 @end
