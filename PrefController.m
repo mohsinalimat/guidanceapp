@@ -1,6 +1,9 @@
 #import "PrefController.h"
 
+static PrefController *_sharedPrefController = nil;
+
 @implementation PrefController
+
 
 /****************/
 /* UI FUNCTIONS */

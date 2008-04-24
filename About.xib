@@ -3,7 +3,7 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
 		<string key="IBDocument.SystemVersion">9C7010</string>
-		<string key="IBDocument.InterfaceBuilderVersion">649</string>
+		<string key="IBDocument.InterfaceBuilderVersion">652</string>
 		<string key="IBDocument.AppKitVersion">949.26</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
@@ -168,7 +168,7 @@
 						</object>
 						<object class="NSScrollView" id="788693510">
 							<reference key="NSNextResponder" ref="1015359216"/>
-							<int key="NSvFlags">256</int>
+							<int key="NSvFlags">-2147483392</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSClipView" id="765348607">
@@ -178,7 +178,7 @@
 										<bool key="EncodedWithXMLCoder">YES</bool>
 										<object class="NSTextView" id="24467965">
 											<reference key="NSNextResponder" ref="765348607"/>
-											<int key="NSvFlags">-2147481326</int>
+											<int key="NSvFlags">2322</int>
 											<string key="NSFrameSize">{340, 227}</string>
 											<reference key="NSSuperview" ref="765348607"/>
 											<object class="NSTextContainer" key="NSTextContainer" id="1024553782">
@@ -489,7 +489,7 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 												<nil key="NSDefaultParagraphStyle"/>
 											</object>
 											<int key="NSTVFlags">6</int>
-											<string key="NSMaxSize">{619, 1e+07}</string>
+											<string key="NSMaxSize">{697, 1e+07}</string>
 											<string key="NSMinize">{83, 66}</string>
 											<nil key="NSDelegate"/>
 										</object>

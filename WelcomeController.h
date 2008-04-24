@@ -7,17 +7,22 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "AppController.h"
+#import "PrefController.h"
 
 @interface WelcomeController : NSWindowController {
 	
-	IBOutlet NSTextField *locationLookupMessage;
-	IBOutlet NSProgressIndicator *locationLookupIndicator;
+	IBOutlet NSTextField *location;
+	IBOutlet NSTextField *lookupStatus;
+	IBOutlet NSProgressIndicator *lookupIndicator;
 	IBOutlet NSWindow *welcomeWindow;
+	IBOutlet NSButton *startAtLogin;
+	
+	NSUserDefaults *userDefaults;
 }
 
 + (WelcomeController *)sharedWelcomeWindowController;
 + (NSString *)nibName;
-
 
 - (IBAction)done:(id)sender;
 - (IBAction)lookup:(id)sender;
