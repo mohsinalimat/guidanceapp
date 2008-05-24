@@ -56,15 +56,13 @@ static AppController *sharedAppController = nil;
 		[self doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil : nil];
 	}
 	
-	/*
 	[self checkForUpdate:YES]; //check for new version	
 
-	if(firstRun || true) {
+	if(firstRun) {
 		[[WelcomeController sharedWelcomeWindowController] showWindow:nil];
 		[[[WelcomeController sharedWelcomeWindowController] window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
 	}
-	*/
 }
 
 
@@ -192,18 +190,23 @@ static AppController *sharedAppController = nil;
 	}	
 	
 	if(displayNextPrayer) {
-		if(menuDisplayName == 0) {		
-			nextPrayerNameDisplay = [nextPrayer getName]; //display whole name			
+		if(menuDisplayName == 0) {	
+			//display whole name
+			nextPrayerNameDisplay = [nextPrayer getName]; 
 		} else if(menuDisplayName == 1) {
-			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; //display abbreviation
+			//display abbreviation
+			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; 
 		} else if(menuDisplayName == 2) {
+			//display none
 			nextPrayerNameDisplay = @"";
 		}
 		
 	
 		if(menuDisplayTime == 0) {
-			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"]; //display next prayer time
+			//display next prayer time
+			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"]; 
 		} else if(menuDisplayTime == 1) {
+			//display amount of time left until the next prayer
 			int hourCount,minuteCount,secondsCount;
 			
 			//calculate time until next prayer
@@ -570,11 +573,8 @@ static AppController *sharedAppController = nil;
 - (void) applyPrefs
 {
 	[self loadDefaults]; //get prefrences and load them into global vars
-	
 	[self setPrayerTimes]; //recalculate and set the prayer times for each prayer object
-	
 	[self setMenuTimes]; //rewrite the prayer times to the gui
-	
 	[self checkPrayerTimes]; //recheck prayer times
 }
 
@@ -620,6 +620,7 @@ static AppController *sharedAppController = nil;
 
 - (NSString *) getVersion
 {
+	//get the value of CFBundleVersion from Info.plist
 	return [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey];
 }
 
@@ -627,12 +628,11 @@ static AppController *sharedAppController = nil;
 - (BOOL) isAdhanPlaying
 {
 	BOOL adhanPlaying = NO;
-
-	if([[NSSound soundNamed:@"alaqsa"] isPlaying] ||
-	[[NSSound soundNamed:@"istanbul"] isPlaying] ||
-	[[NSSound soundNamed:@"yusufislam"] isPlaying] ||
-	[[NSSound soundNamed:@"makkah"] isPlaying]) {
-		adhanPlaying = YES;
+	int i = 0;
+	
+	for(i = 0; i < 4; i++) {
+		if([[NSSound soundNamed:[adhanOptions objectAtIndex:i]] isPlaying])
+			adhanPlaying = YES;
 	}
 	
 	return adhanPlaying;
