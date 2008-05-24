@@ -92,6 +92,7 @@
 - (IBAction)displayIconToggle:(id)sender;
 - (IBAction)selectDisplayNextPrayerOption:(id)sender;
 - (IBAction)startAtLoginToggle:(id)sender;
+- (BOOL)startsAtLogin;
 - (IBAction)checkForUpdates:(id)sender;
 
 

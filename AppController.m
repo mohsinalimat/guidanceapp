@@ -14,6 +14,9 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {
+	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
+	[adhanOptions retain];
+	
 	//create user defaults object
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
@@ -53,6 +56,7 @@ static AppController *sharedAppController = nil;
 		[self doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil : nil];
 	}
 	
+	/*
 	[self checkForUpdate:YES]; //check for new version	
 
 	if(firstRun || true) {
@@ -60,7 +64,7 @@ static AppController *sharedAppController = nil;
 		[[[WelcomeController sharedWelcomeWindowController] window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
 	}
-	
+	*/
 }
 
 
@@ -176,6 +180,8 @@ static AppController *sharedAppController = nil;
 	/* SET MENU BAR DISPLAY */
 	
 	NSString *menuBarTitle;
+	NSString *nextPrayerNameDisplay;
+	NSString *nextPrayerTimeDisplay;
 	
 	if(displayIcon) {
 		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
@@ -183,34 +189,21 @@ static AppController *sharedAppController = nil;
 	} else {
 		[menuBar setImage: nil];
 		[menuBar setAlternateImage: nil];
-	}
-	
+	}	
 	
 	if(displayNextPrayer) {
-	
-		NSString *nextPrayerNameDisplay;
-		NSString *nextPrayerTimeDisplay;
-		
-		
-		if(menuDisplayName == 0) {
-		
-			nextPrayerNameDisplay = [nextPrayer getName]; //display whole name
-			
+		if(menuDisplayName == 0) {		
+			nextPrayerNameDisplay = [nextPrayer getName]; //display whole name			
 		} else if(menuDisplayName == 1) {
-		
 			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; //display abbreviation
-		
 		} else if(menuDisplayName == 2) {
 			nextPrayerNameDisplay = @"";
 		}
 		
 	
 		if(menuDisplayTime == 0) {
-		
 			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"]; //display next prayer time
-		
 		} else if(menuDisplayTime == 1) {
-		
 			int hourCount,minuteCount,secondsCount;
 			
 			//calculate time until next prayer
@@ -237,9 +230,7 @@ static AppController *sharedAppController = nil;
 		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
 		
 	} else {
-	
 			menuBarTitle = @"";
-	
 	}
 	
 	//if its time to pray change the menu bar title to "prayer name" time for that minute
@@ -248,20 +239,6 @@ static AppController *sharedAppController = nil;
 	}
 	
 	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
-
-
-	/* RED FONT IN MENU BAR
-	//NSFont *stringFont = [NSFont fontWithName:@"Times" size:17.0];
-	//NSDictionary *stringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:stringFont, NSFontAttributeName, stringColor, NSForegroundColorAttributeName, nil];
-	
-	NSFont *stringFont = [NSFont menuBarFontOfSize:15.0]; 
-	NSColor *stringColor = [NSColor redColor];
-	NSDictionary *stringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:stringFont, NSFontAttributeName, stringColor, NSForegroundColorAttributeName, nil];
-
-	NSAttributedString *wootString = [[NSAttributedString alloc] initWithString:@"Fajr 5:28" attributes:stringAttributes];
-
-	[menuBar setAttributedTitle:wootString];
-	*/
 }
 
 
@@ -275,7 +252,7 @@ static AppController *sharedAppController = nil;
 	
 	int i, secondsTill;
 	
-	for (i=0; i<6; i++)
+	for (i = 0; i < 6; i++)
 	{
 		prayerName = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getName];
 		prayerTime = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getTime];
@@ -489,25 +466,15 @@ static AppController *sharedAppController = nil;
 		NSSound *useradhanobject = [[NSSound alloc] initWithContentsOfFile:adhanFile byReference:YES];
 		[useradhanobject stop];
 	} else {
-		//create NSSound objects
-		NSSound *yusufAdhan = [NSSound soundNamed:@"yusufislam"];
-		NSSound *aqsaAdhan = [NSSound soundNamed:@"alaqsa"];
-		NSSound *istanbulAdhan = [NSSound soundNamed:@"istanbul"];
-		NSSound *makkahAdhan = [NSSound soundNamed:@"makkah"];
-	
-		//stop NSSound objects
-		[yusufAdhan stop];
-		[aqsaAdhan stop];
-		[istanbulAdhan stop];
-		[makkahAdhan stop];	
+		int i = 0;
+		for(i = 0; i < 4; i++) {
+			[[NSSound soundNamed:[adhanOptions objectAtIndex:i]] stop];
+			NSLog(@"just stopped adhan %d",i);
+		}
 	}
 }
 
 
-- (IBAction)donate:(id)sender 
-{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/donate/"]]; //go to the donate page
-}
 
 - (IBAction)getHelp:(id)sender
 {
@@ -524,22 +491,15 @@ static AppController *sharedAppController = nil;
 
 - (void) loadDefaults
 {	
-	switch ([userDefaults integerForKey:@"SoundFile"])
-	{
-		case 1:		adhan = [NSSound soundNamed:@"makkah"]; break;
-		case 2:		adhan = [NSSound soundNamed:@"alaqsa"]; break;
-		case 3:		adhan = [NSSound soundNamed:@"istanbul"]; break;
-		case 0:
-		default:	adhan = [NSSound soundNamed:@"yusufislam"]; break;
-	}
-	
 	if([userDefaults boolForKey:@"UserSound"]) {
-		adhanFile = [userDefaults stringForKey:@"UserSoundFile"];
-		adhan = [[NSSound alloc] initWithContentsOfFile:adhanFile byReference:YES];
 		userAdhan = YES;
+		adhan = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:YES];
 	} else {
 		userAdhan = NO;
+		adhan = [NSSound soundNamed:[adhanOptions objectAtIndex:[userDefaults integerForKey:@"SoundFile"]]];
 	}
+	
+	[adhan setName:@"theAdhan"];
 	
 	[adhan setDelegate:self];
 

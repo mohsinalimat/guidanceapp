@@ -1,7 +1,5 @@
 #import "PrefController.h"
 
-static PrefController *_sharedPrefController = nil;
-
 @implementation PrefController
 
 
@@ -44,6 +42,14 @@ static PrefController *_sharedPrefController = nil;
 	
 	[soundFile selectItemAtIndex:[userDefaults integerForKey:@"SoundFile"]];
 
+	
+	if([self startsAtLogin]) {
+		[startAtLogin setState:1];
+		[userDefaults setBool:YES forKey:@"StartAtLogin"];
+	} else {
+		[startAtLogin setState:0];
+		[userDefaults setBool:NO forKey:@"StartAtLogin"];
+	}
 }
 
 - (void)setupToolbar
@@ -166,6 +172,29 @@ static PrefController *_sharedPrefController = nil;
 
     [loginItems release];
 }
+
+
+- (BOOL)startsAtLogin
+{
+	BOOL starts = NO;
+	int i = 0;
+	NSMutableArray* loginItems;
+	
+    loginItems = (NSMutableArray*) CFPreferencesCopyValue((CFStringRef) @"AutoLaunchedApplicationDictionary", (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+    loginItems =  [[loginItems autorelease] mutableCopy];
+	
+
+	for (i=0;i<[loginItems count];i++)
+	{
+		if ([[[loginItems objectAtIndex:i] objectForKey:@"Path"] isEqualToString:[[NSBundle mainBundle] bundlePath]]) {
+			starts = YES;
+		}
+	}
+	
+    [loginItems release];
+	return starts;
+}
+
 
 - (IBAction)checkForUpdates:(id)sender
 {

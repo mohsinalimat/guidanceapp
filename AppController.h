@@ -58,22 +58,39 @@
 	
 	/* PREFERENCES */
 	NSUserDefaults *userDefaults;
-	NSString *adhanFile;
-	BOOL userAdhan;
-	BOOL displayGrowl;
-	BOOL stickyGrowl;
-	BOOL checkForUpdates;
-	BOOL firstRun;
-	int menuDisplayTime;
-	int menuDisplayName;
-	BOOL displayIcon;
-	BOOL displayNextPrayer;
-	BOOL shuruqReminder;
-	int minutesBeforeShuruq;
-	BOOL tahajudReminder;
-	int minutesBeforeTahajud;
+	NSArray *adhanOptions;
 	
-	NSSound *testSound;
+	BOOL userPrefsCheckForUpdates;
+	BOOL userPrefsdisplayIcon;
+	BOOL userPrefsDisplayNextPrayer;
+	int userPrefsDisplayNextPrayerName;
+	int userPrefsDisplayNextPrayerTime;
+	BOOL userPrefsEnableGrowl;
+	BOOL userPrefsEnableSound;
+	BOOL userPrefsFajrReminder;
+	BOOL userPrefsFirstRun;
+	int userPrefsMinutesBeforeFajr;
+	int userPrefsMinutesBeforeShuruq;
+	BOOL userPrefsShuruqReminder;
+	int userPrefsSoundFile;
+	BOOL userPrefsStickyGrowl;
+	BOOL userPrefsUserSound;
+	NSString *userPrefsUserSoundFile;
+	
+	NSString *adhanFile; /* DONE */
+	BOOL userAdhan; /* DONE */
+	BOOL displayGrowl; /* DONE */
+	BOOL stickyGrowl; /* DONE */
+	BOOL checkForUpdates; /* DONE */
+	BOOL firstRun; /* DONE */
+	int menuDisplayTime; /* DONE */
+	int menuDisplayName; /* DONE */
+	BOOL displayIcon; /* DONE */
+	BOOL displayNextPrayer; /* DONE */
+	BOOL shuruqReminder; /* DONE */
+	int minutesBeforeShuruq; /* DONE */
+	BOOL tahajudReminder; /* DONE */
+	int minutesBeforeTahajud; /* DONE */
 }
 
 
@@ -103,7 +120,6 @@
 /* USER ACTIONS */
 - (IBAction)doNothing:(id)sender; 
 - (IBAction)stopAdhan:(id)sender;
-- (IBAction)donate:(id)sender;
 - (IBAction)getHelp:(id)sender;
 - (IBAction)openAboutPanel:(id)sender;
 - (IBAction)openPreferencesWindow:(id)sender;

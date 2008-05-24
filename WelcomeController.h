@@ -27,5 +27,6 @@
 - (IBAction)done:(id)sender;
 - (IBAction)lookup:(id)sender;
 - (IBAction)startAtLogin:(id)sender;
+- (BOOL)startsAtLogin;
 
 @end
