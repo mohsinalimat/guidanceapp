@@ -13,9 +13,10 @@ static AppController *sharedAppController = nil;
 @implementation AppController
 
 - (void)awakeFromNib
-{
+{	
 	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
 	[adhanOptions retain];
+	
 	
 	//create user defaults object
 	userDefaults = [NSUserDefaults standardUserDefaults];
@@ -66,6 +67,9 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * Create prayer objects, set names, and create prayersArray
+ */
 - (void) initPrayers
 {
 	//init Prayer objects
@@ -97,6 +101,10 @@ static AppController *sharedAppController = nil;
 	[tomorrowFajrPrayer setName: @"Fajr"];
 }
 
+
+/*
+ * Calculate and set prayer times for current date
+ */
 - (void) setPrayerTimes
 {
 	//calculate prayer times for current date
@@ -111,6 +119,10 @@ static AppController *sharedAppController = nil;
 	[ishaPrayer setTime: [todaysPrayerTimes getIshaTime]];
 }
 
+
+/*
+ * Create menu bar, icon, prayer items, and mute adhan item
+ */
 - (void) initAppMenu
 {
 	NSStatusBar *bar = [NSStatusBar systemStatusBar];
@@ -124,7 +136,6 @@ static AppController *sharedAppController = nil;
 		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
 		[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
 	}
-	
 		
 	menuItems = [[NSDictionary dictionaryWithObjectsAndKeys:
                    fajrItem,	@"Fajr", 
@@ -137,12 +148,14 @@ static AppController *sharedAppController = nil;
 				   
 	[appMenu setAutoenablesItems:NO];
 	
-
 	muteAdhan = [[NSMenuItem alloc] initWithTitle:@"Mute Adhan" action:@selector(stopAdhan:) keyEquivalent:@""];
 	[muteAdhan retain];
 }
 
 
+/*
+ * Set prayer times in menu bar
+ */
 - (void) setMenuTimes
 {
 	[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t " stringByAppendingString:[fajrPrayer getFormattedTime]],@"")];
@@ -171,12 +184,12 @@ static AppController *sharedAppController = nil;
 }
 
 
-
+/*
+ * icon display settings, prayer name and time display settings for menu bar
+ */
 - (void) setMenuBar: (BOOL) currentlyPrayerTime
 {
-
-	/* SET MENU BAR DISPLAY */
-	
+	/* Set menu bar display */
 	NSString *menuBarTitle;
 	NSString *nextPrayerNameDisplay;
 	NSString *nextPrayerTimeDisplay;
@@ -188,6 +201,7 @@ static AppController *sharedAppController = nil;
 		[menuBar setImage: nil];
 		[menuBar setAlternateImage: nil];
 	}	
+	
 	
 	if(displayNextPrayer) {
 		if(menuDisplayName == 0) {	
@@ -233,10 +247,10 @@ static AppController *sharedAppController = nil;
 		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
 		
 	} else {
-			menuBarTitle = @"";
+		menuBarTitle = @"";
 	}
 	
-	//if its time to pray change the menu bar title to "prayer name" time for that minute
+	//if it's time to pray, change the menu bar title to "prayer name" time for that minute
 	if(currentlyPrayerTime) {
 		menuBarTitle = [[currentPrayer getName] stringByAppendingString:@" time"];
 	}
@@ -245,6 +259,9 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * set grey icon, green icon or sound icon next to prayer names in menu bar
+ */
 - (void) setStatusIcons
 {
 
@@ -268,7 +285,6 @@ static AppController *sharedAppController = nil;
 		if(secondsTill > 0 && nextPrayerSet == NO)
 		{
 			nextPrayerSet = YES;
-			
 				
 			if(i == 0) {
 				stillTimeToPray = @"Isha";
@@ -287,7 +303,6 @@ static AppController *sharedAppController = nil;
 	if(!nextPrayerSet) {
 		stillTimeToPray = @"Isha";
 	}
-	
 	
 	[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
 	[[menuItems objectForKey:currentlyPlayingAdhan] setImage: [NSImage imageNamed: @"status_sound"]];
@@ -456,34 +471,30 @@ static AppController *sharedAppController = nil;
 }
 
 
-
-
 - (IBAction)doNothing:(id)sender 
 {
 	//absolutely nothing
 }
 
+
 - (IBAction)stopAdhan:(id)sender 
 {
-	if(userAdhan) {
-		NSSound *useradhanobject = [[NSSound alloc] initWithContentsOfFile:adhanFile byReference:YES];
-		[useradhanobject stop];
-	} else {
-		int i = 0;
-		for(i = 0; i < 4; i++) {
-			[[NSSound soundNamed:[adhanOptions objectAtIndex:i]] stop];
-			NSLog(@"just stopped adhan %d",i);
-		}
-	}
+	[adhan stop];
 }
 
 
-
+/*
+ * opens up help webpage 
+ */
 - (IBAction)getHelp:(id)sender
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/help/"]]; //go to the help page
 }
 
+
+/*
+ * opens about window and puts it in front of all windows and apps
+ */
 - (IBAction)openAboutPanel:(id)sender
 {
 	[[AboutController sharedAboutWindowController] showWindow:nil];
@@ -491,6 +502,7 @@ static AppController *sharedAppController = nil;
 	[NSApp activateIgnoringOtherApps:YES];
 	[[AboutController sharedAboutWindowController] setVersionText:[self getVersion]];
 }
+
 
 - (void) loadDefaults
 {	
@@ -502,7 +514,7 @@ static AppController *sharedAppController = nil;
 		adhan = [NSSound soundNamed:[adhanOptions objectAtIndex:[userDefaults integerForKey:@"SoundFile"]]];
 	}
 	
-	[adhan setName:@"theAdhan"];
+	[adhan setName:@"adhanAudio"];
 	
 	[adhan setDelegate:self];
 
@@ -562,6 +574,9 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * opens preferences window and puts it in front of all windows and apps
+ */
 - (IBAction)openPreferencesWindow:(id)sender
 {	
 	[[PrefController sharedPrefsWindowController] showWindow:nil];
@@ -570,15 +585,28 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * load user preferences into variables, caclulate and set prayer times, and recheck prayer times
+ */
 - (void) applyPrefs
 {
-	[self loadDefaults]; //get prefrences and load them into global vars
-	[self setPrayerTimes]; //recalculate and set the prayer times for each prayer object
-	[self setMenuTimes]; //rewrite the prayer times to the gui
-	[self checkPrayerTimes]; //recheck prayer times
+	//get prefrences and load them into global vars
+	[self loadDefaults]; 
+	
+	//recalculate and set the prayer times for each prayer object for today's date
+	[self setPrayerTimes]; 
+	
+	//write the prayer times to the menu bar
+	[self setMenuTimes]; 
+	
+	//recheck prayer times
+	[self checkPrayerTimes]; 
 }
 
 
+/*
+ * checks for new version
+ */
 - (void) checkForUpdate:(BOOL)quiet
 {
 	NSString *currentVersion = [self getVersion];		
@@ -618,6 +646,10 @@ static AppController *sharedAppController = nil;
 	}
 }
 
+
+/*
+ * returns the version listed in CFBundleVersion from Info.plist
+ */
 - (NSString *) getVersion
 {
 	//get the value of CFBundleVersion from Info.plist
@@ -625,6 +657,9 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * returns true if any adhan is playing, otherwise false
+ */
 - (BOOL) isAdhanPlaying
 {
 	BOOL adhanPlaying = NO;
@@ -701,7 +736,6 @@ static AppController *sharedAppController = nil;
 /*************************************
 ********** GROWL METHODS *************
 *************************************/
-
 
 /*
  * initialize growl and set the delegate as self
@@ -780,6 +814,10 @@ static AppController *sharedAppController = nil;
 ********** SOUND METHODS *************
 *************************************/
 
+/*
+ * sets currentlyPlayingAdhan to blank, removes sound icon, 
+ * and removes mute adhan button and sets prayer items action to nothing
+ */
 - (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
 {
 	currentlyPlayingAdhan = @"";
