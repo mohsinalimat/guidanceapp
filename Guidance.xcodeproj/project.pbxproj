@@ -70,7 +70,7 @@
 		340EF9140CD79628007280D6 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
 		340EF99D0CD7A7A7007280D6 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
 		340EF99F0CD7A867007280D6 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
-		347BEC600CCC64BE008BE40C /* Growl.framework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Growl.framework-Info.plist"; sourceTree = "<group>"; };
+		347BEC600CCC64BE008BE40C /* Growl.framework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Growl.framework-Info.plist"; sourceTree = "<group>"; };
 		347E3F4E0CD681C80035D056 /* General.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = General.tiff; sourceTree = "<group>"; };
 		347E3F530CD688D30035D056 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		3499B12F0CE3F2F40044010B /* aboutbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aboutbg.png; sourceTree = "<group>"; };
@@ -99,12 +99,12 @@
 		8457C4290D01201F00BFAF0C /* SoundLow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundLow.png; sourceTree = SOURCE_ROOT; };
 		8457C42A0D01201F00BFAF0C /* SoundHigh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundHigh.png; sourceTree = SOURCE_ROOT; };
 		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
-		84985D860D63FA92008447D3 /* WelcomeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeController.h; path = /Users/ameir/Developer/Guidance/WelcomeController.h; sourceTree = "<absolute>"; };
-		84985D870D63FA92008447D3 /* WelcomeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WelcomeController.m; path = /Users/ameir/Developer/Guidance/WelcomeController.m; sourceTree = "<absolute>"; };
+		84985D860D63FA92008447D3 /* WelcomeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeController.h; sourceTree = "<group>"; };
+		84985D870D63FA92008447D3 /* WelcomeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeController.m; sourceTree = "<group>"; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
 		84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrayerTimes.m; sourceTree = "<group>"; };
 		84BEB0E80DAAEC1600F2BB87 /* Advanced.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Advanced.tiff; sourceTree = "<group>"; };
-		84ED0CAE0D64023500654A1D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = /Users/ameir/Developer/Guidance/English.lproj/Welcome.xib; sourceTree = "<absolute>"; };
+		84ED0CAE0D64023500654A1D /* Welcome.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Welcome.xib; path = English.lproj/Welcome.xib; sourceTree = "<group>"; };
 		84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guidanceIcon.icns; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Guidance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Guidance.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -419,7 +419,7 @@
 		84ED0CAD0D64023500654A1D /* Welcome.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				84ED0CAE0D64023500654A1D /* English */,
+				84ED0CAE0D64023500654A1D /* Welcome.xib */,
 			);
 			name = Welcome.xib;
 			sourceTree = "<group>";
