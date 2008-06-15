@@ -14,22 +14,21 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {	
-	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
-	[adhanOptions retain];
-	
-	
 	//create user defaults object
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 	
 	[userDefaults registerDefaults:appDefaults];
+
+	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
+	[adhanOptions retain];
 	
 	prayerTimeDate = [[NSCalendarDate calendarDate] retain]; //set date with which to check prayer times
 	
 	lastCheckTime = [[NSCalendarDate calendarDate] retain]; //initialize last check time
 	
-	lastNotificationTime = [[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:0 hours:-1 minutes:0 seconds:0] retain]; //initialize last adhan time
+	lastNotificationTime = [[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:0 hours:0 minutes:-1 seconds:0] retain]; //initialize last adhan time to one minute ago
 	
 	todaysPrayerTimes = [[PrayerTimes alloc] init]; //initialize prayer times object 
 	
