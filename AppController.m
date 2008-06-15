@@ -501,6 +501,7 @@ static AppController *sharedAppController = nil;
 	[[[AboutController sharedAboutWindowController] window] makeKeyAndOrderFront:nil];
 	[NSApp activateIgnoringOtherApps:YES];
 	[[AboutController sharedAboutWindowController] setVersionText:[self getVersion]];
+	[[AboutController sharedAboutWindowController] setBuildNumber:[self getBuildNumber]];
 }
 
 
@@ -648,12 +649,22 @@ static AppController *sharedAppController = nil;
 
 
 /*
- * returns the version listed in CFBundleVersion from Info.plist
+ * returns the version listed in CFBundleShortVersionString from Info.plist
  */
 - (NSString *) getVersion
 {
-	//get the value of CFBundleVersion from Info.plist
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey];
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+	
+}
+
+
+/*
+ * returns the version listed in CFBundleVersion from Info.plist as an integer
+ */
+- (int) getBuildNumber
+{
+	NSString *buildString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+	return [buildString intValue];
 }
 
 

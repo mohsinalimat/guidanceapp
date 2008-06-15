@@ -46,6 +46,11 @@ static AboutController *_sharedAboutWindowController = nil;
 	[guidanceVersion setStringValue:[@"Version " stringByAppendingString:version]];
 }
 
+- (void)setBuildNumber:(int)build
+{
+	[guidanceBuild setStringValue:[NSString stringWithFormat:@"(r%i)",build]];
+}
+
 - (IBAction)toggleCredits:(NSButton *)sender
 {
 	toggleCredits = !toggleCredits;

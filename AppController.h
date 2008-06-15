@@ -114,6 +114,7 @@
 - (void) setMenuBar: (BOOL) currentlyPrayerTime;
 - (void) checkForUpdate:(BOOL)quiet;
 - (NSString *) getVersion;
+- (int) getBuildNumber;
 - (BOOL) isAdhanPlaying;
 
 

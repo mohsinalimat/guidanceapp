@@ -13,14 +13,18 @@
 	
 	IBOutlet NSScrollView *creditsBox;
 	IBOutlet NSTextField *guidanceVersion;
+	IBOutlet NSTextField *guidanceBuild;
 }
 
 + (AboutController *)sharedAboutWindowController;
 + (NSString *)nibName;
 
 - (IBAction)goDonate:(NSButton *)sender;
+
 - (IBAction)toggleCredits:(NSButton *)sender;
 
 - (void)setVersionText:(NSString *)version;
+
+- (void)setBuildNumber:(int)build;
 
 @end
