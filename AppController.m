@@ -167,17 +167,19 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * check prayer time if seconds is 0 or if its been more than 60 seconds since the last check
+ */
 - (void) runLoop
 {	
-
 	if([[NSCalendarDate calendarDate] secondOfMinute] == 0)
 	{
 		[self checkPrayerTimes];
 	} else {
-		int seconds;
+		int seconds = 0;
 		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
 		
-		if(seconds > 65 || seconds < 0) {
+		if(seconds > 60 || seconds < 0) {
 			[self checkPrayerTimes];
 		}
 	}
@@ -488,7 +490,7 @@ static AppController *sharedAppController = nil;
  */
 - (IBAction)getHelp:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/help/"]]; //go to the help page
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/help/"]];
 }
 
 
@@ -606,18 +608,19 @@ static AppController *sharedAppController = nil;
 
 
 /*
- * checks for new version
+ * checks for new version based on the build number
  */
 - (void) checkForUpdate:(BOOL)quiet
 {
-	NSString *currentVersion = [self getVersion];		
+	int currentBuild = [self getBuildNumber];
 
 	NSDictionary *productVersionDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:@"http://guidanceapp.com/version.xml"]];
-    NSString *latestVersionNumber = [productVersionDict valueForKey:@"version"];
+	int latestBuild = [[productVersionDict valueForKey:@"build"] intValue];
+	NSString *latestVersionNumber = [productVersionDict valueForKey:@"version"];
     
 	if([productVersionDict count] > 0 ) 
 	{
-		if([latestVersionNumber isEqualTo: currentVersion] && !quiet)
+		if(currentBuild == latestBuild && !quiet)
 		{
 			// tell user software is up to date
 			[NSApp activateIgnoringOtherApps:YES];
@@ -625,12 +628,12 @@ static AppController *sharedAppController = nil;
 				NSLocalizedString(@"You have the most recent version of Guidance.", @"Alert text when the user's software is up to date."),
 				NSLocalizedString(@"OK", @"OK"), nil, nil);
 		}
-		else if( ![latestVersionNumber isEqualTo: currentVersion])
+		else if(currentBuild < latestBuild)
 		{
 			// tell user to download a new version
 			[NSApp activateIgnoringOtherApps:YES];
 			int button = NSRunAlertPanel(NSLocalizedString(@"A New Version is Available", @"Title of alert when a the user's software is not up to date."),
-			[NSString stringWithFormat:NSLocalizedString(@"A new version of Guidance is available (version %@). Would you like to download the new version now?", @"Alert text when the user's software is not up to date."), latestVersionNumber],
+			[NSString stringWithFormat:NSLocalizedString(@"A new version of Guidance is available (version %@ r%i). Would you like to download the new version now?", @"Alert text when the user's software is not up to date."), latestVersionNumber,latestBuild],
 				NSLocalizedString(@"OK", @"OK"),
 				NSLocalizedString(@"Cancel", @"Cancel"), nil);
 			if(NSOKButton == button)
