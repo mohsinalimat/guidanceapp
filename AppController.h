@@ -53,6 +53,7 @@
 	NSCalendarDate *lastNotificationTime;
 	NSCalendarDate *prayerTimeDate;
 	NSSound *adhan;
+
 	NSString *currentlyPlayingAdhan;
 	
 	
@@ -78,7 +79,6 @@
 	NSString *userPrefsUserSoundFile;
 	
 	NSString *adhanFile; /* DONE */
-	BOOL userAdhan; /* DONE */
 	BOOL displayGrowl; /* DONE */
 	BOOL stickyGrowl; /* DONE */
 	BOOL checkForUpdates; /* DONE */
@@ -121,6 +121,7 @@
 /* USER ACTIONS */
 - (IBAction)doNothing:(id)sender; 
 - (IBAction)stopAdhan:(id)sender;
+- (void)playAdhan;
 - (IBAction)getHelp:(id)sender;
 - (IBAction)openAboutPanel:(id)sender;
 - (IBAction)openPreferencesWindow:(id)sender;

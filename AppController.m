@@ -187,130 +187,8 @@ static AppController *sharedAppController = nil;
 
 
 /*
- * icon display settings, prayer name and time display settings for menu bar
+ * go through all the prayers and check if it is currently time to pray
  */
-- (void) setMenuBar: (BOOL) currentlyPrayerTime
-{
-	/* Set menu bar display */
-	NSString *menuBarTitle;
-	NSString *nextPrayerNameDisplay;
-	NSString *nextPrayerTimeDisplay;
-	
-	if(displayIcon) {
-		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
-		[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
-	} else {
-		[menuBar setImage: nil];
-		[menuBar setAlternateImage: nil];
-	}	
-	
-	
-	if(displayNextPrayer) {
-		if(menuDisplayName == 0) {	
-			//display whole name
-			nextPrayerNameDisplay = [nextPrayer getName]; 
-		} else if(menuDisplayName == 1) {
-			//display abbreviation
-			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; 
-		} else if(menuDisplayName == 2) {
-			//display none
-			nextPrayerNameDisplay = @"";
-		}
-		
-	
-		if(menuDisplayTime == 0) {
-			//display next prayer time
-			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"]; 
-		} else if(menuDisplayTime == 1) {
-			//display amount of time left until the next prayer
-			int hourCount,minuteCount,secondsCount;
-			
-			//calculate time until next prayer
-			[[nextPrayer getTime] 
-				years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
-				sinceDate:[NSCalendarDate calendarDate]];
-			
-			//round the seconds up
-			if(secondsCount > 0) {
-				if(minuteCount == 59) {
-					hourCount++;
-					minuteCount = 0;
-				} else {
-					minuteCount++;
-				}
-			}
-			
-			nextPrayerTimeDisplay = [NSString stringWithFormat:@" -%d:%02d",hourCount,minuteCount];
-			
-		} else if(menuDisplayTime == 2) {
-			nextPrayerTimeDisplay = @"";
-		}
-		
-		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
-		
-	} else {
-		menuBarTitle = @"";
-	}
-	
-	//if it's time to pray, change the menu bar title to "prayer name" time for that minute
-	if(currentlyPrayerTime) {
-		menuBarTitle = [[currentPrayer getName] stringByAppendingString:@" time"];
-	}
-	
-	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
-}
-
-
-/*
- * set grey icon, green icon or sound icon next to prayer names in menu bar
- */
-- (void) setStatusIcons
-{
-
-	BOOL nextPrayerSet = NO;
-	
-	NSCalendarDate *prayerTime;
-	NSString *prayerName, *stillTimeToPray;
-	
-	int i, secondsTill;
-	
-	for (i = 0; i < 6; i++)
-	{
-		prayerName = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getName];
-		prayerTime = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getTime];
-
-		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
-		
-		[[menuItems objectForKey:prayerName] setImage: [NSImage imageNamed: @"status_notTime"]];
-		
-		//Get next prayer
-		if(secondsTill > 0 && nextPrayerSet == NO)
-		{
-			nextPrayerSet = YES;
-				
-			if(i == 0) {
-				stillTimeToPray = @"Isha";
-			} else if(i == 1) {
-				stillTimeToPray = @"Fajr";
-			} else if(i == 2) {
-				stillTimeToPray = @"";
-			} else {
-				stillTimeToPray = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i-1]] getName];
-			}
-			
-		}
-
-	}
-	
-	if(!nextPrayerSet) {
-		stillTimeToPray = @"Isha";
-	}
-	
-	[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
-	[[menuItems objectForKey:currentlyPlayingAdhan] setImage: [NSImage imageNamed: @"status_sound"]];
-}
-
-
 - (void) checkPrayerTimes
 {
 	//update last time prayer times were checked
@@ -387,7 +265,7 @@ static AppController *sharedAppController = nil;
 				notified = YES;
 				
 				if(![self isAdhanPlaying]) {
-					[adhan play];
+					[self playAdhan];
 					
 					//set mute adhan menu item and seperator
 					[appMenu insertItem:muteAdhan atIndex:0];
@@ -415,7 +293,7 @@ static AppController *sharedAppController = nil;
 			currentPrayer = prayer;
 			
 			if(![self isAdhanPlaying]) {
-				[adhan play];
+				[self playAdhan];
 
 				//set menu adhan menu item and seperator
 				[appMenu insertItem:muteAdhan atIndex:0];
@@ -438,7 +316,7 @@ static AppController *sharedAppController = nil;
 			currentPrayer = prayer;
 			
 			if(![self isAdhanPlaying]) {
-				[adhan play];
+				[self playAdhan];
 
 				//set menu adhan menu item and seperator
 				[appMenu insertItem:muteAdhan atIndex:0];
@@ -473,6 +351,131 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * icon display settings, prayer name and time display settings for menu bar
+ */
+- (void) setMenuBar: (BOOL) currentlyPrayerTime
+{
+	/* Set menu bar display */
+	NSString *menuBarTitle;
+	NSString *nextPrayerNameDisplay;
+	NSString *nextPrayerTimeDisplay;
+	
+	if(displayIcon) {
+		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
+		[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
+	} else {
+		[menuBar setImage: nil];
+		[menuBar setAlternateImage: nil];
+	}	
+	
+	
+	if(displayNextPrayer) {
+		if(menuDisplayName == 0) {	
+			//display whole name
+			nextPrayerNameDisplay = [nextPrayer getName]; 
+		} else if(menuDisplayName == 1) {
+			//display abbreviation
+			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; 
+		} else if(menuDisplayName == 2) {
+			//display none
+			nextPrayerNameDisplay = @"";
+		}
+		
+		
+		if(menuDisplayTime == 0) {
+			//display next prayer time
+			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"]; 
+		} else if(menuDisplayTime == 1) {
+			//display amount of time left until the next prayer
+			int hourCount,minuteCount,secondsCount;
+			
+			//calculate time until next prayer
+			[[nextPrayer getTime] 
+			 years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
+			 sinceDate:[NSCalendarDate calendarDate]];
+			
+			//round the seconds up
+			if(secondsCount > 0) {
+				if(minuteCount == 59) {
+					hourCount++;
+					minuteCount = 0;
+				} else {
+					minuteCount++;
+				}
+			}
+			
+			nextPrayerTimeDisplay = [NSString stringWithFormat:@" -%d:%02d",hourCount,minuteCount];
+			
+		} else if(menuDisplayTime == 2) {
+			nextPrayerTimeDisplay = @"";
+		}
+		
+		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
+		
+	} else {
+		menuBarTitle = @"";
+	}
+	
+	//if it's time to pray, change the menu bar title to "prayer name" time for that minute
+	if(currentlyPrayerTime) {
+		menuBarTitle = [[currentPrayer getName] stringByAppendingString:@" time"];
+	}
+	
+	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
+}
+
+
+/*
+ * set grey icon, green icon or sound icon next to prayer names in menu bar
+ */
+- (void) setStatusIcons
+{
+	
+	BOOL nextPrayerSet = NO;
+	
+	NSCalendarDate *prayerTime;
+	NSString *prayerName, *stillTimeToPray;
+	
+	int i, secondsTill;
+	
+	for (i = 0; i < 6; i++)
+	{
+		prayerName = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getName];
+		prayerTime = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getTime];
+		
+		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
+		
+		[[menuItems objectForKey:prayerName] setImage: [NSImage imageNamed: @"status_notTime"]];
+		
+		//Get next prayer
+		if(secondsTill > 0 && nextPrayerSet == NO)
+		{
+			nextPrayerSet = YES;
+			
+			if(i == 0) {
+				stillTimeToPray = @"Isha";
+			} else if(i == 1) {
+				stillTimeToPray = @"Fajr";
+			} else if(i == 2) {
+				stillTimeToPray = @"";
+			} else {
+				stillTimeToPray = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i-1]] getName];
+			}
+			
+		}
+		
+	}
+	
+	if(!nextPrayerSet) {
+		stillTimeToPray = @"Isha";
+	}
+	
+	[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
+	[[menuItems objectForKey:currentlyPlayingAdhan] setImage: [NSImage imageNamed: @"status_sound"]];
+}
+
+
 - (IBAction)doNothing:(id)sender 
 {
 	//absolutely nothing
@@ -482,6 +485,22 @@ static AppController *sharedAppController = nil;
 - (IBAction)stopAdhan:(id)sender 
 {
 	[adhan stop];
+}
+
+
+/*
+ * set NSSound object adhan to the proper sound file and play 
+ */
+- (void) playAdhan
+{
+	if(userPrefsUserSound) {
+		adhan = [[NSSound alloc] initWithContentsOfFile:userPrefsUserSoundFile byReference:YES];
+	} else {
+		adhan = [NSSound soundNamed:[adhanOptions objectAtIndex:userPrefsSoundFile]];
+	}	
+	
+	[adhan setDelegate:self];
+	[adhan play];
 }
 
 
@@ -507,19 +526,16 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ * load all the values from the user preferences file into variables
+ */
 - (void) loadDefaults
 {	
-	if([userDefaults boolForKey:@"UserSound"]) {
-		userAdhan = YES;
-		adhan = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:YES];
-	} else {
-		userAdhan = NO;
-		adhan = [NSSound soundNamed:[adhanOptions objectAtIndex:[userDefaults integerForKey:@"SoundFile"]]];
-	}
 	
-	[adhan setName:@"adhanAudio"];
+	userPrefsSoundFile = [userDefaults integerForKey:@"SoundFile"];
+	userPrefsUserSound = [userDefaults boolForKey:@"UserSound"];
+	userPrefsUserSoundFile = [userDefaults stringForKey:@"UserSoundFile"];
 	
-	[adhan setDelegate:self];
 
 	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
@@ -676,15 +692,7 @@ static AppController *sharedAppController = nil;
  */
 - (BOOL) isAdhanPlaying
 {
-	BOOL adhanPlaying = NO;
-	int i = 0;
-	
-	for(i = 0; i < 4; i++) {
-		if([[NSSound soundNamed:[adhanOptions objectAtIndex:i]] isPlaying])
-			adhanPlaying = YES;
-	}
-	
-	return adhanPlaying;
+	return [adhan isPlaying];
 }
 
 
