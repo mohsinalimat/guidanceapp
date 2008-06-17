@@ -28,8 +28,6 @@ static AppController *sharedAppController = nil;
 	
 	lastCheckTime = [[NSCalendarDate calendarDate] retain]; //initialize last check time
 	
-	lastNotificationTime = [[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:0 hours:0 minutes:-1 seconds:0] retain]; //initialize last adhan time to one minute ago
-	
 	todaysPrayerTimes = [[PrayerTimes alloc] init]; //initialize prayer times object 
 	
 	currentlyPlayingAdhan = @"";
@@ -72,7 +70,9 @@ static AppController *sharedAppController = nil;
 - (void) initPrayers
 {
 	//init Prayer objects
+	fajrPrayerReminder = [[Prayer alloc] init];
 	fajrPrayer = [[Prayer alloc] init];
+	shuruqPrayerReminder = [[Prayer alloc] init];
 	shuruqPrayer = [[Prayer alloc] init];
 	dhuhurPrayer = [[Prayer alloc] init];
 	asrPrayer = [[Prayer alloc] init];
@@ -82,22 +82,35 @@ static AppController *sharedAppController = nil;
 	
 	//init prayers array to loop through when checking prayer times
 	prayersArray = [[NSDictionary dictionaryWithObjectsAndKeys:
-				fajrPrayer,		@"0", 
-				shuruqPrayer,	@"1", 
-				dhuhurPrayer,	@"2",
-				asrPrayer,		@"3",
-				maghribPrayer,	@"4",
-				ishaPrayer,		@"5",
+				fajrPrayer,				@"0", 	 
+				shuruqPrayer,			@"1", 
+				dhuhurPrayer,			@"2",
+				asrPrayer,				@"3",
+				maghribPrayer,			@"4",
+				ishaPrayer,				@"5",
 				nil] retain];
 	
 	//set prayer object names names
+	[fajrPrayerReminder setName:@"Tahajud Reminder"];
 	[fajrPrayer setName: @"Fajr"];
+	[shuruqPrayerReminder setName:@"Shuruq Reminder"];
 	[shuruqPrayer setName: @"Shuruq"];
 	[dhuhurPrayer setName: @"Dhuhur"];
 	[asrPrayer setName: @"Asr"];
 	[maghribPrayer setName: @"Maghrib"];
 	[ishaPrayer setName: @"Isha"];
 	[tomorrowFajrPrayer setName: @"Fajr"];
+	
+	//set prayer notification status to false
+	[fajrPrayerReminder setNotified:NO];
+	[fajrPrayer setNotified:NO];
+	[shuruqPrayerReminder setNotified:NO];
+	[shuruqPrayer setNotified:NO];
+	[dhuhurPrayer setNotified:NO];
+	[asrPrayer setNotified:NO];
+	[maghribPrayer setNotified:NO];
+	[ishaPrayer setNotified:NO];
+	[tomorrowFajrPrayer setNotified:NO];
 }
 
 
@@ -108,9 +121,11 @@ static AppController *sharedAppController = nil;
 {
 	//calculate prayer times for current date
 	[todaysPrayerTimes calcTimes:[NSCalendarDate calendarDate]];
-	
+		
 	//set times
+	[fajrPrayerReminder setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:0 hours:0 minutes:(-1*minutesBeforeTahajud) seconds:0]];
 	[fajrPrayer setTime: [todaysPrayerTimes getFajrTime]];
+	[shuruqPrayerReminder setTime:[[todaysPrayerTimes getShuruqTime] dateByAddingYears:0 months:0 days:0 hours:0 minutes:(-1*minutesBeforeShuruq) seconds:0]];
 	[shuruqPrayer setTime: [todaysPrayerTimes getShuruqTime]];
 	[dhuhurPrayer setTime: [todaysPrayerTimes getDhuhurTime]];
 	[asrPrayer setTime: [todaysPrayerTimes getAsrTime]];
@@ -185,6 +200,35 @@ static AppController *sharedAppController = nil;
 }
 
 
+/* 
+ * recalculate and display prayer times for new day, reset prayer's notification status and check for updates
+ */
+- (void) updateForNewDay
+{
+	[self setPrayerTimes];
+	[self setMenuTimes];
+	
+	//reset current day
+	[prayerTimeDate release];
+	prayerTimeDate = [[NSCalendarDate calendarDate] retain];
+	
+	//reset prayer notification status
+	[fajrPrayerReminder setNotified:NO];
+	[fajrPrayer setNotified:NO];
+	[shuruqPrayerReminder setNotified:NO];
+	[shuruqPrayer setNotified:NO];
+	[dhuhurPrayer setNotified:NO];
+	[asrPrayer setNotified:NO];
+	[maghribPrayer setNotified:NO];
+	[ishaPrayer setNotified:NO];
+	
+	//and if set, check for updates
+	if(checkForUpdates) {
+		[self checkForUpdate:YES];
+	}	
+}
+
+
 /*
  * go through all the prayers and check if it is currently time to pray
  */
@@ -196,37 +240,29 @@ static AppController *sharedAppController = nil;
 	
 	//if new day, update prayer times first
 	if([[NSCalendarDate calendarDate] dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
-		[self setPrayerTimes];
-		[self setMenuTimes];
-		
-		//reset current day
-		[prayerTimeDate release];
-		prayerTimeDate = [[NSCalendarDate calendarDate] retain];
-		
-		//and if set, check for updates
-		if(checkForUpdates) {
-			[self checkForUpdate:YES];
-		}
+		[self updateForNewDay];
 	}
 	
 	
 	BOOL nextPrayerSet = NO;
 	BOOL currentlyPrayerTime = NO;
 	
-	NSCalendarDate *prayerTime;
 	
 	Prayer *prayer;
 	NSString *name, *time;
+	BOOL notified;
 	int i, secondsTill, minutesTill, minuteSecondsTill;
 	
-	for (i=0; i<6; i++)
+	//loop through array of prayers
+	for (i = 0; i < 6; i++)
 	{
 		prayer = [prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]];
-		prayerTime = [prayer getTime];
 
-		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
+		//calculate seconds till
+		[[prayer getTime] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
 		
-		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:&minutesTill seconds:&minuteSecondsTill sinceDate:[NSCalendarDate calendarDate]];
+		//calculate minutes till
+		[[prayer getTime] years:NULL months:NULL days:NULL  hours:NULL minutes:&minutesTill seconds:&minuteSecondsTill sinceDate:[NSCalendarDate calendarDate]];
 		
 		if(minuteSecondsTill > 0) minutesTill++; //round minute up
 		
@@ -237,107 +273,80 @@ static AppController *sharedAppController = nil;
 			nextPrayer = prayer;
 			nextPrayerSet = YES;
 		}
-
-		int secondsSinceNotification;
-		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsSinceNotification sinceDate:lastNotificationTime];		
 		
 		//check if its currently prayer time
-		if ((secondsTill >= -58 && secondsTill <= 0) && ![[prayer getName] isEqualTo:@"Shuruq"])
+		if ((secondsTill >= -59 && secondsTill <= 0) && ![[prayer getName] isEqualTo:@"Shuruq"])
 		{
-			currentPrayer = prayer;
 			currentlyPrayerTime = YES;
+			currentPrayer = prayer;
+			
 			name = [prayer getName];
 			time = [prayer getFormattedTime];
+			notified = [prayer getNotified];
 			
-			BOOL notified = NO;
-
-			//display growl
-			if(displayGrowl  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0)) 
+			//if user hasnt been notified yet
+			if(!notified) 
 			{
-				[self doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : @"" : name];
-				notified = YES;
-			}
-			
-			//play audio
-			if([prayer getPlayAudio]  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
-			{	
-				notified = YES;
-				
-				if(![self isAdhanPlaying]) {
-					[self playAdhan];
-					
-					//set mute adhan menu item and seperator
-					[appMenu insertItem:muteAdhan atIndex:0];
-					[muteAdhan setTarget:self];
-					[muteAdhan setAction:@selector(stopAdhan:)];
-					
-					
-					[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
-					
+				if(displayGrowl) 
+				{
+					[self doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : @"" : name];
+					[prayer setNotified:YES];
 				}
 				
-				currentlyPlayingAdhan = name;
-				[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];	
+				//play audio
+				if([prayer getPlayAudio])
+				{	
+					[prayer setNotified:YES];
 					
+					if(![self isAdhanPlaying]) {
+						[self playAdhan];
+					}
+					
+					currentlyPlayingAdhan = name;
+					[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];	
+						
+				}
 			}
-			
-			if(notified) {
-				//update last time user was notified
-				[lastNotificationTime release];
-				lastNotificationTime = [[NSCalendarDate calendarDate] retain];
-			}
-		} 
-		else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
-		{
-			currentPrayer = prayer;
-			
-			if(![self isAdhanPlaying]) {
-				[self playAdhan];
-
-				//set menu adhan menu item and seperator
-				[appMenu insertItem:muteAdhan atIndex:0];
-				[muteAdhan setTarget:self];
-				[muteAdhan setAction:@selector(stopAdhan:)];
-				[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
-			}
-			
-			if(displayGrowl) [self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
-			
-			currentlyPlayingAdhan = @"Shuruq";
-			[[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
-			
-			//update last time user was notified
-			[lastNotificationTime release];
-			lastNotificationTime = [[NSCalendarDate calendarDate] retain];
-		}
-		else if(tahajudReminder && (minutesBeforeTahajud == minutesTill) && ([[prayer getName] isEqualTo:@"Fajr"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
-		{
-			currentPrayer = prayer;
-			
-			if(![self isAdhanPlaying]) {
-				[self playAdhan];
-
-				//set menu adhan menu item and seperator
-				[appMenu insertItem:muteAdhan atIndex:0];
-				[muteAdhan setTarget:self];
-				[muteAdhan setAction:@selector(stopAdhan:)];
-				[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
-			}
-			
-			if(displayGrowl) [self doGrowl : @"Tahajud" : [[NSString stringWithFormat:@"%d",minutesBeforeTahajud] stringByAppendingString:@" minutes left until Fajr"] : stickyGrowl : @"" : @"Tahajud"];
-			
-			currentlyPlayingAdhan = @"Fajr";
-			[[menuItems objectForKey:@"Fajr"] setAction:@selector(stopAdhan:)];
-			
-			//update last time user was notified
-			[lastNotificationTime release];
-			lastNotificationTime = [[NSCalendarDate calendarDate] retain];
-		}
-	}
+		} // end if currently prayer time
+	} // end prayers array loop
+	
+	
+	/*
+	 else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
+	 {
+	 currentPrayer = prayer;
+	 
+	 if(![self isAdhanPlaying]) {
+	 [self playAdhan];
+	 }
+	 
+	 currentlyPlayingAdhan = @"Shuruq";
+	 [[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
+	 
+	 if(displayGrowl) [self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
+	 
+	 [prayer setNotified:YES];
+	 }
+	 else if(tahajudReminder && (minutesBeforeTahajud == minutesTill) && ([[prayer getName] isEqualTo:@"Fajr"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
+	 {
+	 currentPrayer = prayer;
+	 
+	 if(![self isAdhanPlaying]) {
+	 [self playAdhan];
+	 }
+	 
+	 currentlyPlayingAdhan = @"Fajr";
+	 [[menuItems objectForKey:@"Fajr"] setAction:@selector(stopAdhan:)];
+	 
+	 if(displayGrowl) [self doGrowl : @"Tahajud" : [[NSString stringWithFormat:@"%d",minutesBeforeTahajud] stringByAppendingString:@" minutes left until Fajr"] : stickyGrowl : @"" : @"Tahajud"];
+	 
+	 [prayer setNotified:YES];
+	 }
+	 */
+	
 	
 	
 	if(nextPrayerSet == NO) {
-	
 		//calculate the time for tomorrow's fajr prayer
 		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
 		[tomorrowFajrPrayer setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
@@ -500,6 +509,14 @@ static AppController *sharedAppController = nil;
 	
 	[adhan setDelegate:self];
 	[adhan play];
+	
+	//add mute adhan menu item 
+	[appMenu insertItem:muteAdhan atIndex:0];
+	[muteAdhan setTarget:self];
+	[muteAdhan setAction:@selector(stopAdhan:)];
+	
+	//add seperator
+	[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
 }
 
 

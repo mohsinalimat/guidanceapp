@@ -16,6 +16,7 @@
 	NSString *PrayerName;
 	NSCalendarDate *PrayerTime;
 	BOOL PlayAudio;
+	BOOL Notified;
 }
 
 - (void) setTime : (NSCalendarDate *) prayerTime;
@@ -28,5 +29,7 @@
 - (void) setPlayAudio: (BOOL) PlayAudio;
 - (BOOL) getPlayAudio;
 
+- (void) setNotified: (BOOL) hasBeenNotified;
+- (BOOL) getNotified;
 
 @end

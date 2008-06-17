@@ -35,8 +35,10 @@
 	
 	
 	/* PRAYER OBJECTS */	
+	Prayer *fajrPrayerReminder;
 	Prayer *fajrPrayer;
-	Prayer *shuruqPrayer;
+	Prayer *shuruqPrayerReminder;
+	Prayer *shuruqPrayer;	
 	Prayer *dhuhurPrayer;
 	Prayer *asrPrayer;
 	Prayer *maghribPrayer;
@@ -50,7 +52,6 @@
 	/* NOTIFICATION */
 	NSTimer *timer;
 	NSCalendarDate *lastCheckTime;
-	NSCalendarDate *lastNotificationTime;
 	NSCalendarDate *prayerTimeDate;
 	NSSound *adhan;
 
@@ -113,6 +114,7 @@
 - (void) setStatusIcons;
 - (void) setMenuBar: (BOOL) currentlyPrayerTime;
 - (void) checkForUpdate:(BOOL)quiet;
+- (void) updateForNewDay;
 - (NSString *) getVersion;
 - (int) getBuildNumber;
 - (BOOL) isAdhanPlaying;

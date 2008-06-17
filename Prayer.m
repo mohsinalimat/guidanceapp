@@ -47,12 +47,26 @@
 	return PlayAudio;
 }
 
+
+- (void) setNotified: (BOOL) hasBeenNotified
+{
+	Notified = hasBeenNotified;
+}
+
+- (BOOL) getNotified
+{
+	return Notified;
+}
+
+
+
 - (id)init
 {
     self = [super init];
     if (self) {
         PrayerName = @"";
         PrayerTime = [[NSCalendarDate calendarDate] retain];
+		Notified = NO;
     }
     return self;
 }
