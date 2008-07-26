@@ -104,6 +104,7 @@
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
 		84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrayerTimes.m; sourceTree = "<group>"; };
 		84BEB0E80DAAEC1600F2BB87 /* Advanced.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Advanced.tiff; sourceTree = "<group>"; };
+		84C7D2510E22C21A00C74459 /* Arabic */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Arabic; path = Arabic.lproj/Preferences.xib; sourceTree = "<group>"; };
 		84ED0CAE0D64023500654A1D /* Welcome.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Welcome.xib; path = English.lproj/Welcome.xib; sourceTree = "<group>"; };
 		84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guidanceIcon.icns; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -329,6 +330,13 @@
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Guidance" */;
 			compatibilityVersion = "Xcode 3.0";
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				Arabic,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* Guidance */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -412,6 +420,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				34B5CC820CD6C06900CF5D14 /* English */,
+				84C7D2510E22C21A00C74459 /* Arabic */,
 			);
 			name = Preferences.xib;
 			sourceTree = "<group>";
