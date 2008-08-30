@@ -19,14 +19,66 @@
 		Latitude = 0.0;
 		Longitude = 0.0;
 		Altitude = 0.0;
-		Shafi = 1;
-		TwilightDawnAngle = 18;
-		TwilightSunsetAngle = 18;
+		Madhab = 1;
+		Method = 2;
+		SunsetAngle = 15;
+		SunsetAngle = 15;
+		CustomSunsetAngle = 15;
+		CustomSunsetAngle = 15;
 	}
 	return self;
 }
 
  
+
++ (int)dayOfYear:(NSDate *)date
+{
+	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+	int dayOfYear = [gregorian ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:date];
+	[gregorian release];
+	return dayOfYear;
+}
+
+
++ (double)rad2deg:(double)n
+{
+	return n * (180.0 / M_PI);
+}
+
+
++ (double)deg2rad:(double)n
+{
+	return n * (M_PI / 180.0);
+}
+
+
++ (int)sign:(double)n
+{
+	return fabs(n)/n;
+}
+
+
++ (double)acot:(double)n
+{
+    return atan(1.0 / n);
+}
+
+
+- (void)setMethod:(int)n {
+	Method = n;
+}
+
+
+- (void)setCustomSunriseAngle:(float)n {
+	CustomSunriseAngle = n;
+}
+
+
+- (void)setCustomSunsetAngle:(float)n {
+	CustomSunsetAngle = n;	
+}
+
+
 - (void)setLatitude:(double)n
 {
 	Latitude = n;
@@ -74,135 +126,140 @@
 	IshaOffset = n;
 }
 
-- (void)setAsrMethod:(int)n
+- (void)setMadhab:(int)n
 {
 	if (n >= 0 && n < 2)
 	{
-		Shafi = n+1;
+		Madhab = n+1;
 	}
 	else
 	{
-		Shafi = 1;
-	}
-}
-
-- (void)setIshaMethod:(int)n
-{
-	switch (n)
-	{
-		case 3:
-			TwilightSunsetAngle = 18;
-			break;
-		case 2:
-			TwilightSunsetAngle = 17.5;
-			break;
-		case 1:
-			TwilightSunsetAngle = 17;
-			break;
-		case 0:
-		default:
-			TwilightSunsetAngle = 15;
-			break;
-	}
-}
-
-- (void)setFajrMethod:(int)n
-{
-	switch (n)
-	{
-		case 3:
-			TwilightDawnAngle = 19.5;
-			break;
-		case 2:
-			TwilightDawnAngle = 19;
-			break;
-		case 1:
-			TwilightDawnAngle = 18;
-			break;
-		case 0:
-		default:
-			TwilightDawnAngle = 15;
-			break;
+		Madhab = 1;
 	}
 }
 
 
-+ (double)rad2deg:(double)n
+- (void)setSystemTimezone:(BOOL)systemTZ 
 {
-	return n * (180.0 / M_PI);
+	systemTimezone = systemTZ;
+}
+
+- (void)setTimezone:(float)tz 
+{
+	timezone = tz;
 }
 
 
-+ (double)deg2rad:(double)n
-{
-	return n * (M_PI / 180.0);
+- (void)setDaylightSavings:(BOOL)dst {
+	daylightSavings = dst;
 }
 
 
-+ (int)sign:(double)n
++ (NSDate *)hoursToTime:(double)n
 {
-	return fabs(n)/n;
-}
-
-
-+ (double)acot:(double)n
-{
-    return atan(1.0 / n);
-}
-
-
-+ (NSCalendarDate *) hoursToTime:(double)n
-{
-	NSCalendarDate *midnight = [[NSCalendarDate calendarDate]
-								dateByAddingYears:0
-								months:0
-								days:0
-								hours:-[[NSCalendarDate calendarDate] hourOfDay]
-								minutes:-[[NSCalendarDate calendarDate] minuteOfHour]
-								seconds:-[[NSCalendarDate calendarDate] secondOfMinute]];
+	int hour = floor(n);
+	int minute = floor((n - hour) * 60);
 	
-	int hours = floor(n);
-	int minutes = floor((n - hours) * 60);
+	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 	
-	return [midnight dateByAddingYears:0 months:0 days:0 hours:hours minutes:minutes seconds:0];
+	NSDate *now = [NSDate date];
+	unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+	NSDateComponents *comps = [gregorian components:unitFlags fromDate:now];
+	
+	[comps setHour:hour];
+	[comps setMinute:minute];
+	
+	NSDate *date = [gregorian dateFromComponents:comps];
+	[gregorian release];
+	
+	return date;
 }
 
 
-- (void)calcTimes:(NSCalendarDate *)calcDate
+- (void)calcTimes:(NSDate *)calcDate
 {	
-		
-	timezone =((float)[[NSTimeZone systemTimeZone] secondsFromGMT])/3600;
-
+	
+	float timezoneValue = 0;
+	
+	if(systemTimezone) {
+		timezoneValue = ((float)[[NSTimeZone systemTimeZone] secondsFromGMT])/3600;
+	} else {
+		timezoneValue = timezone;
+		if(daylightSavings) timezoneValue++;
+	
 	double rad_lat = [PrayerTimes deg2rad:Latitude];
 	
-	int day = [calcDate dayOfYear];
+	int day = [PrayerTimes dayOfYear:calcDate];
 	
 	if (Altitude == 0) Altitude = 1;
+	
+	switch (Method) {
+		case 7:
+			//custom method
+			SunriseAngle = CustomSunriseAngle;
+			SunsetAngle = CustomSunsetAngle;
+			break;
+		case 5:
+			//Fixed Ishaa Angle Interval
+			SunriseAngle = 19.5;
+			SunsetAngle = 19.5;
+			break;
+		case 4:
+			//Om Al-Qurra University
+			SunriseAngle = 19;
+			SunsetAngle = 19;
+			break;
+		case 3:
+			//Muslim World League
+			SunriseAngle = 18;
+			SunsetAngle = 17;
+			break;
+		case 2:
+			//Islamic Society of North America
+			SunriseAngle = 15;
+			SunsetAngle = 15;
+			break;
+		case 1:
+			//University of Islamic Sciences, Karachi
+			SunriseAngle = 18;
+			SunsetAngle = 18;
+			break;
+		case 0:
+			//Egyptian General Authority of Survey
+			SunriseAngle = 20;
+			SunsetAngle = 18;
+			break;
+		default:
+			SunriseAngle = CustomSunriseAngle;
+			SunsetAngle = CustomSunsetAngle;
+			break;
+	}
+	
 	double beta = (2 * M_PI * day) / 365.0;
 	double d = (180.0 / M_PI) * (0.006918 - (0.399912 * cos(beta))
-				+ (0.07057 * sin(beta))
-				- (0.006758 * cos(2*beta))
-				+ (0.000907 * sin(2*beta))
-				- (0.002697 * cos(3*beta))
-				+ (0.001480 * sin(3*beta)));
-				
-	double rad_d = [PrayerTimes deg2rad:d]; 			
-				
-	double t = 229.18 * (0.000075 + (0.001868 * cos(beta))
-				- (0.032077 * sin(beta))
-				- (0.014615 * cos(2*beta))
-				- (0.040849 * sin(2*beta)));
+								 + (0.07057 * sin(beta))
+								 - (0.006758 * cos(2*beta))
+								 + (0.000907 * sin(2*beta))
+								 - (0.002697 * cos(3*beta))
+								 + (0.001480 * sin(3*beta)));
 	
-	double r = 15.0 * timezone;
+	double rad_d = [PrayerTimes deg2rad:d]; 			
+	
+	double t = 229.18 * (0.000075 + (0.001868 * cos(beta))
+						 - (0.032077 * sin(beta))
+						 - (0.014615 * cos(2*beta))
+						 - (0.040849 * sin(2*beta)));
+	
+	double r = 15.0 * timezoneValue;
 	double z = 12.0 + ((r - Longitude) / 15.0) - (t / 60.0);
 	
 	double xu = sin([PrayerTimes deg2rad:(-0.8333 - 0.0347
-				* [PrayerTimes sign:Altitude]
-				* sqrt(fabs(Altitude)))]
-				- sin([PrayerTimes deg2rad:d])
-				* sin([PrayerTimes deg2rad:Latitude]))
-				/ (cos([PrayerTimes deg2rad:d])
-				* cos([PrayerTimes deg2rad:Latitude]));
+										  * [PrayerTimes sign:Altitude]
+										  * sqrt(fabs(Altitude)))]
+					- sin([PrayerTimes deg2rad:d])
+					* sin([PrayerTimes deg2rad:Latitude]))
+	/ (cos([PrayerTimes deg2rad:d])
+	   * cos([PrayerTimes deg2rad:Latitude]));
 	
 	double u;
 	
@@ -222,74 +279,96 @@
 		}
 	}
 	
-	double xvd = (-sin([PrayerTimes deg2rad:TwilightDawnAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
-				/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
+	double xvd = (-sin([PrayerTimes deg2rad:SunriseAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
+	/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
 	
 	double vd = [PrayerTimes rad2deg:1/15.0 * acos(xvd)];
 	
-	double xvn = (-sin([PrayerTimes deg2rad:TwilightSunsetAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
-				/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
+	double xvn = (-sin([PrayerTimes deg2rad:SunsetAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
+	/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
 	
 	double vn = [PrayerTimes rad2deg:1/15.0 * acos(xvn)];
 	
 	
 	double w = [PrayerTimes rad2deg:(
-		1/15.0 * acos(
-			(
-				sin(
-					[PrayerTimes acot:(
-						Shafi + tan(
-							fabs(rad_lat - rad_d)
-						)
-					)]
-				) - sin(rad_d) * sin(rad_lat)
-			) /	
-			( cos(rad_d) * cos(rad_lat) ) 
-		)
-	)];
+									 1/15.0 * acos(
+												   (
+													sin(
+														[PrayerTimes acot:(
+																		   Madhab + tan(
+																						fabs(rad_lat - rad_d)
+																						)
+																		   )]
+														) - sin(rad_d) * sin(rad_lat)
+													) /	
+												   ( cos(rad_d) * cos(rad_lat) ) 
+												   )
+									 )];
 	
 	FajrTime = [PrayerTimes hoursToTime: z - vd];
 	ShuruqTime = [PrayerTimes hoursToTime: z - u];
 	DhuhurTime = [PrayerTimes hoursToTime: z];
 	AsrTime = [PrayerTimes hoursToTime: z + w];
 	MaghribTime = [PrayerTimes hoursToTime: z + u];
-	IshaTime = [PrayerTimes hoursToTime: z + vn];
-}
-
- 
-- (NSCalendarDate *)getFajrTime 
-{
-	return [FajrTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:FajrOffset seconds:0];	
-}
-
-
-- (NSCalendarDate *)getShuruqTime 
-{
-	return [ShuruqTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:ShuruqOffset seconds:0];	
+	
+	if(Method == 4 || Method == 5) {
+		IshaTime = [PrayerTimes hoursToTime: z + u + 1.5];
+	} else {
+		IshaTime = [PrayerTimes hoursToTime: z + vn];
+	}
 }
 
 
-- (NSCalendarDate *)getDhuhurTime 
+- (NSDate *)getFajrTime 
 {
-	return [DhuhurTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:DhuhurOffset seconds:0];	
+	//offset in minutes * 60 = seconds
+	return [FajrTime addTimeInterval:FajrOffset*60];	
 }
 
 
-- (NSCalendarDate *)getAsrTime 
+- (NSDate *)getShuruqTime 
 {
-	return [AsrTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:AsrOffset seconds:0];	
+	//offset in minutes * 60 = seconds...
+	return [ShuruqTime addTimeInterval:ShuruqOffset*60];	
 }
 
 
-- (NSCalendarDate *)getMaghribTime 
+- (NSDate *)getDhuhurTime 
 {
-	return [MaghribTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:MaghribOffset seconds:0];	
+	//offset in minutes * 60 = seconds...
+	return [DhuhurTime addTimeInterval:DhuhurOffset*60];	
 }
 
 
-- (NSCalendarDate *)getIshaTime 
+- (NSDate *)getAsrTime 
 {
-	return [IshaTime dateByAddingYears:0 months:0 days:0 hours:0 minutes:IshaOffset seconds:0];	
+	//offset in minutes * 60 = seconds...
+	return [AsrTime addTimeInterval:AsrOffset*60];	
+}
+
+
+- (NSDate *)getMaghribTime 
+{
+	//offset in minutes * 60 = seconds...
+	return [MaghribTime addTimeInterval:MaghribOffset*60];	
+}
+
+
+- (NSDate *)getIshaTime 
+{
+	//offset in minutes * 60 = seconds...
+	return [IshaTime addTimeInterval:IshaOffset*60];	
+}
+
+- (void)setDate:(NSDate *)date
+{
+	DateTime = date;
+	[self calcTimes:date];
+}
+
+- (NSDate *)getDate
+{
+	return DateTime;
 }
 
 

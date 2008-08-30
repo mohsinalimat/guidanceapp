@@ -131,10 +131,10 @@
 			isa = PBXGroup;
 			children = (
 				34B5CC440CD6A68600CF5D14 /* UI */,
-				84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */,
-				84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */,
 				843C4E2A0CCBE610000DAEB4 /* AppController.h */,
 				340EF99F0CD7A867007280D6 /* AppController.m */,
+				84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */,
+				84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */,
 				34E7E5620CCD2DBA0098659D /* Prayer.h */,
 				34E7E5630CCD2DBA0098659D /* Prayer.m */,
 			);

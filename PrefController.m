@@ -9,6 +9,7 @@
 
 - (void)awakeFromNib
 {
+	// register user defaults preference plist file
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
@@ -16,13 +17,48 @@
 	
 	fileManager = [NSFileManager defaultManager];
 	
+	timezoneArray = [[NSArray arrayWithObjects:
+					   [NSNumber numberWithFloat:-12], 
+					   [NSNumber numberWithFloat:-11], 
+					   [NSNumber numberWithFloat:-10], 
+					   [NSNumber numberWithFloat:-9], 
+					   [NSNumber numberWithFloat:-8], 
+					   [NSNumber numberWithFloat:-7], 
+					   [NSNumber numberWithFloat:-6], 
+					   [NSNumber numberWithFloat:-5], 
+					   [NSNumber numberWithFloat:-4], 
+					   [NSNumber numberWithFloat:-3.5], 
+					   [NSNumber numberWithFloat:-3], 
+					   [NSNumber numberWithFloat:-2], 
+					   [NSNumber numberWithFloat:-1], 
+					   [NSNumber numberWithFloat:0], 
+					   [NSNumber numberWithFloat:1], 
+					   [NSNumber numberWithFloat:2], 
+					   [NSNumber numberWithFloat:3], 
+					   [NSNumber numberWithFloat:3.5], 
+					   [NSNumber numberWithFloat:4], 
+					   [NSNumber numberWithFloat:4.5], 
+					   [NSNumber numberWithFloat:5], 
+					   [NSNumber numberWithFloat:5.5], 
+					   [NSNumber numberWithFloat:6], 
+					   [NSNumber numberWithFloat:7], 
+					   [NSNumber numberWithFloat:8], 
+					   [NSNumber numberWithFloat:9], 
+					   [NSNumber numberWithFloat:9.5], 
+					   [NSNumber numberWithFloat:10], 
+					   [NSNumber numberWithFloat:11], 
+					   [NSNumber numberWithFloat:12], 
+					   nil] retain];	
 	
+	
+	
+	// grey out disabled menu bar display options
 	[displayNextPrayerName setAutoenablesItems:NO];
 	[displayNextPrayerTime setAutoenablesItems:NO];
 	[self selectDisplayNextPrayerOption:self];
 	
-	//gray out any options that need to be grayed out
-	[self locationToggle];
+	// gray out any options that need to be grayed out
+	[self systemTimezoneToggle:self];
 	[self enableSoundToggle:self];
 	[self enableGrowlToggle:self];
 	[self displayNextPrayerToggle:self];	
@@ -30,9 +66,11 @@
 	[self fajrReminderToggle:self];
 	
 
+	// if user selected file still exists, add that item to the adhan drop down
 	if([fileManager fileExistsAtPath:[userDefaults stringForKey:@"UserSoundFile"]]) {
 		[self insertUserAdhan:[userDefaults stringForKey:@"UserSoundFile"]];
 	} else {
+		// if file no longer exists then remove that choice from the user preferences
 		if([userDefaults boolForKey:@"UserSound"]) {
 			[userDefaults setBool:NO forKey:@"UserSound"];
 			[userDefaults setInteger:0 forKey:@"SoundFile"];
@@ -40,9 +78,24 @@
 		}
 	}
 	
+	// select the adhan choice in the adhan drop down
 	[soundFile selectItemAtIndex:[userDefaults integerForKey:@"SoundFile"]];
-
 	
+	
+	//if custom sunrise and sunset angles exist, insert them in the method drop down
+	if([userDefaults floatForKey:@"CustomSunriseAngle"] > 0 && [userDefaults floatForKey:@"CustomSunsetAngle"] > 0) {
+		[self insertCustomMethod];
+	}
+	
+	//select the method in the method drop down
+	[method selectItemAtIndex:[userDefaults integerForKey:@"Method"]];
+	
+	
+	//select the timezone in the timezone drop down
+	[timezone selectItemAtIndex:[timezoneArray indexOfObject:[NSNumber numberWithFloat:[userDefaults floatForKey:@"Timezone"]]]];
+
+	// check if Guidance still starts at login and modify the checkbox and preference value 
+	// to reflect this because user can modify this externally in the system preferences
 	if([self startsAtLogin]) {
 		[startAtLogin setState:1];
 		[userDefaults setBool:YES forKey:@"StartAtLogin"];
@@ -52,20 +105,12 @@
 	}
 }
 
-- (void)setupToolbar
-{
-	[self addView:generalPrefsView label:@"General"];
-	[self addView:locationPrefsView label:@"Location"];
-	[self addView:calculationsPrefsView label:@"Prayer Times"];
-	[self addView:soundPrefsView label:@"Alerts"];
-	[self addView:advancedPrefsView label:@"Advanced"];
-}
-
 - (IBAction)showWindow:(id)sender
 {
 	[super showWindow:sender];
 	
-	[lookupStatus setStringValue:@""];
+	// hide any location lookup items and set the location text field
+	// to the last successfully looked up location
 	[lookupIndicator setDisplayedWhenStopped:NO];
 	[lookupStatusImage setImage:nil];
 	[location setStringValue:[userDefaults stringForKey:@"Location"]];
@@ -80,6 +125,15 @@
 - (void)windowWillClose:(NSNotification *)notification
 {
 	[self saveAndApply];
+}
+
+- (void)setupToolbar
+{
+	[self addView:generalPrefsView label:@"General"];
+	[self addView:locationPrefsView label:@"Location"];
+	[self addView:calculationsPrefsView label:@"Prayer Times"];
+	[self addView:soundPrefsView label:@"Alerts"];
+	[self addView:advancedPrefsView label:@"Advanced"];
 }
 
 
@@ -174,7 +228,6 @@
     [loginItems release];
 }
 
-
 - (BOOL)startsAtLogin
 {
 	BOOL starts = NO;
@@ -196,7 +249,6 @@
 	return starts;
 }
 
-
 - (IBAction)checkForUpdates:(id)sender
 {
 	[[AppController sharedController] checkForUpdate:NO];
@@ -207,123 +259,148 @@
 /* LOCATION FUNCTIONS */
 /**********************/
 
-- (IBAction)manualLocationToggle:(id)sender
-{
-    if ([manualLocation state] == NSOffState)
-	{
-		[self lookupLocation:self];
-	}
-	
-	[self locationToggle];
-}
-
-- (void)locationToggle 
-{
-    if ([manualLocation state] == NSOffState)
-	{
-		[latitude setEnabled:NO];
-		[latitudeLabel setTextColor:[NSColor grayColor]];
-		[longitude setEnabled:NO];
-		[longitudeLabel setTextColor:[NSColor grayColor]];
-		[setManualLocation setEnabled:NO];
-		[location setEnabled:YES];
-		[locationTitleText setTextColor:[NSColor blackColor]];
-		[setLocation setEnabled:YES];
-	}
-	else
-	{
-		[latitude setEnabled:YES];
-		[latitudeLabel setTextColor:[NSColor blackColor]];
-		[longitude setEnabled:YES];
-		[longitudeLabel setTextColor:[NSColor blackColor]];
-		[setManualLocation setEnabled:YES];
-		[location setEnabled:NO];
-		[locationTitleText setTextColor:[NSColor grayColor]];
-		[setLocation setEnabled:NO];
-		[lookupStatus setStringValue:@""];
-		[lookupIndicator setDisplayedWhenStopped:NO];
-	}
-}
-
 - (IBAction)lookupLocation:(id)sender 
 {
-
-	[lookupStatus setStringValue:@"Looking up latitude and longitude..."];
-	[lookupStatus setTextColor:[NSColor blackColor]];
-	[locationPrefsView display];
-
 	[lookupStatusImage setImage:nil];
-	[lookupIndicator startAnimation:sender];
-	
+	[lookupIndicator startAnimation:nil];
+	[NSThread detachNewThreadSelector:@selector(locationSearch) toTarget:self withObject:nil];
+}
 
+- (void)locationSearch
+{
+	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
+	
 	NSString *userLocation = [location stringValue];
-		
+	
 	NSString *urlSafeUserLocation =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) userLocation, NULL, NULL, kCFStringEncodingUTF8) autorelease];
 	
-	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?loc=%@",urlSafeUserLocation];
+	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/geocode-google.php?location=%@",urlSafeUserLocation];
+	
 	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
 	
 	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
 	
+	[lookupIndicator stopAnimation:nil];
+	
 	if (valid)
 	{
-		[latitude setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
-		[longitude setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
+		[userDefaults setFloat:[[coordDict valueForKey:@"latitude"] doubleValue] forKey:@"Latitude"];
+		[userDefaults setFloat:[[coordDict valueForKey:@"longitude"] doubleValue] forKey:@"Longitude"];
+		[userDefaults setValue:[coordDict valueForKey:@"address"] forKey:@"Location"];	
 		
-		[lookupIndicator stopAnimation:sender];
+		
+		[location setStringValue:[coordDict valueForKey:@"address"]];
+		
 		[lookupStatusImage setImage:[NSImage imageNamed:@"check"]];
 		
-		
-		[userDefaults setValue:[coordDict valueForKey:@"name"] forKey:@"Location"];	
-
 		[self saveAndApply];
 	}
 	else
 	{
-		[lookupIndicator stopAnimation:sender];
 		[lookupStatusImage setImage:[NSImage imageNamed:@"error"]];
-	}
+	}	
+	
+	
+	[autoreleasePool release];
+	[NSThread exit];
 }
 
-
-/*************************/
-/* CALCULATION FUNCTIONS */
-/*************************/
-
-- (IBAction)advancedToggle:(id)sender
+- (IBAction)systemTimezoneToggle:(id)sender
 {
-	NSWindow *calcWindow = [calculationsPrefsView window];
-	
-	
-	NSRect expandedWindowSize = {(NSPoint){0,0},(NSSize){375,500}};
-	NSRect collapsedWindowSize = {(NSPoint){0,0},(NSSize){375,270}};
-	
-	NSRect expandedWindowRect = NSMakeRect([calcWindow frame].origin.x - 
-		(expandedWindowSize.size.width - [calcWindow frame].size.width), [calcWindow frame].origin.y - 
-        (expandedWindowSize.size.height - [calcWindow frame].size.height), expandedWindowSize.size.width, expandedWindowSize.size.height);
-	
-	NSRect collapsedWindowRect = NSMakeRect([calcWindow frame].origin.x - 
-		(collapsedWindowSize.size.width - [calcWindow frame].size.width), [calcWindow frame].origin.y - 
-        (collapsedWindowSize.size.height - [calcWindow frame].size.height), collapsedWindowSize.size.width, collapsedWindowSize.size.height);
-	
-    if ([expandAdvanced state] == NSOffState)
+	if ([systemTimezone state] == NSOffState)
 	{
-		[advancedCalculationsPrefsView setHidden:YES];
-		[calcWindow setFrame:collapsedWindowRect display:YES animate:YES];
+		[daylightSavings setEnabled:YES];
+		[timezone setEnabled:YES];
+		
+		[timezone selectItemAtIndex:[timezoneArray indexOfObject:[NSNumber numberWithFloat:[userDefaults floatForKey:@"Timezone"]]]];
 	} 
 	else 
 	{
-		[advancedCalculationsPrefsView setHidden:NO];
-
-
-		[advancedCalculationsPrefsView setFrameSize:(NSSize){350,300}];
-		[advancedCalculationsPrefsView setFrameOrigin:(NSPoint){10,-190}];
+		if([[NSTimeZone systemTimeZone] isDaylightSavingTime]) {
+			[daylightSavings setState:NSOnState];
+		} else {
+			[daylightSavings setState:NSOnState];
+		}
 		
-		[advancedCalculationsPrefsView display];
-		[calcWindow setFrame:expandedWindowRect display:YES animate:YES];
+		float systemTimezoneValue = [[NSTimeZone systemTimeZone] secondsFromGMT]/3600;
+		if([[NSTimeZone systemTimeZone] isDaylightSavingTime]) systemTimezoneValue--;
+		
+		[timezone selectItemAtIndex:[timezoneArray indexOfObject:[NSNumber numberWithFloat:systemTimezoneValue]]];
+		
+		[daylightSavings setEnabled:NO];
+		[timezone setEnabled:NO];
+	}
+	
+	[self selectTimezone:self];
+	[self saveAndApply];
+}
 
+- (IBAction)selectTimezone:(id)sender
+{
+	[userDefaults setFloat:[[timezoneArray objectAtIndex:[timezone indexOfSelectedItem]] floatValue] forKey:@"Timezone"];
+	[self saveAndApply];
+}
+
+
+/*************************/
+/* PRAYER TIME FUNCTIONS */
+/*************************/
+
+- (IBAction)selectMethod:(id)sender 
+{
+	if([[method titleOfSelectedItem] isEqualToString:@"Other..."]) {
+		[NSApp beginSheet:customMethodSheet 
+			modalForWindow:[self window] 
+			modalDelegate:self 
+			didEndSelector:@selector(customMethodClosed:) 
+			contextInfo:nil];
+	} else {
+		[userDefaults setInteger:[method indexOfSelectedItem] forKey:@"Method"];
 	}
 }
+
+- (void)customMethodClosed:(NSWindow *)sheet 
+{
+	[sheet orderOut:self];
+}
+
+- (IBAction)cancelCustomMethod: (id)sender 
+{
+	[NSApp endSheet:customMethodSheet];	
+	[method selectItemAtIndex:[userDefaults integerForKey:@"Method"]];
+}
+
+
+- (IBAction)saveCustomMethod: (id)sender 
+{
+	[NSApp endSheet:customMethodSheet];	
+
+	if([sunriseAngle floatValue] > 0 && [sunsetAngle floatValue] > 0) {
+		[userDefaults setFloat:[sunriseAngle floatValue] forKey:@"CustomSunriseAngle"];
+		[userDefaults setFloat:[sunsetAngle floatValue] forKey:@"CustomSunsetAngle"];
+		
+		[self insertCustomMethod];
+		[method selectItemAtIndex:7];
+	} else {
+		[method selectItemAtIndex:[userDefaults integerForKey:@"Method"]];	
+	}
+}
+
+- (void)insertCustomMethod 
+{
+	NSString *customMethodTitle = [NSString stringWithFormat:@"Sunrise %.1f°, Sunset %.1f°",[userDefaults floatForKey:@"CustomSunriseAngle"],[userDefaults floatForKey:@"CustomSunsetAngle"]];
+	
+	if([method numberOfItems] <= 8) {
+		[[method menu] insertItem:[NSMenuItem separatorItem] atIndex:6];
+		[method insertItemWithTitle:customMethodTitle atIndex:7];
+	} else {
+		[method removeItemAtIndex:7];
+		[method insertItemWithTitle:customMethodTitle atIndex:7];
+	}	
+}
+
+
+
 
 
 /*******************/
@@ -467,7 +544,7 @@
 	if([[soundFile titleOfSelectedItem] isEqualToString:@"Select..."]) {
 	
 		NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
-		NSOpenPanel * panel = [NSOpenPanel openPanel];
+		NSOpenPanel *panel = [NSOpenPanel openPanel];
 		[panel setPrompt: @"Select"];
 		[panel setAllowsMultipleSelection: NO];
 		[panel setCanChooseFiles: YES];
@@ -536,10 +613,6 @@
 
 - (void)saveAndApply
 {	
-	//save latitude and longitude
-	[userDefaults setFloat:[latitude floatValue] forKey:@"Latitude"];
-	[userDefaults setFloat:[longitude floatValue] forKey:@"Longitude"];	
-
 	//write user preferences to pref file
 	[userDefaults synchronize];
 

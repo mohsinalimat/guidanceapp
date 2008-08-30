@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AsrMethod</key>
+	<key>Madhahb</key>
 	<integer>0</integer>
 	<key>AsrOffset</key>
 	<integer>15</integer>
@@ -26,11 +26,13 @@
 	<integer>15</integer>
 	<key>FajrReminder</key>
 	<false/>
-	<key>FarMethod</key>
-	<integer>1</integer>
+	<key>CustomSunriseAngle</key>
+	<real>17.5</real>
+	<key>CustomSunsetAngle</key>
+	<real>15.5</real>
 	<key>FirstRun</key>
 	<true/>
-	<key>IshaMethod</key>
+	<key>Method</key>
 	<integer>3</integer>
 	<key>IshaOffset</key>
 	<integer>15</integer>
@@ -60,6 +62,12 @@
 	<integer>15</integer>
 	<key>ShuruqReminder</key>
 	<false/>
+	<key>SystemTimezone</key>
+	<true/>
+	<key>DaylightSavings</key>
+	<false/>
+	<key>Timezone</key>
+	<real>-5</real>
 	<key>SoundFile</key>
 	<integer>0</integer>
 	<key>StartAtLogin</key>

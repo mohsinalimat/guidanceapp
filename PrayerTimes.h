@@ -13,11 +13,16 @@
 	double Latitude;
 	double Longitude;
 	double Altitude;
-	int Shafi;
-	double TwilightDawnAngle;
-	double TwilightSunsetAngle;
+	int Madhab;
+	int Method;
+	double CustomSunriseAngle;
+	double CustomSunsetAngle;
+	double SunriseAngle;
+	double SunsetAngle;
+	BOOL systemTimezone;
 	float timezone;
-
+	BOOL daylightSavings;
+	
 	int FajrOffset;
 	int ShuruqOffset;
 	int DhuhurOffset;
@@ -25,15 +30,15 @@
 	int MaghribOffset;
 	int IshaOffset;
 	
+	NSDate *FajrTime;
+	NSDate *ShuruqTime;
+	NSDate *DhuhurTime;
+	NSDate *AsrTime;
+	NSDate *MaghribTime;
+	NSDate *IshaTime;
 	
-	NSCalendarDate *FajrTime;
-	NSCalendarDate *ShuruqTime;
-	NSCalendarDate *DhuhurTime;
-	NSCalendarDate *AsrTime;
-	NSCalendarDate *MaghribTime;
-	NSCalendarDate *IshaTime;
+	NSDate *DateTime;
 }
-
 
 - (void)setFajrOffset:(int)n;
 - (void)setShuruqOffset:(int)n;
@@ -45,22 +50,25 @@
 - (void)setLatitude:(double)n;
 - (void)setLongitude:(double)n;
 - (void)setAltitude:(double)n;
-- (void)setAsrMethod:(int)n;
-- (void)setIshaMethod:(int)n;
-- (void)setFajrMethod:(int)n;
+- (void)setMadhab:(int)n;
+- (void)setMethod:(int)n;
+- (void)setCustomSunriseAngle:(float)n;
+- (void)setCustomSunsetAngle:(float)n;
 
-- (void)calcTimes:(NSCalendarDate *)calcDate;
+- (void)setSystemTimezone:(BOOL)systemTZ;
+- (void)setTimezone:(float)tz;
+- (void)setDaylightSavings:(BOOL)dst;
 
-- (NSCalendarDate *)getFajrTime;
+- (void)calcTimes:(NSDate *)calcDate;
 
-- (NSCalendarDate *)getShuruqTime;
+- (NSDate *)getFajrTime;
+- (NSDate *)getShuruqTime;
+- (NSDate *)getDhuhurTime;
+- (NSDate *)getAsrTime;
+- (NSDate *)getMaghribTime;
+- (NSDate *)getIshaTime;
 
-- (NSCalendarDate *)getDhuhurTime;
-
-- (NSCalendarDate *)getAsrTime;
-
-- (NSCalendarDate *)getMaghribTime;
-
-- (NSCalendarDate *)getIshaTime;
+- (void)setDate:(NSDate *)date;
+- (NSDate *)getDate;
 
 @end

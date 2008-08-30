@@ -18,33 +18,44 @@ static AppController *sharedAppController = nil;
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
-	
 	[userDefaults registerDefaults:appDefaults];
 
+	//create array of default adhans
 	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
 	[adhanOptions retain];
 	
-	prayerTimeDate = [[NSCalendarDate calendarDate] retain]; //set date with which to check prayer times
+	//set date with which to initially check prayer times
+	prayerTimeDate = [[NSCalendarDate calendarDate] retain]; 
 	
-	lastCheckTime = [[NSCalendarDate calendarDate] retain]; //initialize last check time
+	//initialize last check time
+	lastCheckTime = [[NSCalendarDate calendarDate] retain]; 
 	
-	todaysPrayerTimes = [[PrayerTimes alloc] init]; //initialize prayer times object 
+	//initialize prayer times object 
+	todaysPrayerTimes = [[PrayerTimes alloc] init]; 
 	
+	//set currently playing adhan to empty string 
 	currentlyPlayingAdhan = @"";
 	
-	[self initPrayers]; //initialize each prayer object
+	//initialize each prayer object
+	[self initPrayers]; 
 
-	[self loadDefaults]; //load default preferences
+	//load default preferences
+	[self loadDefaults]; 
 
-	[self setPrayerTimes]; //sets each prayer object's prayer time
+	//sets each prayer object's prayer time
+	[self setPrayerTimes]; 
 	
-	[self initAppMenu]; //create menu bar
+	//create menu bar
+	[self initAppMenu]; 
 	
-	[self setMenuTimes]; //initialize prayer time items in menu bar	
+	//initialize prayer time items in menu bar
+	[self setMenuTimes]; 	
 
-	nextPrayer = fajrPrayer; //initially set next prayer to fajr
+	//initially set next prayer to fajr
+	nextPrayer = fajrPrayer; 
 
-	[self checkPrayerTimes]; //initial prayer time check
+	//initial prayer time check
+	[self checkPrayerTimes]; 
 	
 	//running loop that checks prayer times every second
 	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(runLoop) userInfo:nil repeats:YES]; 
@@ -54,8 +65,11 @@ static AppController *sharedAppController = nil;
 		[self doGrowl : @"Guidance" : @"Request Growl installation" : NO : nil : nil];
 	}
 	
-	[self checkForUpdate:YES]; //check for new version	
+	//check for new version
+	[self checkForUpdate:YES]; 	
 
+	// bring  up welcome window if this is the first time the program has been ran 
+	// or if the preferences are incompatible
 	if(firstRun || preferencesVersion < [self getBuildNumber]) {
 		[[WelcomeController sharedWelcomeWindowController] showWindow:nil];
 		[[[WelcomeController sharedWelcomeWindowController] window] makeKeyAndOrderFront:nil];
@@ -63,7 +77,6 @@ static AppController *sharedAppController = nil;
 		
 		//now that app has been run, set FirstRun to false and set the proper preferences version
 		[userDefaults setBool:NO forKey:@"FirstRun"];
-		
 		[userDefaults setInteger:[self getBuildNumber] forKey:@"PreferencesVersion"];
 	}
 }
@@ -560,7 +573,7 @@ static AppController *sharedAppController = nil;
 
 	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
 	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
-	[todaysPrayerTimes setAsrMethod: [userDefaults integerForKey:@"AsrMethod"]];
+	[todaysPrayerTimes setMadhab: [userDefaults integerForKey:@"Madhab"]];
 	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
 	[todaysPrayerTimes setFajrMethod: [userDefaults integerForKey:@"FajrMethod"]];
 	
@@ -654,7 +667,7 @@ static AppController *sharedAppController = nil;
     
 	if([productVersionDict count] > 0 ) 
 	{
-		if(currentBuild == latestBuild && !quiet)
+		if(currentBuild >= latestBuild && !quiet)
 		{
 			// tell user software is up to date
 			[NSApp activateIgnoringOtherApps:YES];
