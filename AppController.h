@@ -71,6 +71,7 @@
 	BOOL userPrefsEnableSound;
 	BOOL userPrefsFajrReminder;
 	BOOL userPrefsFirstRun;
+	int preferencesVersion;
 	int userPrefsMinutesBeforeFajr;
 	int userPrefsMinutesBeforeShuruq;
 	BOOL userPrefsShuruqReminder;

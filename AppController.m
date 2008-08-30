@@ -56,10 +56,15 @@ static AppController *sharedAppController = nil;
 	
 	[self checkForUpdate:YES]; //check for new version	
 
-	if(firstRun) {
+	if(firstRun || preferencesVersion < [self getBuildNumber]) {
 		[[WelcomeController sharedWelcomeWindowController] showWindow:nil];
 		[[[WelcomeController sharedWelcomeWindowController] window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
+		
+		//now that app has been run, set FirstRun to false and set the proper preferences version
+		[userDefaults setBool:NO forKey:@"FirstRun"];
+		
+		[userDefaults setInteger:[self getBuildNumber] forKey:@"PreferencesVersion"];
 	}
 }
 
@@ -593,7 +598,7 @@ static AppController *sharedAppController = nil;
 		minutesBeforeTahajud = 0;		
 	}
 	
-		
+	preferencesVersion = [userDefaults integerForKey:@"PreferencesVersion"];
 	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
 	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
 	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
@@ -603,9 +608,6 @@ static AppController *sharedAppController = nil;
 	menuDisplayName = [userDefaults integerForKey:@"DisplayNextPrayerName"];
 	displayIcon = [userDefaults boolForKey:@"DisplayIcon"];
 	displayNextPrayer = [userDefaults boolForKey:@"DisplayNextPrayer"];
-		
-	//now that app has been run, set FirstRun to false
-	[userDefaults setBool:NO forKey:@"FirstRun"];
 }
 
 

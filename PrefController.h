@@ -38,6 +38,7 @@
 	IBOutlet NSTextField *locationTitleText;
 	IBOutlet NSButton *setLocation;
 	IBOutlet NSTextField *lookupStatus;
+	IBOutlet NSImageView *lookupStatusImage;
 	IBOutlet NSProgressIndicator *lookupIndicator;
 	IBOutlet NSButton *manualLocation;
 	IBOutlet NSTextField *latitude;

@@ -47,6 +47,8 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 
 - (IBAction)done:(id)sender
 {
+	BOOL valid = [self locationLookup];
+	
 	//write user preferences to pref file
 	[userDefaults synchronize];
 	
@@ -55,13 +57,19 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 	
 	//close window
 	[welcomeWindow close];
+	
+	if(!valid) {
+		[NSApp activateIgnoringOtherApps:YES];
+		NSRunAlertPanel(NSLocalizedString(@"Unable to find location", @"Title of alert telling user that their location was not found."),
+						NSLocalizedString(@"Guidance was unable to find the location you entered, please enter a different location in the preferences.", @"Alert text when the user's location was not found."),
+						NSLocalizedString(@"OK", @"OK"), nil, nil);
+		
+	}
 }
 
-
-- (IBAction)lookup:(id)sender
-{
+- (BOOL)locationLookup {
 	[lookupIndicator setDisplayedWhenStopped:YES];
-	[lookupIndicator startAnimation:sender];	
+	[lookupIndicator startAnimation:self];	
 	[lookupStatus setStringValue:@"Looking up latitude and longitude..."];
 	[welcomeWindow display];
 	
@@ -74,22 +82,37 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 	
 	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
 	
-	if (valid)
-	{
-		[userDefaults setFloat:[[coordDict valueForKey:@"latitude"] doubleValue] forKey:@"Latitude"];
-		[userDefaults setFloat:[[coordDict valueForKey:@"longitude"] doubleValue] forKey:@"Longitude"];
-		[userDefaults setValue:[location stringValue] forKey:@"Location"];	
-		
-		[lookupStatus setStringValue:@"Your location has been set"];
-		[lookupStatus setTextColor:[NSColor blackColor]];
-		[lookupIndicator stopAnimation:sender];
-	}
-	else
-	{
-		[lookupStatus setStringValue:@"Error: Unable to find location"];
+	if(coordDict == nil) {
+		[lookupStatus setStringValue:@"Error: Unable reach server"];
 		[lookupStatus setTextColor:[NSColor redColor]];
-		[lookupIndicator stopAnimation:sender];
+		[lookupIndicator stopAnimation:self];
+		
+		valid = NO;
+	} else {
+		if (valid)
+		{
+			[userDefaults setFloat:[[coordDict valueForKey:@"latitude"] doubleValue] forKey:@"Latitude"];
+			[userDefaults setFloat:[[coordDict valueForKey:@"longitude"] doubleValue] forKey:@"Longitude"];
+			[userDefaults setValue:[location stringValue] forKey:@"Location"];	
+			
+			[lookupStatus setStringValue:@"Your location has been set"];
+			[lookupStatus setTextColor:[NSColor blackColor]];
+			[lookupIndicator stopAnimation:self];
+		}
+		else
+		{
+			[lookupStatus setStringValue:@"Error: Unable to find location"];
+			[lookupStatus setTextColor:[NSColor redColor]];
+			[lookupIndicator stopAnimation:self];
+		}
 	}
+	
+	return valid;
+}
+
+
+- (IBAction)lookup:(id)sender {
+	[self locationLookup];
 }
 
 - (IBAction)startAtLogin:(id)sender

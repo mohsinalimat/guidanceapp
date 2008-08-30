@@ -67,6 +67,7 @@
 	
 	[lookupStatus setStringValue:@""];
 	[lookupIndicator setDisplayedWhenStopped:NO];
+	[lookupStatusImage setImage:nil];
 	[location setStringValue:[userDefaults stringForKey:@"Location"]];
 }
 
@@ -247,11 +248,11 @@
 - (IBAction)lookupLocation:(id)sender 
 {
 
-	[lookupIndicator setDisplayedWhenStopped:YES];
 	[lookupStatus setStringValue:@"Looking up latitude and longitude..."];
 	[lookupStatus setTextColor:[NSColor blackColor]];
 	[locationPrefsView display];
 
+	[lookupStatusImage setImage:nil];
 	[lookupIndicator startAnimation:sender];
 	
 
@@ -269,20 +270,18 @@
 		[latitude setFloatValue: [[coordDict valueForKey:@"latitude"] doubleValue]];
 		[longitude setFloatValue: [[coordDict valueForKey:@"longitude"] doubleValue]];
 		
-
-		[lookupStatus setStringValue:@"Your location has been set"];
-		[lookupStatus setTextColor:[NSColor blackColor]];
 		[lookupIndicator stopAnimation:sender];
+		[lookupStatusImage setImage:[NSImage imageNamed:@"check"]];
 		
-		[userDefaults setValue:[location stringValue] forKey:@"Location"];	
+		
+		[userDefaults setValue:[coordDict valueForKey:@"name"] forKey:@"Location"];	
 
 		[self saveAndApply];
 	}
 	else
 	{
-		[lookupStatus setStringValue:@"Error: Unable to find location"];
-		[lookupStatus setTextColor:[NSColor redColor]];
 		[lookupIndicator stopAnimation:sender];
+		[lookupStatusImage setImage:[NSImage imageNamed:@"error"]];
 	}
 }
 
