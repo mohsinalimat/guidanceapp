@@ -98,32 +98,32 @@
 
 - (void)setFajrOffset:(int)n
 {
-	FajrOffset = n;
+	FajrOffset = n - 15;
 }
 
 - (void)setShuruqOffset:(int)n
 {
-	ShuruqOffset = n;
+	ShuruqOffset = n - 15;
 }
 
 - (void)setDhuhurOffset:(int)n
 {
-	DhuhurOffset = n;
+	DhuhurOffset = n - 15;
 }
 
 - (void)setAsrOffset:(int)n
 {
-	AsrOffset = n;
+	AsrOffset = n - 15;
 }
 
 - (void)setMaghribOffset:(int)n
 {
-	MaghribOffset = n;
+	MaghribOffset = n - 15;
 }
 
 - (void)setIshaOffset:(int)n
 {
-	IshaOffset = n;
+	IshaOffset = n - 15;
 }
 
 - (void)setMadhab:(int)n
@@ -155,16 +155,15 @@
 }
 
 
-+ (NSDate *)hoursToTime:(double)n
++ (NSDate *)hoursToTime:(double)n : (NSDate *)calcDate
 {
 	int hour = floor(n);
 	int minute = floor((n - hour) * 60);
 	
 	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 	
-	NSDate *now = [NSDate date];
 	unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-	NSDateComponents *comps = [gregorian components:unitFlags fromDate:now];
+	NSDateComponents *comps = [gregorian components:unitFlags fromDate:calcDate];
 	
 	[comps setHour:hour];
 	[comps setMinute:minute];
@@ -186,6 +185,7 @@
 	} else {
 		timezoneValue = timezone;
 		if(daylightSavings) timezoneValue++;
+	}
 	
 	double rad_lat = [PrayerTimes deg2rad:Latitude];
 	
@@ -234,6 +234,7 @@
 			SunsetAngle = CustomSunsetAngle;
 			break;
 	}
+
 	
 	double beta = (2 * M_PI * day) / 365.0;
 	double d = (180.0 / M_PI) * (0.006918 - (0.399912 * cos(beta))
@@ -305,16 +306,16 @@
 												   )
 									 )];
 	
-	FajrTime = [PrayerTimes hoursToTime: z - vd];
-	ShuruqTime = [PrayerTimes hoursToTime: z - u];
-	DhuhurTime = [PrayerTimes hoursToTime: z];
-	AsrTime = [PrayerTimes hoursToTime: z + w];
-	MaghribTime = [PrayerTimes hoursToTime: z + u];
+	FajrTime = [PrayerTimes hoursToTime: z - vd : calcDate];
+	ShuruqTime = [PrayerTimes hoursToTime: z - u : calcDate];
+	DhuhurTime = [PrayerTimes hoursToTime: z : calcDate];
+	AsrTime = [PrayerTimes hoursToTime: z + w : calcDate];
+	MaghribTime = [PrayerTimes hoursToTime: z + u : calcDate];
 	
 	if(Method == 4 || Method == 5) {
-		IshaTime = [PrayerTimes hoursToTime: z + u + 1.5];
+		IshaTime = [PrayerTimes hoursToTime: z + u + 1.5 : calcDate];
 	} else {
-		IshaTime = [PrayerTimes hoursToTime: z + vn];
+		IshaTime = [PrayerTimes hoursToTime: z + vn : calcDate];
 	}
 }
 

@@ -2,14 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Madhahb</key>
-	<integer>0</integer>
-	<key>AsrOffset</key>
-	<integer>15</integer>
-	<key>CheckForUpdates</key>
+	<key>FirstRun</key>
 	<true/>
-	<key>DhuhurOffset</key>
-	<integer>15</integer>
+	<key>PreferencesVersion</key>
+	<integer>0</integer>
 	<key>DisplayIcon</key>
 	<true/>
 	<key>DisplayNextPrayer</key>
@@ -18,67 +14,71 @@
 	<integer>0</integer>
 	<key>DisplayNextPrayerTime</key>
 	<integer>1</integer>
-	<key>EnableGrowl</key>
-	<true/>
-	<key>EnableSound</key>
-	<true/>
-	<key>FajrOffset</key>
-	<integer>15</integer>
-	<key>FajrReminder</key>
+	<key>StartAtLogin</key>
 	<false/>
-	<key>CustomSunriseAngle</key>
-	<real>17.5</real>
-	<key>CustomSunsetAngle</key>
-	<real>15.5</real>
-	<key>FirstRun</key>
+	<key>CheckForUpdates</key>
 	<true/>
-	<key>Method</key>
-	<integer>3</integer>
-	<key>IshaOffset</key>
-	<integer>15</integer>
-	<key>Latitude</key>
-	<real>35.776049</real>
 	<key>Location</key>
 	<string>Raleigh, NC</string>
+	<key>Latitude</key>
+	<real>35.776049</real>
 	<key>Longitude</key>
 	<real>-78.708552</real>
-	<key>MaghribOffset</key>
-	<integer>15</integer>
-	<key>MinutesBeforeFajr</key>
-	<integer>45</integer>
-	<key>MinutesBeforeShuruq</key>
-	<integer>30</integer>
-	<key>PlayAdhanForAsr</key>
-	<true/>
-	<key>PlayAdhanForDhuhur</key>
-	<true/>
-	<key>PlayAdhanForFajr</key>
-	<true/>
-	<key>PlayAdhanForIsha</key>
-	<true/>
-	<key>PlayAdhanForMaghrib</key>
-	<true/>
-	<key>ShuruqOffset</key>
-	<integer>15</integer>
-	<key>ShuruqReminder</key>
-	<false/>
 	<key>SystemTimezone</key>
 	<true/>
 	<key>DaylightSavings</key>
 	<false/>
 	<key>Timezone</key>
 	<real>-5</real>
+	<key>Madhahb</key>
+	<integer>0</integer>
+	<key>Method</key>
+	<integer>3</integer>
+	<key>CustomSunriseAngle</key>
+	<real>17.5</real>
+	<key>CustomSunsetAngle</key>
+	<real>15.5</real>
+	<key>EnableSound</key>
+	<true/>
 	<key>SoundFile</key>
 	<integer>0</integer>
-	<key>StartAtLogin</key>
-	<false/>
-	<key>StickyGrowl</key>
-	<false/>
 	<key>UserSound</key>
 	<false/>
 	<key>UserSoundFile</key>
 	<string></string>
-	<key>PreferencesVersion</key>
-	<integer>0</integer>
+	<key>PlayAdhanForFajr</key>
+	<true/>
+	<key>PlayAdhanForDhuhur</key>
+	<true/>
+	<key>PlayAdhanForAsr</key>
+	<true/>
+	<key>PlayAdhanForMaghrib</key>
+	<true/>
+	<key>PlayAdhanForIsha</key>
+	<true/>
+	<key>FajrReminder</key>
+	<false/>
+	<key>MinutesBeforeFajr</key>
+	<integer>45</integer>
+	<key>ShuruqReminder</key>
+	<false/>
+	<key>MinutesBeforeShuruq</key>
+	<integer>30</integer>
+	<key>EnableGrowl</key>
+	<true/>
+	<key>StickyGrowl</key>
+	<false/>
+	<key>FajrOffset</key>
+	<integer>15</integer>
+	<key>ShuruqOffset</key>
+	<integer>15</integer>
+	<key>DhuhurOffset</key>
+	<integer>15</integer>
+	<key>AsrOffset</key>
+	<integer>15</integer>
+	<key>MaghribOffset</key>
+	<integer>15</integer>
+	<key>IshaOffset</key>
+	<integer>15</integer>
 </dict>
 </plist>

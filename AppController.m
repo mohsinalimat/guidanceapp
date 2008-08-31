@@ -19,46 +19,23 @@ static AppController *sharedAppController = nil;
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 	[userDefaults registerDefaults:appDefaults];
-
-	//create array of default adhans
-	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
-	[adhanOptions retain];
 	
-	//set date with which to initially check prayer times
-	prayerTimeDate = [[NSCalendarDate calendarDate] retain]; 
+	[self createAppMenu];
 	
-	//initialize last check time
-	lastCheckTime = [[NSCalendarDate calendarDate] retain]; 
+	[self loadPreferences];
 	
-	//initialize prayer times object 
-	todaysPrayerTimes = [[PrayerTimes alloc] init]; 
+	todaysPrayerTimes = [[PrayerTimes alloc] init];
+	tomorrowsPrayerTimes = [[PrayerTimes alloc] init];
+	[self setPrayerTimes];
 	
-	//set currently playing adhan to empty string 
-	currentlyPlayingAdhan = @"";
+	[self displayPrayerTimes];
 	
-	//initialize each prayer object
-	[self initPrayers]; 
-
-	//load default preferences
-	[self loadDefaults]; 
-
-	//sets each prayer object's prayer time
-	[self setPrayerTimes]; 
-	
-	//create menu bar
-	[self initAppMenu]; 
-	
-	//initialize prayer time items in menu bar
-	[self setMenuTimes]; 	
-
-	//initially set next prayer to fajr
-	nextPrayer = fajrPrayer; 
-
-	//initial prayer time check
-	[self checkPrayerTimes]; 
+	lastCheckTime = [[NSDate date] retain];
+	[self checkPrayerStatus];
 	
 	//running loop that checks prayer times every second
 	timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(runLoop) userInfo:nil repeats:YES]; 
+	
 	
 	//check if growl is installed
 	if(![self isGrowlInstalled]) {
@@ -67,7 +44,7 @@ static AppController *sharedAppController = nil;
 	
 	//check for new version
 	[self checkForUpdate:YES]; 	
-
+	
 	// bring  up welcome window if this is the first time the program has been ran 
 	// or if the preferences are incompatible
 	if(firstRun || preferencesVersion < [self getBuildNumber]) {
@@ -82,80 +59,7 @@ static AppController *sharedAppController = nil;
 }
 
 
-/*
- * Create prayer objects, set names, and create prayersArray
- */
-- (void) initPrayers
-{
-	//init Prayer objects
-	fajrPrayerReminder = [[Prayer alloc] init];
-	fajrPrayer = [[Prayer alloc] init];
-	shuruqPrayerReminder = [[Prayer alloc] init];
-	shuruqPrayer = [[Prayer alloc] init];
-	dhuhurPrayer = [[Prayer alloc] init];
-	asrPrayer = [[Prayer alloc] init];
-	maghribPrayer = [[Prayer alloc] init];
-	ishaPrayer = [[Prayer alloc] init];
-	tomorrowFajrPrayer = [[Prayer alloc] init];
-	
-	//init prayers array to loop through when checking prayer times
-	prayersArray = [[NSDictionary dictionaryWithObjectsAndKeys:
-				fajrPrayer,				@"0", 	 
-				shuruqPrayer,			@"1", 
-				dhuhurPrayer,			@"2",
-				asrPrayer,				@"3",
-				maghribPrayer,			@"4",
-				ishaPrayer,				@"5",
-				nil] retain];
-	
-	//set prayer object names names
-	[fajrPrayerReminder setName:@"Tahajud Reminder"];
-	[fajrPrayer setName: @"Fajr"];
-	[shuruqPrayerReminder setName:@"Shuruq Reminder"];
-	[shuruqPrayer setName: @"Shuruq"];
-	[dhuhurPrayer setName: @"Dhuhur"];
-	[asrPrayer setName: @"Asr"];
-	[maghribPrayer setName: @"Maghrib"];
-	[ishaPrayer setName: @"Isha"];
-	[tomorrowFajrPrayer setName: @"Fajr"];
-	
-	//set prayer notification status to false
-	[fajrPrayerReminder setNotified:NO];
-	[fajrPrayer setNotified:NO];
-	[shuruqPrayerReminder setNotified:NO];
-	[shuruqPrayer setNotified:NO];
-	[dhuhurPrayer setNotified:NO];
-	[asrPrayer setNotified:NO];
-	[maghribPrayer setNotified:NO];
-	[ishaPrayer setNotified:NO];
-	[tomorrowFajrPrayer setNotified:NO];
-}
-
-
-/*
- * Calculate and set prayer times for current date
- */
-- (void) setPrayerTimes
-{
-	//calculate prayer times for current date
-	[todaysPrayerTimes calcTimes:[NSCalendarDate calendarDate]];
-		
-	//set times
-	[fajrPrayerReminder setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:0 hours:0 minutes:(-1*minutesBeforeTahajud) seconds:0]];
-	[fajrPrayer setTime: [todaysPrayerTimes getFajrTime]];
-	[shuruqPrayerReminder setTime:[[todaysPrayerTimes getShuruqTime] dateByAddingYears:0 months:0 days:0 hours:0 minutes:(-1*minutesBeforeShuruq) seconds:0]];
-	[shuruqPrayer setTime: [todaysPrayerTimes getShuruqTime]];
-	[dhuhurPrayer setTime: [todaysPrayerTimes getDhuhurTime]];
-	[asrPrayer setTime: [todaysPrayerTimes getAsrTime]];
-	[maghribPrayer setTime: [todaysPrayerTimes getMaghribTime]];
-	[ishaPrayer setTime: [todaysPrayerTimes getIshaTime]];
-}
-
-
-/*
- * Create menu bar, icon, prayer items, and mute adhan item
- */
-- (void) initAppMenu
+- (void) createAppMenu
 {
 	NSStatusBar *bar = [NSStatusBar systemStatusBar];
 	menuBar = [bar statusItemWithLength:NSVariableStatusItemLength];
@@ -164,39 +68,98 @@ static AppController *sharedAppController = nil;
 	[menuBar setHighlightMode:YES];
 	[menuBar setMenu:appMenu];
 	
-	if(displayIcon) {
-		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
-		[menuBar setAlternateImage:[NSImage imageNamed: @"menuBarHighlight"]];
-	}
-		
-	menuItems = [[NSDictionary dictionaryWithObjectsAndKeys:
-                   fajrItem,	@"Fajr", 
-                   shuruqItem,	@"Shuruq", 
-                   dhuhurItem,	@"Dhuhur",
-				   asrItem,		@"Asr",
-				   maghribItem,	@"Maghrib",
-				   ishaItem,	@"Isha",
-                   nil] retain];
-				   
 	[appMenu setAutoenablesItems:NO];
 	
-	muteAdhan = [[NSMenuItem alloc] initWithTitle:@"Mute Adhan" action:@selector(stopAdhan:) keyEquivalent:@""];
-	[muteAdhan retain];
+	// default all status icons to not time
+	[fajrItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[shuruqItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[dhuhurItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[asrItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[maghribItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[ishaItem setImage:[NSImage imageNamed:@"status_notTime"]];
 }
 
 
-/*
- * Set prayer times in menu bar
- */
-- (void) setMenuTimes
+- (void) setPrayerTimes 
 {
-	[fajrItem setTitle:NSLocalizedString([@"Fajr:\t\t " stringByAppendingString:[fajrPrayer getFormattedTime]],@"")];
-	[shuruqItem setTitle:NSLocalizedString([@"Shuruq:\t\t " stringByAppendingString:[shuruqPrayer getFormattedTime]],@"")];
-	[dhuhurItem setTitle:NSLocalizedString([@"Dhuhur:\t\t " stringByAppendingString:[dhuhurPrayer getFormattedTime]],@"")];
-	[asrItem setTitle:NSLocalizedString([@"Asr:\t\t\t " stringByAppendingString:[asrPrayer getFormattedTime]],@"")];
-	[maghribItem setTitle:NSLocalizedString([@"Maghrib:\t " stringByAppendingString:[maghribPrayer getFormattedTime]],@"")];
-	[ishaItem setTitle:NSLocalizedString([@"Isha:\t\t " stringByAppendingString:[ishaPrayer getFormattedTime]],@"")];
+	
+	[tomorrowsPrayerTimes setLatitude:latitude];
+	[tomorrowsPrayerTimes setLongitude:longitude];
+	
+	[tomorrowsPrayerTimes setSystemTimezone:systemTimezone];
+	[tomorrowsPrayerTimes setTimezone:timezone];
+	[tomorrowsPrayerTimes setDaylightSavings:daylightSavings];
+	
+	[tomorrowsPrayerTimes setMadhab:madhab]; 
+	[tomorrowsPrayerTimes setMethod:method];
+	[tomorrowsPrayerTimes setCustomSunriseAngle:customSunriseAngle];
+	[tomorrowsPrayerTimes setCustomSunsetAngle:customSunsetAngle];
+	
+	[tomorrowsPrayerTimes setFajrOffset:fajrOffset];
+	[tomorrowsPrayerTimes setShuruqOffset:shuruqOffset];
+	[tomorrowsPrayerTimes setDhuhurOffset:dhuhurOffset];
+	[tomorrowsPrayerTimes setAsrOffset:asrOffset];
+	[tomorrowsPrayerTimes setMaghribOffset:maghribOffset];
+	[tomorrowsPrayerTimes setIshaOffset:ishaOffset];
+	
+	[tomorrowsPrayerTimes setDate:[NSDate dateWithTimeIntervalSinceNow:86400]];
+	
+	
+	
+	[todaysPrayerTimes setLatitude:latitude];
+	[todaysPrayerTimes setLongitude:longitude];
+	
+	[todaysPrayerTimes setSystemTimezone:systemTimezone];
+	[todaysPrayerTimes setTimezone:timezone];
+	[todaysPrayerTimes setDaylightSavings:daylightSavings];
+	
+	[todaysPrayerTimes setMadhab:madhab]; 
+	[todaysPrayerTimes setMethod:method];
+	[todaysPrayerTimes setCustomSunriseAngle:customSunriseAngle];
+	[todaysPrayerTimes setCustomSunsetAngle:customSunsetAngle];
+	
+	[todaysPrayerTimes setFajrOffset:fajrOffset];
+	[todaysPrayerTimes setShuruqOffset:shuruqOffset];
+	[todaysPrayerTimes setDhuhurOffset:dhuhurOffset];
+	[todaysPrayerTimes setAsrOffset:asrOffset];
+	[todaysPrayerTimes setMaghribOffset:maghribOffset];
+	[todaysPrayerTimes setIshaOffset:ishaOffset];
+	
+	[todaysPrayerTimes setDate:[NSDate date]];
+	currentDay = [[[NSCalendar currentCalendar] components:(NSDayCalendarUnit) fromDate:[NSDate date]] day];
+	
+	
+	fajrTime = [[todaysPrayerTimes getFajrTime] retain];
+	shuruqTime = [[todaysPrayerTimes getShuruqTime] retain];
+	dhuhurTime = [[todaysPrayerTimes getDhuhurTime] retain];
+	asrTime = [[todaysPrayerTimes getAsrTime] retain];
+	maghribTime = [[todaysPrayerTimes getMaghribTime] retain];
+	ishaTime = [[todaysPrayerTimes getIshaTime] retain];
+	
+	tomorrowFajrTime = [[tomorrowsPrayerTimes getFajrTime] retain];
+
 }
+
+
+- (void) displayPrayerTimes 
+{
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+	[dateFormatter setDateStyle:NSDateFormatterNoStyle];
+	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	
+	[fajrItem setTitle:[NSString stringWithFormat:@"Fajr:\t\t %@",[dateFormatter stringFromDate:fajrTime]]];
+	[shuruqItem setTitle:[NSString stringWithFormat:@"Shuruq:\t\t %@",[dateFormatter stringFromDate:shuruqTime]]];
+	[dhuhurItem setTitle:[NSString stringWithFormat:@"Dhuhur:\t\t %@",[dateFormatter stringFromDate:dhuhurTime]]];
+	[asrItem setTitle:[NSString stringWithFormat:@"Asr:\t\t\t %@",[dateFormatter stringFromDate:asrTime]]];
+	[maghribItem setTitle:[NSString stringWithFormat:@"Maghrib:\t %@",[dateFormatter stringFromDate:maghribTime]]];
+	[ishaItem setTitle:[NSString stringWithFormat:@"Isha:\t\t %@",[dateFormatter stringFromDate:ishaTime]]];
+	
+	[dateFormatter release];
+}
+
+
+
 
 
 /*
@@ -204,188 +167,40 @@ static AppController *sharedAppController = nil;
  */
 - (void) runLoop
 {	
-	if([[NSCalendarDate calendarDate] secondOfMinute] == 0)
-	{
-		[self checkPrayerTimes];
-	} else {
-		int seconds = 0;
-		[[NSCalendarDate calendarDate] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&seconds sinceDate:lastCheckTime];
+	
+	if([[[NSCalendar currentCalendar] components:(NSSecondCalendarUnit) fromDate:[NSDate date]] second] == 0 || fabs([lastCheckTime timeIntervalSinceNow]) >= 60.0) {
+		[lastCheckTime release];
+		lastCheckTime = [[NSDate date] retain];
 		
-		if(seconds > 60 || seconds < 0) {
-			[self checkPrayerTimes];
-		}
+		[self checkPrayerStatus];
 	}
 }
 
 
-/* 
- * recalculate and display prayer times for new day, reset prayer's notification status and check for updates
- */
-- (void) updateForNewDay
+- (void) checkPrayerStatus
 {
-	[self setPrayerTimes];
-	[self setMenuTimes];
-	
-	//reset current day
-	[prayerTimeDate release];
-	prayerTimeDate = [[NSCalendarDate calendarDate] retain];
-	
-	//reset prayer notification status
-	[fajrPrayerReminder setNotified:NO];
-	[fajrPrayer setNotified:NO];
-	[shuruqPrayerReminder setNotified:NO];
-	[shuruqPrayer setNotified:NO];
-	[dhuhurPrayer setNotified:NO];
-	[asrPrayer setNotified:NO];
-	[maghribPrayer setNotified:NO];
-	[ishaPrayer setNotified:NO];
-	
-	//and if set, check for updates
-	if(checkForUpdates) {
-		[self checkForUpdate:YES];
-	}	
-}
-
-
-/*
- * go through all the prayers and check if it is currently time to pray
- */
-- (void) checkPrayerTimes
-{
-	//update last time prayer times were checked
-	[lastCheckTime release];
-	lastCheckTime = [[NSCalendarDate calendarDate] retain];
-	
-	//if new day, update prayer times first
-	if([[NSCalendarDate calendarDate] dayOfCommonEra] != [prayerTimeDate dayOfCommonEra]) {
-		[self updateForNewDay];
+	// if its a new day, recalculate and display the prayer times and check for updates
+	if(currentDay != [[[NSCalendar currentCalendar] components:(NSDayCalendarUnit) fromDate:[NSDate date]] day]) {
+		[self setPrayerTimes];
+		[self displayPrayerTimes];
+		if(checkForUpdates) [self checkForUpdate:YES];
 	}
 	
+	// set menu bar title
+	[self setMenuBarTitle];
 	
-	BOOL nextPrayerSet = NO;
-	BOOL currentlyPrayerTime = NO;
-	
-	
-	Prayer *prayer;
-	NSString *name, *time;
-	BOOL notified;
-	int i, secondsTill, minutesTill, minuteSecondsTill;
-	
-	//loop through array of prayers
-	for (i = 0; i < 6; i++)
-	{
-		prayer = [prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]];
-
-		//calculate seconds till
-		[[prayer getTime] years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
-		
-		//calculate minutes till
-		[[prayer getTime] years:NULL months:NULL days:NULL  hours:NULL minutes:&minutesTill seconds:&minuteSecondsTill sinceDate:[NSCalendarDate calendarDate]];
-		
-		if(minuteSecondsTill > 0) minutesTill++; //round minute up
-		
-		
-		//Get next prayer
-		if(secondsTill > 0 && nextPrayerSet == NO)
-		{
-			nextPrayer = prayer;
-			nextPrayerSet = YES;
-		}
-		
-		//check if its currently prayer time
-		if ((secondsTill >= -59 && secondsTill <= 0) && ![[prayer getName] isEqualTo:@"Shuruq"])
-		{
-			currentlyPrayerTime = YES;
-			currentPrayer = prayer;
-			
-			name = [prayer getName];
-			time = [prayer getFormattedTime];
-			notified = [prayer getNotified];
-			
-			//if user hasnt been notified yet
-			if(!notified) 
-			{
-				if(displayGrowl) 
-				{
-					[self doGrowl : name : [[time stringByAppendingString:@"\nIt's time to pray "] stringByAppendingString:name] : stickyGrowl : @"" : name];
-					[prayer setNotified:YES];
-				}
-				
-				//play audio
-				if([prayer getPlayAudio])
-				{	
-					[prayer setNotified:YES];
-					
-					if(![self isAdhanPlaying]) {
-						[self playAdhan];
-					}
-					
-					currentlyPlayingAdhan = name;
-					[[menuItems objectForKey:name] setAction:@selector(stopAdhan:)];	
-						
-				}
-			}
-		} // end if currently prayer time
-	} // end prayers array loop
-	
-	
-	/*
-	 else if(shuruqReminder && (minutesBeforeShuruq == minutesTill) && ([[prayer getName] isEqualTo:@"Shuruq"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
-	 {
-	 currentPrayer = prayer;
-	 
-	 if(![self isAdhanPlaying]) {
-	 [self playAdhan];
-	 }
-	 
-	 currentlyPlayingAdhan = @"Shuruq";
-	 [[menuItems objectForKey:@"Shuruq"] setAction:@selector(stopAdhan:)];
-	 
-	 if(displayGrowl) [self doGrowl : @"Shuruq" : [[[shuruqPrayer getFormattedTime] stringByAppendingString:[NSString stringWithFormat:@"\n%d",minutesBeforeShuruq]] stringByAppendingString:@" minutes left to pray Fajr"] : stickyGrowl : @"" : @"Shuruq"];
-	 
-	 [prayer setNotified:YES];
-	 }
-	 else if(tahajudReminder && (minutesBeforeTahajud == minutesTill) && ([[prayer getName] isEqualTo:@"Fajr"])  && !(secondsSinceNotification < 60 && secondsSinceNotification > 0))
-	 {
-	 currentPrayer = prayer;
-	 
-	 if(![self isAdhanPlaying]) {
-	 [self playAdhan];
-	 }
-	 
-	 currentlyPlayingAdhan = @"Fajr";
-	 [[menuItems objectForKey:@"Fajr"] setAction:@selector(stopAdhan:)];
-	 
-	 if(displayGrowl) [self doGrowl : @"Tahajud" : [[NSString stringWithFormat:@"%d",minutesBeforeTahajud] stringByAppendingString:@" minutes left until Fajr"] : stickyGrowl : @"" : @"Tahajud"];
-	 
-	 [prayer setNotified:YES];
-	 }
-	 */
-	
-	
-	
-	if(nextPrayerSet == NO) {
-		//calculate the time for tomorrow's fajr prayer
-		[todaysPrayerTimes calcTimes:[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
-		[tomorrowFajrPrayer setTime:[[todaysPrayerTimes getFajrTime] dateByAddingYears:0 months:0 days:1 hours:0 minutes:0 seconds:0]];
-	
-		nextPrayer = tomorrowFajrPrayer;
-	}
-	
-	[self setMenuBar : currentlyPrayerTime];
+	// set status icons
 	[self setStatusIcons];
+	
+	// check prayer times for adhan
+	[self checkPrayertimes];
 }
 
-
-/*
- * icon display settings, prayer name and time display settings for menu bar
- */
-- (void) setMenuBar: (BOOL) currentlyPrayerTime
+- (void) setMenuBarTitle
 {
 	/* Set menu bar display */
-	NSString *menuBarTitle;
-	NSString *nextPrayerNameDisplay;
-	NSString *nextPrayerTimeDisplay;
+	NSString *nextPrayerNameDisplay = @"";
+	NSString *nextPrayerTimeDisplay = @"";
 	
 	if(displayIcon) {
 		[menuBar setImage: [NSImage imageNamed: @"menuBar"]];
@@ -393,157 +208,287 @@ static AppController *sharedAppController = nil;
 	} else {
 		[menuBar setImage: nil];
 		[menuBar setAlternateImage: nil];
+		
+		displayNextPrayer = YES;
 	}	
 	
-	
 	if(displayNextPrayer) {
-		if(menuDisplayName == 0) {	
-			//display whole name
-			nextPrayerNameDisplay = [nextPrayer getName]; 
-		} else if(menuDisplayName == 1) {
-			//display abbreviation
-			nextPrayerNameDisplay = [[nextPrayer getName] substringToIndex:1]; 
-		} else if(menuDisplayName == 2) {
-			//display none
-			nextPrayerNameDisplay = @"";
-		}
 		
-		
-		if(menuDisplayTime == 0) {
-			//display next prayer time
-			nextPrayerTimeDisplay = [[nextPrayer getTime] descriptionWithCalendarFormat: @" %1I:%M"]; 
-		} else if(menuDisplayTime == 1) {
-			//display amount of time left until the next prayer
-			int hourCount,minuteCount,secondsCount;
+		if([fajrTime timeIntervalSinceNow] >= 0 || ([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60)) {
 			
-			//calculate time until next prayer
-			[[nextPrayer getTime] 
-			 years:NULL months:NULL days:NULL  hours:&hourCount minutes:&minuteCount seconds:&secondsCount 
-			 sinceDate:[NSCalendarDate calendarDate]];
-			
-			//round the seconds up
-			if(secondsCount > 0) {
-				if(minuteCount == 59) {
-					hourCount++;
-					minuteCount = 0;
-				} else {
-					minuteCount++;
-				}
+			if([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60) {
+				nextPrayerNameDisplay = @"Fajr";
+				nextPrayerTimeDisplay = @"Time";
+			} else {
+				
+				nextPrayerNameDisplay = [self getNameDisplay:@"Fajr"];
+				nextPrayerTimeDisplay = [self getTimeDisplay:fajrTime];
 			}
 			
-			nextPrayerTimeDisplay = [NSString stringWithFormat:@" -%d:%02d",hourCount,minuteCount];
+		} else if([dhuhurTime timeIntervalSinceNow] >= 0 || ([dhuhurTime timeIntervalSinceNow] <= 0 && [dhuhurTime timeIntervalSinceNow] > -60)) {
 			
-		} else if(menuDisplayTime == 2) {
-			nextPrayerTimeDisplay = @"";
+			if([dhuhurTime timeIntervalSinceNow] <= 0 && [dhuhurTime timeIntervalSinceNow] > -60) {
+				nextPrayerNameDisplay = @"Dhuhur";
+				nextPrayerTimeDisplay = @"Time";
+			} else {
+				
+				nextPrayerNameDisplay = [self getNameDisplay:@"Dhuhur"];
+				nextPrayerTimeDisplay = [self getTimeDisplay:dhuhurTime];
+			}
+			
+		} else if([asrTime timeIntervalSinceNow] >= 0 || ([asrTime timeIntervalSinceNow] <= 0 && [asrTime timeIntervalSinceNow] > -60)) {
+			
+			if([asrTime timeIntervalSinceNow] <= 0 && [asrTime timeIntervalSinceNow] > -60) {
+				nextPrayerNameDisplay = @"Asr";
+				nextPrayerTimeDisplay = @"Time";
+			} else {
+				
+				nextPrayerNameDisplay = [self getNameDisplay:@"Asr"];
+				nextPrayerTimeDisplay = [self getTimeDisplay:asrTime];
+			}
+			
+		} else if([maghribTime timeIntervalSinceNow] >= 0 || ([maghribTime timeIntervalSinceNow] <= 0 && [maghribTime timeIntervalSinceNow] > -60)) {
+			
+			if([maghribTime timeIntervalSinceNow] <= 0 && [maghribTime timeIntervalSinceNow] > -60) {
+				nextPrayerNameDisplay = @"Maghrib";
+				nextPrayerTimeDisplay = @"Time";
+			} else {
+				
+				nextPrayerNameDisplay = [self getNameDisplay:@"Maghrib"];
+				nextPrayerTimeDisplay = [self getTimeDisplay:maghribTime];
+			}
+			
+		} else if([ishaTime timeIntervalSinceNow] >= 0 || ([ishaTime timeIntervalSinceNow] <= 0 && [ishaTime timeIntervalSinceNow] > -60)) {
+			
+			if([ishaTime timeIntervalSinceNow] <= 0 && [ishaTime timeIntervalSinceNow] > -60) {
+				nextPrayerNameDisplay = @"Isha";
+				nextPrayerTimeDisplay = @"Time";
+			} else {
+				
+				nextPrayerNameDisplay = [self getNameDisplay:@"Isha"];
+				nextPrayerTimeDisplay = [self getTimeDisplay:ishaTime];
+			}
+			
+		} else {
+			
+			nextPrayerNameDisplay = [self getNameDisplay:@"Fajr"];
+			nextPrayerTimeDisplay = [self getTimeDisplay:tomorrowFajrTime];
 		}
 		
-		menuBarTitle = [nextPrayerNameDisplay stringByAppendingString:nextPrayerTimeDisplay];
+		[menuBar setTitle:[NSString stringWithFormat:@"%@ %@", nextPrayerNameDisplay, nextPrayerTimeDisplay]];
 		
 	} else {
-		menuBarTitle = @"";
+		[menuBar setTitle:@""];
+	}
+}
+
+- (NSString *) getNameDisplay:(NSString *)prayerName
+{
+	NSString *nameDisplay = @"";
+	
+	// get the name display option
+	if(displayNextPrayerName == 0) {	
+		// display whole name
+		nameDisplay = prayerName;
+	} else if(displayNextPrayerName == 1) {
+		// display abbreviation
+		nameDisplay = [prayerName substringToIndex:1];
+	} else if(displayNextPrayerName == 2) {
+		// display nothing
+		nameDisplay = @"";
+	}	
+	
+	return nameDisplay;
+}
+
+- (NSString *) getTimeDisplay:(NSDate *)prayerTime
+{
+	NSString *timeDisplay = @"";
+	
+	NSLog([prayerTime description]);
+	
+	// get the time display option
+	if(displayNextPrayerTime == 0) {
+		
+		// display next prayer time
+		timeDisplay = [prayerTime descriptionWithCalendarFormat:@"%1I:%M" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+		
+	} else if(displayNextPrayerTime == 1) {
+		
+		// display amount of time left until the next prayer
+		float hours = floor([prayerTime timeIntervalSinceNow]/3600);
+		float minutes = ceil(([prayerTime timeIntervalSinceNow] - (hours * 3600)) / 60);
+		timeDisplay = [NSString stringWithFormat:@"-%.0f:%02.0f",hours,minutes];
+		
+	} else if(displayNextPrayerTime == 2) {
+		
+		// display nothing
+		timeDisplay = @"";
 	}
 	
-	//if it's time to pray, change the menu bar title to "prayer name" time for that minute
-	if(currentlyPrayerTime) {
-		menuBarTitle = [[currentPrayer getName] stringByAppendingString:@" time"];
-	}
-	
-	[menuBar setTitle:NSLocalizedString(menuBarTitle,@"")]; //set menu bar title
+	return timeDisplay;
 }
 
 
-/*
- * set grey icon, green icon or sound icon next to prayer names in menu bar
- */
 - (void) setStatusIcons
 {
+	// default all status icons to not time
+	[fajrItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[shuruqItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[dhuhurItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[asrItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[maghribItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[ishaItem setImage:[NSImage imageNamed:@"status_notTime"]];
 	
-	BOOL nextPrayerSet = NO;
-	
-	NSCalendarDate *prayerTime;
-	NSString *prayerName, *stillTimeToPray;
-	
-	int i, secondsTill;
-	
-	for (i = 0; i < 6; i++)
-	{
-		prayerName = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getName];
-		prayerTime = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i]] getTime];
+	// check which prayer it is currently time for
+	if([ishaTime timeIntervalSinceNow] <= 0) {
+
+		[ishaItem setImage:[NSImage imageNamed:@"status_prayerTime"]];
 		
-		[prayerTime years:NULL months:NULL days:NULL  hours:NULL minutes:NULL seconds:&secondsTill sinceDate:[NSCalendarDate calendarDate]];
+	} else if([maghribTime timeIntervalSinceNow] <= 0) {
 		
-		[[menuItems objectForKey:prayerName] setImage: [NSImage imageNamed: @"status_notTime"]];
+		[maghribItem setImage:[NSImage imageNamed:@"status_prayerTime"]];
 		
-		//Get next prayer
-		if(secondsTill > 0 && nextPrayerSet == NO)
-		{
-			nextPrayerSet = YES;
-			
-			if(i == 0) {
-				stillTimeToPray = @"Isha";
-			} else if(i == 1) {
-				stillTimeToPray = @"Fajr";
-			} else if(i == 2) {
-				stillTimeToPray = @"";
-			} else {
-				stillTimeToPray = [[prayersArray objectForKey:[NSString stringWithFormat:@"%d",i-1]] getName];
-			}
-			
-		}
+	} else if([asrTime timeIntervalSinceNow] <= 0) {
+		
+		[asrItem setImage:[NSImage imageNamed:@"status_prayerTime"]];
+		
+	} else if([dhuhurTime timeIntervalSinceNow] <= 0) {
+		
+		[dhuhurItem setImage:[NSImage imageNamed:@"status_prayerTime"]];
+		
+	} else if([fajrTime timeIntervalSinceNow] <= 0) {
+		
+		if([shuruqTime timeIntervalSinceNow] > 0) {
+			[fajrItem setImage:[NSImage imageNamed:@"status_prayerTime"]];
+		}	
+		
+	}	else {
+		
+		[ishaItem setImage:[NSImage imageNamed:@"status_prayerTime"]];
 		
 	}
-	
-	if(!nextPrayerSet) {
-		stillTimeToPray = @"Isha";
+}
+
+
+
+- (void) checkPrayertimes
+{
+	if([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60) {
+		NSLog(@"time for fajr!");
 	}
 	
-	[[menuItems objectForKey:stillTimeToPray] setImage: [NSImage imageNamed: @"status_prayerTime"]];
-	[[menuItems objectForKey:currentlyPlayingAdhan] setImage: [NSImage imageNamed: @"status_sound"]];
+	if([dhuhurTime timeIntervalSinceNow] <= 0 && [dhuhurTime timeIntervalSinceNow] > -60) {
+		NSLog(@"time for dhuhur!");
+	}
+	
+	if([asrTime timeIntervalSinceNow] <= 0 && [asrTime timeIntervalSinceNow] > -60) {
+		NSLog(@"time for asr!");
+	}
+	
+	if([maghribTime timeIntervalSinceNow] <= 0 && [maghribTime timeIntervalSinceNow] > -60) {
+		NSLog(@"time for maghrib!");
+	}
+	
+	if([ishaTime timeIntervalSinceNow] <= 0 && [ishaTime timeIntervalSinceNow] > -60) {
+		NSLog(@"time for isha!");
+	}
+	
+}
+
+
+
+/*
+ * load all the values from the user preferences file into variables
+ */
+- (void) loadPreferences
+{	
+	// startup preferences
+	firstRun = [userDefaults boolForKey:@"FirstRun"];	
+	preferencesVersion = [userDefaults integerForKey:@"PreferencesVersion"];
+	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
+	
+	// general preferences
+	displayIcon = [userDefaults boolForKey:@"DisplayIcon"];
+	displayNextPrayer = [userDefaults boolForKey:@"DisplayNextPrayer"];
+	displayNextPrayerName = [userDefaults integerForKey:@"DisplayNextPrayerName"];
+	displayNextPrayerTime = [userDefaults integerForKey:@"DisplayNextPrayerTime"];
+	
+	// prayer time preferences
+	latitude = [userDefaults floatForKey:@"Latitude"];
+	longitude = [userDefaults floatForKey:@"Longitude"];
+	systemTimezone = [userDefaults boolForKey:@"SystemTimezone"];
+	timezone = [userDefaults floatForKey:@"Timezone"];
+	daylightSavings = [userDefaults boolForKey:@"DaylightSavings"];
+	madhab = [userDefaults integerForKey:@"Madhahb"];
+	method = [userDefaults integerForKey:@"Method"];
+	customSunriseAngle = [userDefaults floatForKey:@"CustomSunriseAngle"];
+	customSunsetAngle = [userDefaults floatForKey:@"CustomSunsetAngle"];
+	fajrOffset = [userDefaults integerForKey:@"FajrOffset"];
+	shuruqOffset = [userDefaults integerForKey:@"ShuruqOffset"];
+	dhuhurOffset = [userDefaults integerForKey:@"DhuhurOffset"];
+	asrOffset = [userDefaults integerForKey:@"AsrOffset"];
+	maghribOffset = [userDefaults integerForKey:@"MaghribOffset"];
+	ishaOffset = [userDefaults integerForKey:@"IshaOffset"];
+	
+	// alert preferences
+	enableSound = [userDefaults boolForKey:@"EnableSound"];
+	soundFile = [userDefaults integerForKey:@"SoundFile"];
+	userSound = [userDefaults boolForKey:@"UserSound"];
+	userSoundFile = [userDefaults stringForKey:@"UserSoundFile"];
+	playAdhanForFajr = [userDefaults boolForKey:@"PlayAdhanForFajr"];
+	playAdhanForDhuhur = [userDefaults boolForKey:@"PlayAdhanForDhuhur"];
+	playAdhanForAsr = [userDefaults boolForKey:@"PlayAdhanForAsr"];
+	playAdhanForMaghrib = [userDefaults boolForKey:@"PlayAdhanForMaghrib"];
+	playAdhanForIsha = [userDefaults boolForKey:@"PlayAdhanForIsha"];
+	fajrReminder = [userDefaults boolForKey:@"FajrReminder"];
+	minutesBeforeFajr = [userDefaults integerForKey:@"MinutesBeforeFajr"];
+	shuruqReminder = [userDefaults boolForKey:@"ShuruqReminder"];
+	minutesBeforeShuruq = [userDefaults integerForKey:@"MinutesBeforeShuruq"];
+	enableGrowl = [userDefaults boolForKey:@"EnableGrowl"];
+	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
+}
+
+
+
+
+/*
+ * load user preferences into variables, caclulate and set prayer times, and recheck prayer times
+ */
+- (void) applyPrefs
+{
+	//reload preferences
+	[self loadPreferences];
+	
+	//recalculate prayer times
+	[self setPrayerTimes];
+	
+	//display prayer times
+	[self displayPrayerTimes];
+	
+	//recheck prayer times
+	[self checkPrayerStatus];
+}
+
+
+
+
+
+
+
+/****************/
+/* USER ACTIONS */
+/****************/
+
+- (IBAction)stopAdhan:(id)sender 
+{
+	//[adhan stop];
 }
 
 
 - (IBAction)doNothing:(id)sender 
 {
 	//absolutely nothing
-}
-
-
-- (IBAction)stopAdhan:(id)sender 
-{
-	[adhan stop];
-}
-
-
-/*
- * set NSSound object adhan to the proper sound file and play 
- */
-- (void) playAdhan
-{
-	if(userPrefsUserSound) {
-		adhan = [[NSSound alloc] initWithContentsOfFile:userPrefsUserSoundFile byReference:YES];
-	} else {
-		adhan = [NSSound soundNamed:[adhanOptions objectAtIndex:userPrefsSoundFile]];
-	}	
-	
-	[adhan setDelegate:self];
-	[adhan play];
-	
-	//add mute adhan menu item 
-	[appMenu insertItem:muteAdhan atIndex:0];
-	[muteAdhan setTarget:self];
-	[muteAdhan setAction:@selector(stopAdhan:)];
-	
-	//add seperator
-	[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
-}
-
-
-/*
- * opens up help webpage 
- */
-- (IBAction)getHelp:(id)sender
-{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/help/"]];
 }
 
 
@@ -561,66 +506,11 @@ static AppController *sharedAppController = nil;
 
 
 /*
- * load all the values from the user preferences file into variables
+ * opens up help webpage 
  */
-- (void) loadDefaults
-{	
-	
-	userPrefsSoundFile = [userDefaults integerForKey:@"SoundFile"];
-	userPrefsUserSound = [userDefaults boolForKey:@"UserSound"];
-	userPrefsUserSoundFile = [userDefaults stringForKey:@"UserSoundFile"];
-	
-
-	[todaysPrayerTimes setLatitude: [userDefaults floatForKey:@"Latitude"]];
-	[todaysPrayerTimes setLongitude: [userDefaults floatForKey:@"Longitude"]];
-	[todaysPrayerTimes setMadhab: [userDefaults integerForKey:@"Madhab"]];
-	[todaysPrayerTimes setIshaMethod: [userDefaults integerForKey:@"IshaMethod"]];
-	[todaysPrayerTimes setFajrMethod: [userDefaults integerForKey:@"FajrMethod"]];
-	
-	[todaysPrayerTimes setFajrOffset: [userDefaults integerForKey:@"FajrOffset"] - 15];
-	[todaysPrayerTimes setShuruqOffset: [userDefaults integerForKey:@"ShuruqOffset"] - 15];
-	[todaysPrayerTimes setDhuhurOffset: [userDefaults integerForKey:@"DhuhurOffset"] - 15];
-	[todaysPrayerTimes setAsrOffset: [userDefaults integerForKey:@"AsrOffset"] - 15];
-	[todaysPrayerTimes setMaghribOffset: [userDefaults integerForKey:@"MaghribOffset"] - 15];
-	[todaysPrayerTimes setIshaOffset: [userDefaults integerForKey:@"IshaOffset"] - 15];
-	
-	
-	if ([userDefaults boolForKey:@"EnableSound"])
-	{
-		//set adhan prefs
-		[fajrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForFajr"]];
-		[dhuhurPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForDhuhur"]];
-		[asrPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForAsr"]];
-		[maghribPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForMaghrib"]];
-		[ishaPrayer setPlayAudio: [userDefaults boolForKey:@"PlayAdhanForIsha"]];
-		shuruqReminder = [userDefaults boolForKey:@"ShuruqReminder"];
-		minutesBeforeShuruq = [userDefaults integerForKey:@"MinutesBeforeShuruq"];
-		tahajudReminder = [userDefaults boolForKey:@"FajrReminder"];
-		minutesBeforeTahajud = [userDefaults integerForKey:@"MinutesBeforeFajr"];
-	}
-	else
-	{
-		[fajrPrayer setPlayAudio:NO];
-		[dhuhurPrayer setPlayAudio:NO];
-		[asrPrayer setPlayAudio:NO];
-		[maghribPrayer setPlayAudio:NO];
-		[ishaPrayer setPlayAudio:NO];
-		shuruqReminder = NO;
-		minutesBeforeShuruq = 0;
-		tahajudReminder = NO;
-		minutesBeforeTahajud = 0;		
-	}
-	
-	preferencesVersion = [userDefaults integerForKey:@"PreferencesVersion"];
-	displayGrowl = [userDefaults boolForKey:@"EnableGrowl"];
-	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
-	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
-	firstRun = [userDefaults boolForKey:@"FirstRun"];
-	
-	menuDisplayTime = [userDefaults integerForKey:@"DisplayNextPrayerTime"];
-	menuDisplayName = [userDefaults integerForKey:@"DisplayNextPrayerName"];
-	displayIcon = [userDefaults boolForKey:@"DisplayIcon"];
-	displayNextPrayer = [userDefaults boolForKey:@"DisplayNextPrayer"];
+- (IBAction)getHelp:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/help/"]];
 }
 
 
@@ -635,24 +525,12 @@ static AppController *sharedAppController = nil;
 }
 
 
-/*
- * load user preferences into variables, caclulate and set prayer times, and recheck prayer times
- */
-- (void) applyPrefs
-{
-	//get prefrences and load them into global vars
-	[self loadDefaults]; 
-	
-	//recalculate and set the prayer times for each prayer object for today's date
-	[self setPrayerTimes]; 
-	
-	//write the prayer times to the menu bar
-	[self setMenuTimes]; 
-	
-	//recheck prayer times
-	[self checkPrayerTimes]; 
-}
 
+
+
+/********************/
+/* UPDATE FUNCTIONS */
+/********************/
 
 /*
  * checks for new version based on the build number
@@ -660,7 +538,7 @@ static AppController *sharedAppController = nil;
 - (void) checkForUpdate:(BOOL)quiet
 {
 	int currentBuild = [self getBuildNumber];
-
+	
 	NSDictionary *productVersionDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:@"http://guidanceapp.com/version.xml"]];
 	int latestBuild = [[productVersionDict valueForKey:@"build"] intValue];
 	NSString *latestVersionNumber = [productVersionDict valueForKey:@"version"];
@@ -672,28 +550,28 @@ static AppController *sharedAppController = nil;
 			// tell user software is up to date
 			[NSApp activateIgnoringOtherApps:YES];
 			NSRunAlertPanel(NSLocalizedString(@"Your Software is up to date", @"Title of alert when a the user's software is up to date."),
-				NSLocalizedString(@"You have the most recent version of Guidance.", @"Alert text when the user's software is up to date."),
-				NSLocalizedString(@"OK", @"OK"), nil, nil);
+							NSLocalizedString(@"You have the most recent version of Guidance.", @"Alert text when the user's software is up to date."),
+							NSLocalizedString(@"OK", @"OK"), nil, nil);
 		}
 		else if(currentBuild < latestBuild)
 		{
 			// tell user to download a new version
 			[NSApp activateIgnoringOtherApps:YES];
 			int button = NSRunAlertPanel(NSLocalizedString(@"A New Version is Available", @"Title of alert when a the user's software is not up to date."),
-			[NSString stringWithFormat:NSLocalizedString(@"A new version of Guidance is available (version %@ r%i). Would you like to download the new version now?", @"Alert text when the user's software is not up to date."), latestVersionNumber,latestBuild],
-				NSLocalizedString(@"OK", @"OK"),
-				NSLocalizedString(@"Cancel", @"Cancel"), nil);
+										 [NSString stringWithFormat:NSLocalizedString(@"A new version of Guidance is available (version %@ r%i). Would you like to download the new version now?", @"Alert text when the user's software is not up to date."), latestVersionNumber,latestBuild],
+										 NSLocalizedString(@"OK", @"OK"),
+										 NSLocalizedString(@"Cancel", @"Cancel"), nil);
 			if(NSOKButton == button)
 			{
 				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/download/"]];
 			}
 		}
 	} else if(!quiet) {
-			// tell user unable to check for update
-			[NSApp activateIgnoringOtherApps:YES];
-			NSRunAlertPanel(NSLocalizedString(@"Unable to check for updates", @"Title of alert"),
-				NSLocalizedString(@"Guidance is currently unable to check for updates.", @"Alert text"),
-				NSLocalizedString(@"OK", @"OK"), nil, nil);
+		// tell user unable to check for update
+		[NSApp activateIgnoringOtherApps:YES];
+		NSRunAlertPanel(NSLocalizedString(@"Unable to check for updates", @"Title of alert"),
+						NSLocalizedString(@"Guidance is currently unable to check for updates.", @"Alert text"),
+						NSLocalizedString(@"OK", @"OK"), nil, nil);
 	}
 }
 
@@ -715,15 +593,6 @@ static AppController *sharedAppController = nil;
 {
 	NSString *buildString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
 	return [buildString intValue];
-}
-
-
-/*
- * returns true if any adhan is playing, otherwise false
- */
-- (BOOL) isAdhanPlaying
-{
-	return [adhan isPlaying];
 }
 
 
@@ -847,7 +716,7 @@ static AppController *sharedAppController = nil;
  */
 - (void) growlNotificationWasClicked:(id)clickContext 
 {
-	[self stopAdhan:nil];
+	//[self stopAdhan:nil];
 }
 
 
@@ -859,30 +728,6 @@ static AppController *sharedAppController = nil;
 - (BOOL) isGrowlInstalled 
 {
   return [GrowlApplicationBridge isGrowlInstalled];
-}
-
-
-
-/*************************************
-********** SOUND METHODS *************
-*************************************/
-
-/*
- * sets currentlyPlayingAdhan to blank, removes sound icon, 
- * and removes mute adhan button and sets prayer items action to nothing
- */
-- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
-{
-	currentlyPlayingAdhan = @"";
-
-	[self setStatusIcons];
-	[[menuItems objectForKey:[currentPrayer getName]] setAction:@selector(doNothing:)];
-	
-	//remove "Mute Adhan" option
-	if([appMenu indexOfItem:muteAdhan] > -1) {
-		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
-	}
-	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
 }
 
 

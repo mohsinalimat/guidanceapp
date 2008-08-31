@@ -28,106 +28,94 @@
 	IBOutlet NSMenuItem *asrItem;
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
-	NSMenuItem *muteAdhan;
-	NSMenuItem *muteSeperator;
-	NSDictionary *menuItems;
-	NSDictionary *prayersArray;
 	
-	
-	/* PRAYER OBJECTS */	
-	Prayer *fajrPrayerReminder;
-	Prayer *fajrPrayer;
-	Prayer *shuruqPrayerReminder;
-	Prayer *shuruqPrayer;	
-	Prayer *dhuhurPrayer;
-	Prayer *asrPrayer;
-	Prayer *maghribPrayer;
-	Prayer *ishaPrayer;
-	Prayer *tomorrowFajrPrayer;
-	Prayer *nextPrayer;
-	Prayer *currentPrayer;
 	PrayerTimes *todaysPrayerTimes;
+	PrayerTimes *tomorrowsPrayerTimes;
+	NSDate *fajrTime;
+	NSDate *shuruqTime;
+	NSDate *dhuhurTime;
+	NSDate *asrTime;
+	NSDate *maghribTime;
+	NSDate *ishaTime;
+	NSDate *tomorrowFajrTime;
 	
-	
-	/* NOTIFICATION */
+	int currentDay;
+	NSDate *lastCheckTime;
 	NSTimer *timer;
-	NSCalendarDate *lastCheckTime;
-	NSCalendarDate *prayerTimeDate;
-	NSSound *adhan;
-
-	NSString *currentlyPlayingAdhan;
 	
 	
 	/* PREFERENCES */
 	NSUserDefaults *userDefaults;
-	NSArray *adhanOptions;
-	
-	BOOL userPrefsCheckForUpdates;
-	BOOL userPrefsdisplayIcon;
-	BOOL userPrefsDisplayNextPrayer;
-	int userPrefsDisplayNextPrayerName;
-	int userPrefsDisplayNextPrayerTime;
-	BOOL userPrefsEnableGrowl;
-	BOOL userPrefsEnableSound;
-	BOOL userPrefsFajrReminder;
-	BOOL userPrefsFirstRun;
+	BOOL firstRun;
 	int preferencesVersion;
-	int userPrefsMinutesBeforeFajr;
-	int userPrefsMinutesBeforeShuruq;
-	BOOL userPrefsShuruqReminder;
-	int userPrefsSoundFile;
-	BOOL userPrefsStickyGrowl;
-	BOOL userPrefsUserSound;
-	NSString *userPrefsUserSoundFile;
-	
-	NSString *adhanFile; /* DONE */
-	BOOL displayGrowl; /* DONE */
-	BOOL stickyGrowl; /* DONE */
-	BOOL checkForUpdates; /* DONE */
-	BOOL firstRun; /* DONE */
-	int menuDisplayTime; /* DONE */
-	int menuDisplayName; /* DONE */
-	BOOL displayIcon; /* DONE */
-	BOOL displayNextPrayer; /* DONE */
-	BOOL shuruqReminder; /* DONE */
-	int minutesBeforeShuruq; /* DONE */
-	BOOL tahajudReminder; /* DONE */
-	int minutesBeforeTahajud; /* DONE */
+	BOOL checkForUpdates;
+	BOOL displayIcon;
+	BOOL displayNextPrayer;
+	int displayNextPrayerName;
+	int displayNextPrayerTime;
+	float latitude;
+	float longitude;
+	BOOL systemTimezone;
+	float timezone;
+	BOOL daylightSavings;
+	int madhab;
+	int method;
+	float customSunriseAngle;
+	float customSunsetAngle;
+	int fajrOffset;
+	int shuruqOffset;
+	int dhuhurOffset;
+	int asrOffset;
+	int maghribOffset;
+	int ishaOffset;
+	BOOL enableSound;
+	int soundFile;
+	BOOL userSound;
+	NSString *userSoundFile;
+	BOOL playAdhanForFajr;
+	BOOL playAdhanForDhuhur;
+	BOOL playAdhanForAsr;
+	BOOL playAdhanForMaghrib;
+	BOOL playAdhanForIsha;
+	BOOL fajrReminder;
+	int minutesBeforeFajr;
+	BOOL shuruqReminder;
+	int minutesBeforeShuruq;
+	BOOL enableGrowl;
+	BOOL stickyGrowl;
 }
 
 
 + (AppController*) sharedController;
 
-
-/* APP STARTUP */
-- (void) initPrayers;
+- (void) createAppMenu;
 - (void) setPrayerTimes;
-- (void) initAppMenu;
-- (void) setMenuTimes;
+- (void) displayPrayerTimes;
 
-- (void) loadDefaults;
+
+- (void) runLoop;
+- (void) checkPrayerStatus;
+- (void) setMenuBarTitle;
+- (NSString *) getTimeDisplay:(NSDate *)prayerTime;
+- (NSString *) getNameDisplay:(NSString *)prayerName;
+- (void) setStatusIcons;
+- (void) checkPrayertimes;
+
+- (void) loadPreferences;
 - (void) applyPrefs;
 
 
-/* APP ACTIONS */
-- (void) runLoop;
-- (void) checkPrayerTimes;
-- (void) setStatusIcons;
-- (void) setMenuBar: (BOOL) currentlyPrayerTime;
 - (void) checkForUpdate:(BOOL)quiet;
-- (void) updateForNewDay;
 - (NSString *) getVersion;
 - (int) getBuildNumber;
-- (BOOL) isAdhanPlaying;
 
 
 /* USER ACTIONS */
-- (IBAction)doNothing:(id)sender; 
-- (IBAction)stopAdhan:(id)sender;
-- (void)playAdhan;
-- (IBAction)getHelp:(id)sender;
-- (IBAction)openAboutPanel:(id)sender;
-- (IBAction)openPreferencesWindow:(id)sender;
+- (IBAction) stopAdhan:(id)sender;
+- (IBAction) doNothing:(id)sender; 
+- (IBAction) openAboutPanel:(id)sender;
+- (IBAction) getHelp:(id)sender;
+- (IBAction) openPreferencesWindow:(id)sender;
 
 
 /* GROWL METHODS */

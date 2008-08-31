@@ -318,8 +318,10 @@
 	{
 		if([[NSTimeZone systemTimeZone] isDaylightSavingTime]) {
 			[daylightSavings setState:NSOnState];
+			[userDefaults setBool:YES forKey:@"DaylightSavings"];
 		} else {
-			[daylightSavings setState:NSOnState];
+			[daylightSavings setState:NSOffState];
+			[userDefaults setBool:NO forKey:@"DaylightSavings"];
 		}
 		
 		float systemTimezoneValue = [[NSTimeZone systemTimeZone] secondsFromGMT]/3600;
@@ -356,6 +358,7 @@
 			contextInfo:nil];
 	} else {
 		[userDefaults setInteger:[method indexOfSelectedItem] forKey:@"Method"];
+		[self saveAndApply];
 	}
 }
 
@@ -384,6 +387,8 @@
 	} else {
 		[method selectItemAtIndex:[userDefaults integerForKey:@"Method"]];	
 	}
+	
+	[self saveAndApply];
 }
 
 - (void)insertCustomMethod 
