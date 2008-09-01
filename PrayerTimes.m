@@ -280,13 +280,19 @@
 		}
 	}
 	
+	//fajr time calc
 	double xvd = (-sin([PrayerTimes deg2rad:SunriseAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
 	/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
+	if(xvd <= -1) xvd = -0.997999;
+	if(xvd >= 1) xvd = 0.997999;
 	
 	double vd = [PrayerTimes rad2deg:1/15.0 * acos(xvd)];
 	
+	//isha time calc
 	double xvn = (-sin([PrayerTimes deg2rad:SunsetAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
 	/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
+	if(xvn <= -1) xvn = -0.999999;
+	if(xvn >= 1) xvn = 0.999999;
 	
 	double vn = [PrayerTimes rad2deg:1/15.0 * acos(xvn)];
 	

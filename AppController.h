@@ -43,12 +43,12 @@
 	NSDate *shuruqReminderTime;
 	
 	int currentDay;
-	NSDate *lastCheckTime;
 	NSDate *lastAdhanAlert;
 	NSDate *lastGrowlAlert;
 	NSTimer *timer;
 	NSSound *adhan;
 	int currentAdhan;
+	BOOL adhanIsPlaying;
 	NSArray *adhanOptions;
 	
 	

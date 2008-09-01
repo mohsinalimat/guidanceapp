@@ -226,6 +226,7 @@
 	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 
     [loginItems release];
+	[self saveAndApply];
 }
 
 - (BOOL)startsAtLogin
@@ -430,6 +431,8 @@
 	{
 		[minutesBeforeShuruq setEnabled:YES];	
 	}
+	
+	[self saveAndApply];
 }
 
 - (IBAction)fajrReminderToggle:(id)sender
@@ -442,6 +445,8 @@
 	{
 		[minutesBeforeFajr setEnabled:YES];	
 	}
+	
+	[self saveAndApply];
 }
 
 - (IBAction)enableGrowlToggle:(id)sender
@@ -454,6 +459,8 @@
 	{
 		[stickyGrowl setEnabled:YES];	
 	}
+	
+	[self saveAndApply];
 }
 
 - (IBAction)enableSoundToggle:(id)sender
@@ -511,37 +518,42 @@
 			}
 		[minutesBeforeFajrText setTextColor:[NSColor blackColor]];
 	}
+	
+	[self saveAndApply];
 }
 
 - (IBAction)playPreview:(id)sender
 {
-	if (!playingPreview)
+	if(![[AppController sharedController] isAdhanPlaying])
 	{
-		// play sound
-		switch ([soundFile indexOfSelectedItem])
+		if (!playingPreview)
 		{
-			case 1:		sound = [NSSound soundNamed:@"makkah"]; break;
-			case 2:		sound = [NSSound soundNamed:@"alaqsa"]; break;
-			case 3:		sound = [NSSound soundNamed:@"istanbul"]; break;
-			case 5:		sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:NO]; break;
-			case 0:
-			default:	sound = [NSSound soundNamed:@"yusufislam"]; break;
+			// play sound
+			switch ([soundFile indexOfSelectedItem])
+			{
+				case 1:		sound = [NSSound soundNamed:@"makkah"]; break;
+				case 2:		sound = [NSSound soundNamed:@"alaqsa"]; break;
+				case 3:		sound = [NSSound soundNamed:@"istanbul"]; break;
+				case 5:		sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:NO]; break;
+				case 0:
+				default:	sound = [NSSound soundNamed:@"yusufislam"]; break;
+			}
+			
+			[sound setDelegate:self];
+			[sound play];
+			
+			// change button text to "Stop"
+			if([sound isPlaying]) 
+			{
+				[previewSound setTitle:@"Stop"];
+				playingPreview = !playingPreview;
+			}
 		}
-		
-		[sound setDelegate:self];
-		[sound play];
-		
-		// change button text to "Stop"
-		if([sound isPlaying]) 
+		else
 		{
-			[previewSound setTitle:@"Stop"];
-			playingPreview = !playingPreview;
+			// stop sound
+			[sound stop];
 		}
-	}
-	else
-	{
-		// stop sound
-		[sound stop];
 	}
 }
 
@@ -550,6 +562,10 @@
 	[previewSound setTitle:@"Preview"];
 	playingPreview = NO;
 }
+
+
+
+
 
 - (IBAction)selectAdhan:(id)sender 
 {

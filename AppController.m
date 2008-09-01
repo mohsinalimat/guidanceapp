@@ -31,10 +31,10 @@ static AppController *sharedAppController = nil;
 	
 	[self displayPrayerTimes];
 	
-	lastCheckTime = [[NSDate date] retain];
 	lastAdhanAlert = [[NSDate dateWithTimeIntervalSinceNow:-1] retain];
 	lastGrowlAlert = [[NSDate dateWithTimeIntervalSinceNow:-1] retain];
 
+	adhanIsPlaying = NO;
 	currentAdhan = 0;
 	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
 	[adhanOptions retain];
@@ -180,14 +180,8 @@ static AppController *sharedAppController = nil;
  * check prayer time if seconds is 0 or if its been more than 60 seconds since the last check
  */
 - (void) runLoop
-{	
-	
-	if([[[NSCalendar currentCalendar] components:(NSSecondCalendarUnit) fromDate:[NSDate date]] second] == 0 || fabs([lastCheckTime timeIntervalSinceNow]) >= 60.0) {
-		[lastCheckTime release];
-		lastCheckTime = [[NSDate date] retain];
-		
-		[self checkPrayerStatus];
-	}
+{		
+	[self checkPrayerStatus];
 }
 
 
@@ -573,6 +567,7 @@ static AppController *sharedAppController = nil;
 {
 	if(![self isAdhanPlaying]) {
 		
+		adhanIsPlaying = YES;
 		currentAdhan = prayerIndex;
 		[self setStatusIcons];
 		
@@ -592,13 +587,14 @@ static AppController *sharedAppController = nil;
 		
 		//add seperator
 		[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];	
+		
 	}
 }
 
 
 - (BOOL) isAdhanPlaying
 {
-	return [adhan isPlaying];
+	return adhanIsPlaying;
 }
 
 - (void) stopAdhan
@@ -613,6 +609,7 @@ static AppController *sharedAppController = nil;
  */
 - (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
 {
+	adhanIsPlaying = NO;
 	currentAdhan = 0;
 	[self setStatusIcons];
 	
@@ -621,6 +618,7 @@ static AppController *sharedAppController = nil;
 		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
 	}
 	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
+	
 }
 
 
@@ -648,7 +646,7 @@ static AppController *sharedAppController = nil;
 	systemTimezone = [userDefaults boolForKey:@"SystemTimezone"];
 	timezone = [userDefaults floatForKey:@"Timezone"];
 	daylightSavings = [userDefaults boolForKey:@"DaylightSavings"];
-	madhab = [userDefaults integerForKey:@"Madhahb"];
+	madhab = [userDefaults integerForKey:@"Madhab"];
 	method = [userDefaults integerForKey:@"Method"];
 	customSunriseAngle = [userDefaults floatForKey:@"CustomSunriseAngle"];
 	customSunsetAngle = [userDefaults floatForKey:@"CustomSunsetAngle"];

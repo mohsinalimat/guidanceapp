@@ -544,28 +544,16 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
 			</object>
 			<object class="NSUserDefaultsController" id="421236207">
+				<object class="NSMutableArray" key="NSDeclaredKeys">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>Madhab</string>
+				</object>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedIndex: values.AsrMethod</string>
-						<reference key="source" ref="47263947"/>
-						<reference key="destination" ref="421236207"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="47263947"/>
-							<reference key="NSDestination" ref="421236207"/>
-							<string key="NSLabel">selectedIndex: values.AsrMethod</string>
-							<string key="NSBinding">selectedIndex</string>
-							<string key="NSKeyPath">values.AsrMethod</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">47</int>
-				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: values.CheckForUpdates</string>
@@ -655,12 +643,20 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="connectionID">60</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">lookup:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="96997980"/>
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">selectedIndex: values.Madhab</string>
+						<reference key="source" ref="47263947"/>
+						<reference key="destination" ref="421236207"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="47263947"/>
+							<reference key="NSDestination" ref="421236207"/>
+							<string key="NSLabel">selectedIndex: values.Madhab</string>
+							<string key="NSBinding">selectedIndex</string>
+							<string key="NSKeyPath">values.Madhab</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
 					</object>
-					<int key="connectionID">61</int>
+					<int key="connectionID">62</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1044,7 +1040,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">61</int>
+			<int key="maxID">62</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
