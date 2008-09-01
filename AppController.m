@@ -31,6 +31,13 @@ static AppController *sharedAppController = nil;
 	[self displayPrayerTimes];
 	
 	lastCheckTime = [[NSDate date] retain];
+	lastAdhanAlert = [[NSDate dateWithTimeIntervalSinceNow:-1] retain];
+	lastGrowlAlert = [[NSDate dateWithTimeIntervalSinceNow:-1] retain];
+
+	currentAdhan = 0;
+	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
+	[adhanOptions retain];
+	
 	[self checkPrayerStatus];
 	
 	//running loop that checks prayer times every second
@@ -69,6 +76,9 @@ static AppController *sharedAppController = nil;
 	[menuBar setMenu:appMenu];
 	
 	[appMenu setAutoenablesItems:NO];
+	
+	muteAdhan = [[NSMenuItem alloc] initWithTitle:@"Mute Adhan" action:@selector(stopAdhan) keyEquivalent:@""];
+	[muteAdhan retain];
 	
 	// default all status icons to not time
 	[fajrItem setImage:[NSImage imageNamed:@"status_notTime"]];
@@ -137,6 +147,9 @@ static AppController *sharedAppController = nil;
 	ishaTime = [[todaysPrayerTimes getIshaTime] retain];
 	
 	tomorrowFajrTime = [[tomorrowsPrayerTimes getFajrTime] retain];
+	
+	fajrReminderTime = [[[NSDate alloc] initWithTimeInterval:minutesBeforeFajr*60 sinceDate:fajrTime] retain];
+	shuruqReminderTime = [[[NSDate alloc] initWithTimeInterval:minutesBeforeShuruq*60 sinceDate:shuruqTime] retain];
 
 }
 
@@ -305,8 +318,6 @@ static AppController *sharedAppController = nil;
 {
 	NSString *timeDisplay = @"";
 	
-	NSLog([prayerTime description]);
-	
 	// get the time display option
 	if(displayNextPrayerTime == 0) {
 		
@@ -332,13 +343,24 @@ static AppController *sharedAppController = nil;
 
 - (void) setStatusIcons
 {
-	// default all status icons to not time
+	// default all status icons to not time and their actions to do nothing
 	[fajrItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[fajrItem setAction:@selector(doNothing:)];
+	
 	[shuruqItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[shuruqItem setAction:@selector(doNothing:)];
+	
 	[dhuhurItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[dhuhurItem setAction:@selector(doNothing:)];
+	
 	[asrItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[asrItem setAction:@selector(doNothing:)];
+	
 	[maghribItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[maghribItem setAction:@selector(doNothing:)];
+	
 	[ishaItem setImage:[NSImage imageNamed:@"status_notTime"]];
+	[ishaItem setAction:@selector(doNothing:)];
 	
 	// check which prayer it is currently time for
 	if([ishaTime timeIntervalSinceNow] <= 0) {
@@ -368,6 +390,28 @@ static AppController *sharedAppController = nil;
 		[ishaItem setImage:[NSImage imageNamed:@"status_prayerTime"]];
 		
 	}
+	
+	
+	if(currentAdhan == 1) {
+		[fajrItem setImage:[NSImage imageNamed:@"status_sound"]];
+		[fajrItem setAction:@selector(stopAdhan)];
+	} else if(currentAdhan == 2) {
+		[dhuhurItem setImage:[NSImage imageNamed:@"status_sound"]];
+		[dhuhurItem setAction:@selector(stopAdhan)];
+		
+	} else if(currentAdhan == 3) {
+		[asrItem setImage:[NSImage imageNamed:@"status_sound"]];
+		[asrItem setAction:@selector(stopAdhan)];
+		
+	} else if(currentAdhan == 4) {
+		[maghribItem setImage:[NSImage imageNamed:@"status_sound"]];
+		[maghribItem setAction:@selector(stopAdhan)];
+			
+	} else if(currentAdhan == 5) {
+		[ishaItem setImage:[NSImage imageNamed:@"status_sound"]];
+		[ishaItem setAction:@selector(stopAdhan)];
+		
+	}
 }
 
 
@@ -375,26 +419,198 @@ static AppController *sharedAppController = nil;
 - (void) checkPrayertimes
 {
 	if([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60) {
-		NSLog(@"time for fajr!");
+		
+		if(enableGrowl && ![fajrTime isEqualToDate:lastGrowlAlert]) {
+			
+			lastGrowlAlert = fajrTime;
+			
+			[self doGrowl :@"Fajr" 
+						  :[NSString stringWithFormat:@"%@\nIt's time to pray Fajr",[fajrTime descriptionWithCalendarFormat:@"%1I:%M %p" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]] 
+						  :stickyGrowl 
+						  :@"" 
+						  :@"Fajr"];	
+		} 
+		
+		if(enableSound && playAdhanForFajr && ![fajrTime isEqualToDate:lastAdhanAlert]) {
+			lastAdhanAlert = fajrTime;
+			[self playAdhan:1];
+		}
 	}
 	
 	if([dhuhurTime timeIntervalSinceNow] <= 0 && [dhuhurTime timeIntervalSinceNow] > -60) {
-		NSLog(@"time for dhuhur!");
+	
+		if(enableGrowl && ![dhuhurTime isEqualToDate:lastGrowlAlert]) {
+			
+			lastGrowlAlert = dhuhurTime;
+			
+			[self doGrowl :@"Dhuhur" 
+						  :[NSString stringWithFormat:@"%@\nIt's time to pray Dhuhur",[dhuhurTime descriptionWithCalendarFormat:@"%1I:%M %p" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]] 
+						  :stickyGrowl 
+						  :@"" 
+						  :@"Dhuhur"];	
+		} 
+		
+		if(enableSound && playAdhanForDhuhur && ![dhuhurTime isEqualToDate:lastAdhanAlert]) {
+			lastAdhanAlert = dhuhurTime;
+			[self playAdhan:2];
+		}
 	}
 	
 	if([asrTime timeIntervalSinceNow] <= 0 && [asrTime timeIntervalSinceNow] > -60) {
-		NSLog(@"time for asr!");
+	
+		if(enableGrowl && ![asrTime isEqualToDate:lastGrowlAlert]) {
+			
+			lastGrowlAlert = asrTime;
+			
+			[self doGrowl :@"Asr" 
+						  :[NSString stringWithFormat:@"%@\nIt's time to pray Asr",[asrTime descriptionWithCalendarFormat:@"%1I:%M %p" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]] 
+						  :stickyGrowl 
+						  :@"" 
+						  :@"Asr"];	
+		} 
+		
+		if(enableSound && playAdhanForAsr && ![asrTime isEqualToDate:lastAdhanAlert]) {
+			lastAdhanAlert = asrTime;
+			[self playAdhan:3];
+		}
 	}
 	
 	if([maghribTime timeIntervalSinceNow] <= 0 && [maghribTime timeIntervalSinceNow] > -60) {
-		NSLog(@"time for maghrib!");
+		
+		if(enableGrowl && ![maghribTime isEqualToDate:lastGrowlAlert]) {
+			
+			lastGrowlAlert = maghribTime;
+			
+			[self doGrowl :@"Maghrib" 
+						  :[NSString stringWithFormat:@"%@\nIt's time to pray Maghrib",[maghribTime descriptionWithCalendarFormat:@"%1I:%M %p" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]] 
+						  :stickyGrowl 
+						  :@"" 
+						  :@"Maghrib"];	
+		} 
+		
+		if(enableSound && playAdhanForMaghrib && ![maghribTime isEqualToDate:lastAdhanAlert]) {
+			lastAdhanAlert = maghribTime;
+			[self playAdhan:4];
+		}
 	}
 	
 	if([ishaTime timeIntervalSinceNow] <= 0 && [ishaTime timeIntervalSinceNow] > -60) {
-		NSLog(@"time for isha!");
+		
+		if(enableGrowl && ![ishaTime isEqualToDate:lastGrowlAlert]) {
+			
+			lastGrowlAlert = ishaTime;
+			
+			[self doGrowl :@"Isha" 
+						  :[NSString stringWithFormat:@"%@\nIt's time to pray Isha",[ishaTime descriptionWithCalendarFormat:@"%1I:%M %p" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]] 
+						  :stickyGrowl 
+						  :@"" 
+						  :@"Isha"];	
+		} 
+		
+		if(enableSound && playAdhanForIsha && ![ishaTime isEqualToDate:lastAdhanAlert]) {
+			lastAdhanAlert = ishaTime;
+			[self playAdhan:5];
+		}
 	}
 	
+	if(fajrReminder && [fajrReminderTime timeIntervalSinceNow] <= 0 && [fajrReminderTime timeIntervalSinceNow] > -60) {
+		
+		if(enableGrowl && ![fajrReminderTime isEqualToDate:lastGrowlAlert]) {
+			
+			lastGrowlAlert = fajrReminderTime;
+			
+			[self doGrowl :@"Fajr Reminder" 
+						  :[NSString stringWithFormat:@"Fajr is in %i minutes",minutesBeforeFajr] 
+						  :stickyGrowl 
+						  :@"" 
+						  :@"Fajr Reminder"];	
+		} 
+		
+		if(enableSound && ![fajrReminderTime isEqualToDate:lastAdhanAlert]) {
+			lastAdhanAlert = fajrReminderTime;
+			[self playAdhan:0];
+		}	
+		
+	}
+	
+	if(shuruqReminder && [shuruqReminderTime timeIntervalSinceNow] <= 0 && [shuruqReminderTime timeIntervalSinceNow] > -60) {
+		
+		if(enableGrowl && ![shuruqReminderTime isEqualToDate:lastGrowlAlert]) {
+			
+			lastGrowlAlert = shuruqReminderTime;
+			
+			[self doGrowl :@"Shuruq Reminder" 
+						  :[NSString stringWithFormat:@"Shuruq is in %i minutes",minutesBeforeShuruq] 
+						  :stickyGrowl 
+						  :@"" 
+						  :@"Shuruq Reminder"];	
+		} 
+		
+		if(enableSound && ![shuruqReminderTime isEqualToDate:lastAdhanAlert]) {
+			lastAdhanAlert = shuruqReminderTime;
+			[self playAdhan:0];
+		}	
+		
+	}
+	
+	
 }
+
+
+- (void) playAdhan:(int)prayerIndex 
+{
+	if(![self isAdhanPlaying]) {
+		
+		currentAdhan = prayerIndex;
+		[self setStatusIcons];
+		
+		if(userSound) {
+			adhan = [[NSSound alloc] initWithContentsOfFile:userSoundFile byReference:YES];
+		} else {
+			adhan = [NSSound soundNamed:[adhanOptions objectAtIndex:soundFile]];
+		}	
+		
+		[adhan setDelegate:self];
+		[adhan play];
+		
+		//add mute adhan menu item 
+		[appMenu insertItem:muteAdhan atIndex:0];
+		[muteAdhan setTarget:self];
+		[muteAdhan setAction:@selector(stopAdhan)];
+		
+		//add seperator
+		[appMenu insertItem:[NSMenuItem separatorItem] atIndex:1];	
+	}
+}
+
+
+- (BOOL) isAdhanPlaying
+{
+	return [adhan isPlaying];
+}
+
+- (void) stopAdhan
+{
+	[adhan stop];
+}
+
+
+/*
+ * sets currentlyPlayingAdhan to blank, removes sound icon, 
+ * and removes mute adhan button and sets prayer items action to nothing
+ */
+- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
+{
+	currentAdhan = 0;
+	[self setStatusIcons];
+	
+	//remove "Mute Adhan" option
+	if([appMenu indexOfItem:muteAdhan] > -1) {
+		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
+	}
+	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
+}
+
 
 
 
@@ -479,11 +695,6 @@ static AppController *sharedAppController = nil;
 /****************/
 /* USER ACTIONS */
 /****************/
-
-- (IBAction)stopAdhan:(id)sender 
-{
-	//[adhan stop];
-}
 
 
 - (IBAction)doNothing:(id)sender 
@@ -716,7 +927,7 @@ static AppController *sharedAppController = nil;
  */
 - (void) growlNotificationWasClicked:(id)clickContext 
 {
-	//[self stopAdhan:nil];
+	[self stopAdhan];
 }
 
 

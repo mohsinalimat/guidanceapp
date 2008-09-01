@@ -28,6 +28,7 @@
 	IBOutlet NSMenuItem *asrItem;
 	IBOutlet NSMenuItem *maghribItem;
 	IBOutlet NSMenuItem *ishaItem;
+	NSMenuItem *muteAdhan;
 	
 	PrayerTimes *todaysPrayerTimes;
 	PrayerTimes *tomorrowsPrayerTimes;
@@ -38,10 +39,17 @@
 	NSDate *maghribTime;
 	NSDate *ishaTime;
 	NSDate *tomorrowFajrTime;
+	NSDate *fajrReminderTime;
+	NSDate *shuruqReminderTime;
 	
 	int currentDay;
 	NSDate *lastCheckTime;
+	NSDate *lastAdhanAlert;
+	NSDate *lastGrowlAlert;
 	NSTimer *timer;
+	NSSound *adhan;
+	int currentAdhan;
+	NSArray *adhanOptions;
 	
 	
 	/* PREFERENCES */
@@ -101,6 +109,10 @@
 - (void) setStatusIcons;
 - (void) checkPrayertimes;
 
+- (void) playAdhan:(int)prayerIndex;
+- (BOOL) isAdhanPlaying;
+- (void) stopAdhan;
+
 - (void) loadPreferences;
 - (void) applyPrefs;
 
@@ -111,7 +123,6 @@
 
 
 /* USER ACTIONS */
-- (IBAction) stopAdhan:(id)sender;
 - (IBAction) doNothing:(id)sender; 
 - (IBAction) openAboutPanel:(id)sender;
 - (IBAction) getHelp:(id)sender;
