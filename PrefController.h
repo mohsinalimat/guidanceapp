@@ -108,6 +108,7 @@
 - (IBAction)selectMethod:(id)sender;
 - (IBAction)saveCustomMethod: (id)sender;
 - (IBAction)cancelCustomMethod: (id)sender;
+- (IBAction)getMethodHelp: (id)sender;
 - (void)customMethodClosed:(NSWindow *)sheet;
 - (void)insertCustomMethod;
 

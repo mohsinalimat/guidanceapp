@@ -383,7 +383,9 @@
 		[userDefaults setFloat:[sunsetAngle floatValue] forKey:@"CustomSunsetAngle"];
 		
 		[self insertCustomMethod];
+		
 		[method selectItemAtIndex:7];
+		[userDefaults setInteger:[method indexOfSelectedItem] forKey:@"Method"];
 	} else {
 		[method selectItemAtIndex:[userDefaults integerForKey:@"Method"]];	
 	}
@@ -404,6 +406,12 @@
 	}	
 }
 
+
+- (IBAction)getMethodHelp: (id)sender
+{
+	NSString *bookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
+	[[NSHelpManager sharedHelpManager] openHelpAnchor:@"method"  inBook:bookName];
+}
 
 
 

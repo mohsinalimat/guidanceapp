@@ -77,7 +77,8 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 	
 	NSString *urlSafeUserLocation =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) userLocation, NULL, NULL, kCFStringEncodingUTF8) autorelease];
 	
-	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/location.php?loc=%@",urlSafeUserLocation];
+	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/geocode-google.php?location=%@",urlSafeUserLocation];
+	
 	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
 	
 	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
@@ -93,7 +94,7 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 		{
 			[userDefaults setFloat:[[coordDict valueForKey:@"latitude"] doubleValue] forKey:@"Latitude"];
 			[userDefaults setFloat:[[coordDict valueForKey:@"longitude"] doubleValue] forKey:@"Longitude"];
-			[userDefaults setValue:[location stringValue] forKey:@"Location"];	
+			[userDefaults setValue:[coordDict valueForKey:@"address"] forKey:@"Location"];	
 			
 			[lookupStatus setStringValue:@"Your location has been set"];
 			[lookupStatus setTextColor:[NSColor blackColor]];

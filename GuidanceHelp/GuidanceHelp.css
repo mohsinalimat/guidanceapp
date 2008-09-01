@@ -1,0 +1,191 @@
+/* Guidance Help Documentation	*/
+
+
+
+/* Setting the stage */
+
+	* {
+		margin: 0;
+		padding: 0;
+		}
+	
+	html {
+		font-size: 62.5%;
+		}
+	
+	body {
+		font-family: "Lucida Grande", sans-serif;
+		font-size: small;
+		padding: 3em 1em 0em 1em;
+		}
+		
+	h2 {
+		font-size: small;
+		margin: 2.5em 0 1em 0;
+		}
+	
+	a		{
+		text-decoration: none;
+		}
+	
+	a:hover	{
+		text-decoration: underline;
+		}
+	
+	p, ul, ol  {
+		margin: 1.2em 0;
+		line-height: 1.2em;
+		}
+		
+	code, pre { font-size: medium; }
+	
+	pre {
+		margin-left: 1em;
+		border-left: 1px solid #bbb;
+		padding-left: 1em;
+		}		
+		
+	
+	div.method {
+		background: #f0fbf5;
+		border: 1px solid #ccc;
+		padding: 0em 1em 0.5em;
+		margin: 0.25em 0 1.5em;
+		width: 75%;
+	}	
+	
+	div.method div.angles {
+		padding: 0 0 0.5em;
+	}
+	
+	span.sunrise, span.sunset {
+		padding: 0.25em 0 0;
+		font-size: 13px;
+		display: block;
+	}
+		
+/* Document title, with room for app icon */
+
+	h1 {
+		font-size: medium;
+		margin: 0 0 0.5em 0;
+		padding-left: 42px;
+		min-height: 32px;
+		background: url(./images/Guidance-32.png) no-repeat bottom left;
+		-webkit-background-size: 32px 32px;
+		line-height: 32px;
+		}
+
+
+/* Lists, ordered and otherwise */
+	
+	li {
+		margin-bottom: 1em;
+		}
+	
+	ol, ul {
+		background: #e6edff;
+		border: 1px solid #bbb;
+		padding: 0.5em 1em;
+		margin: 1em 0;
+		}
+		
+	ul.info {
+		background: #eee;
+		}
+		
+	ul ul, ol ul {
+		border: none;
+		margin: 0.5em 0 1em 0;
+		padding: 0;
+		background: transparent;
+		}
+	
+	li {
+		margin: 0.5em 0;
+		padding: 0;
+		margin-left: 1.5em;
+		}
+	
+
+
+/* Things specific to the root index page */
+	
+	div.topics {
+		width: 49%;
+		float: left;
+		}
+	
+	div.topics h2 {
+		display: none;
+		}
+		
+	div.topics ul, div.section ul, ul.topics {
+		list-style: none;
+		margin: 0.5em 1em;
+		padding-left: 1em; text-indent: -1em; /* Hanging indents */
+		background: transparent;
+		border: 0;
+		padding: 0;
+		}
+	
+	div.topics li, div.section li {
+		display: block;
+		margin: 0.5em 0 0 0;
+		padding: 0;
+		}
+	
+	div.section {
+		border: 1px solid #A9A9A9;
+		margin: 0 1% 1em 0;
+		width: 49%;
+		float: left;
+		}
+	
+	div.section, div.section h2 { -webkit-border-radius: 5px; }
+	div.section h2 { -webkit-border-bottom-left-radius: 0; -webkit-border-bottom-right-radius: 0; }
+	
+	div.section h2 {
+		padding: 0.3em 1em;
+		background: #e6edff;
+		font-weight: bold;
+		font-size: smaller;
+		margin: 0;
+		}
+		
+	div.section ul {
+		margin: 0.3em 0.8em;
+		}
+		
+	div.section li {
+		margin: 0.5em 1em;
+		}
+		
+		
+		
+/* The navigation links at the top of the page */
+
+	div.navbar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		background: #f2f2f2;
+		border-bottom: 1px solid #bbb;
+		font-size: smaller;
+		padding: 0.3em 0.5em 0.3em 1em;
+		}
+		
+	div.navbar a {
+		display: block;
+		}
+		
+	div.navbar span#right {
+		position: absolute;
+		right: 0;
+		top: 0;
+		border-left: 1px solid #bbb;
+		padding: 0.3em 1.8em 0.3em 0.75em;
+		}
+		
+		

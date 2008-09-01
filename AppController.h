@@ -125,7 +125,6 @@
 /* USER ACTIONS */
 - (IBAction) doNothing:(id)sender; 
 - (IBAction) openAboutPanel:(id)sender;
-- (IBAction) getHelp:(id)sender;
 - (IBAction) openPreferencesWindow:(id)sender;
 
 

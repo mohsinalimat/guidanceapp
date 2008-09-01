@@ -14,6 +14,7 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {	
+	
 	//create user defaults object
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
@@ -148,8 +149,8 @@ static AppController *sharedAppController = nil;
 	
 	tomorrowFajrTime = [[tomorrowsPrayerTimes getFajrTime] retain];
 	
-	fajrReminderTime = [[[NSDate alloc] initWithTimeInterval:minutesBeforeFajr*60 sinceDate:fajrTime] retain];
-	shuruqReminderTime = [[[NSDate alloc] initWithTimeInterval:minutesBeforeShuruq*60 sinceDate:shuruqTime] retain];
+	fajrReminderTime = [[[NSDate alloc] initWithTimeInterval:minutesBeforeFajr*-60 sinceDate:fajrTime] retain];
+	shuruqReminderTime = [[[NSDate alloc] initWithTimeInterval:minutesBeforeShuruq*-60 sinceDate:shuruqTime] retain];
 
 }
 
@@ -236,6 +237,17 @@ static AppController *sharedAppController = nil;
 				
 				nextPrayerNameDisplay = [self getNameDisplay:@"Fajr"];
 				nextPrayerTimeDisplay = [self getTimeDisplay:fajrTime];
+			}
+			
+		} else if([shuruqTime timeIntervalSinceNow] >= 0 || ([shuruqTime timeIntervalSinceNow] <= 0 && [shuruqTime timeIntervalSinceNow] > -60)) {
+			
+			if([shuruqTime timeIntervalSinceNow] <= 0 && [shuruqTime timeIntervalSinceNow] > -60) {
+				nextPrayerNameDisplay = @"Shuruq";
+				nextPrayerTimeDisplay = @"Time";
+			} else {
+				
+				nextPrayerNameDisplay = [self getNameDisplay:@"Shuruq"];
+				nextPrayerTimeDisplay = [self getTimeDisplay:shuruqTime];
 			}
 			
 		} else if([dhuhurTime timeIntervalSinceNow] >= 0 || ([dhuhurTime timeIntervalSinceNow] <= 0 && [dhuhurTime timeIntervalSinceNow] > -60)) {
@@ -713,15 +725,6 @@ static AppController *sharedAppController = nil;
 	[NSApp activateIgnoringOtherApps:YES];
 	[[AboutController sharedAboutWindowController] setVersionText:[self getVersion]];
 	[[AboutController sharedAboutWindowController] setBuildNumber:[self getBuildNumber]];
-}
-
-
-/*
- * opens up help webpage 
- */
-- (IBAction)getHelp:(id)sender
-{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/help/"]];
 }
 
 
