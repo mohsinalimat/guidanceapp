@@ -2,16 +2,16 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.02">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9E17</string>
-		<string key="IBDocument.InterfaceBuilderVersion">670</string>
-		<string key="IBDocument.AppKitVersion">949.33</string>
+		<string key="IBDocument.SystemVersion">9F33</string>
+		<string key="IBDocument.InterfaceBuilderVersion">672</string>
+		<string key="IBDocument.AppKitVersion">949.34</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="1062"/>
 			<integer value="84"/>
 			<integer value="1050"/>
 			<integer value="344"/>
-			<integer value="253"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -612,10 +612,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 														</object>
 														<object class="NSMutableArray" key="dict.values">
 															<bool key="EncodedWithXMLCoder">YES</bool>
-															<integer value="0" id="6"/>
-															<integer value="1040"/>
-															<real value="6.000000e+01" id="383118419"/>
-															<real value="0.000000e+00" id="242121895"/>
+															<reference ref="8"/>
+															<integer value="1040" id="684430451"/>
+															<real value="6.000000e+01" id="1056531649"/>
+															<reference ref="8"/>
 														</object>
 													</object>
 													<string key="NS.positiveformat">#</string>
@@ -640,8 +640,8 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															</object>
 														</object>
 													</object>
-													<reference key="NS.min" ref="242121895"/>
-													<reference key="NS.max" ref="383118419"/>
+													<reference key="NS.min" ref="8"/>
+													<reference key="NS.max" ref="1056531649"/>
 													<object class="NSDecimalNumberHandler" key="NS.rounding">
 														<int key="NS.roundingmode">3</int>
 														<bool key="NS.raise.overflow">YES</bool>
@@ -747,10 +747,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 														</object>
 														<object class="NSMutableArray" key="dict.values">
 															<bool key="EncodedWithXMLCoder">YES</bool>
-															<reference ref="6"/>
-															<integer value="1040"/>
-															<real value="6.000000e+01" id="1056531649"/>
-															<real value="0.000000e+00" id="232140010"/>
+															<reference ref="8"/>
+															<reference ref="684430451"/>
+															<reference ref="1056531649"/>
+															<reference ref="8"/>
 														</object>
 													</object>
 													<string key="NS.positiveformat">#</string>
@@ -767,7 +767,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 														<string key="NSString">NaN</string>
 														<reference key="NSAttributes" ref="94740574"/>
 													</object>
-													<reference key="NS.min" ref="232140010"/>
+													<reference key="NS.min" ref="8"/>
 													<reference key="NS.max" ref="1056531649"/>
 													<object class="NSDecimalNumberHandler" key="NS.rounding">
 														<int key="NS.roundingmode">3</int>
@@ -1447,9 +1447,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string key="NSKeyEquivalent"/>
 							<int key="NSPeriodicDelay">400</int>
 							<int key="NSPeriodicInterval">75</int>
-							<object class="NSMenuItem" key="NSMenuItem" id="608269841">
+							<object class="NSMenuItem" key="NSMenuItem" id="471230907">
 								<reference key="NSMenu" ref="782189246"/>
-								<string key="NSTitle">GMT +0:00 (London)</string>
+								<string key="NSTitle">GMT -5:00 (Eastern Time)</string>
 								<string key="NSKeyEquiv"/>
 								<int key="NSKeyEquivModMask">1048576</int>
 								<int key="NSMnemonicLoc">2147483647</int>
@@ -1541,9 +1541,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<string key="NSAction">_popUpItemAction:</string>
 										<reference key="NSTarget" ref="959043431"/>
 									</object>
-									<object class="NSMenuItem" id="471230907">
+									<reference ref="471230907"/>
+									<object class="NSMenuItem" id="416528357">
 										<reference key="NSMenu" ref="782189246"/>
-										<string key="NSTitle">GMT -5:00 (Eastern Time)</string>
+										<string key="NSTitle">GMT -4:30 (Caracas)</string>
 										<string key="NSKeyEquiv"/>
 										<int key="NSKeyEquivModMask">1048576</int>
 										<int key="NSMnemonicLoc">2147483647</int>
@@ -1552,7 +1553,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<string key="NSAction">_popUpItemAction:</string>
 										<reference key="NSTarget" ref="959043431"/>
 									</object>
-									<object class="NSMenuItem" id="416528357">
+									<object class="NSMenuItem" id="953792">
 										<reference key="NSMenu" ref="782189246"/>
 										<string key="NSTitle">GMT -4:00 (Atlantic Time)</string>
 										<string key="NSKeyEquiv"/>
@@ -1607,7 +1608,17 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<string key="NSAction">_popUpItemAction:</string>
 										<reference key="NSTarget" ref="959043431"/>
 									</object>
-									<reference ref="608269841"/>
+									<object class="NSMenuItem" id="608269841">
+										<reference key="NSMenu" ref="782189246"/>
+										<string key="NSTitle">GMT +0:00 (London)</string>
+										<string key="NSKeyEquiv"/>
+										<int key="NSKeyEquivModMask">1048576</int>
+										<int key="NSMnemonicLoc">2147483647</int>
+										<reference key="NSOnImage" ref="29241760"/>
+										<reference key="NSMixedImage" ref="106143623"/>
+										<string key="NSAction">_popUpItemAction:</string>
+										<reference key="NSTarget" ref="959043431"/>
+									</object>
 									<object class="NSMenuItem" id="194462927">
 										<reference key="NSMenu" ref="782189246"/>
 										<string key="NSTitle">GMT +1:00 (Central Europe)</string>
@@ -1786,7 +1797,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 									</object>
 								</object>
 							</object>
-							<int key="NSSelectedIndex">13</int>
+							<int key="NSSelectedIndex">7</int>
 							<int key="NSPreferredEdge">1</int>
 							<bool key="NSUsesItemFromMenu">YES</bool>
 							<bool key="NSAltersState">YES</bool>
@@ -4621,7 +4632,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<string key="NSWindowTitle">Custom Method</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
-				<string key="NSWindowContentMaxSize">{10000, 10000}</string>
+				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<object class="NSView" key="NSWindowView" id="322847592">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -8298,6 +8309,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<reference ref="461297862"/>
 							<reference ref="535521686"/>
 							<reference ref="475671303"/>
+							<reference ref="953792"/>
 						</object>
 						<reference key="parent" ref="959043431"/>
 					</object>
@@ -8717,6 +8729,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="object" ref="638723024"/>
 						<reference key="parent" ref="338021971"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1224</int>
+						<reference key="object" ref="953792"/>
+						<reference key="parent" ref="782189246"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -8850,6 +8867,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>1205.IBPluginDependency</string>
 					<string>1222.IBPluginDependency</string>
 					<string>1223.IBPluginDependency</string>
+					<string>1224.IBPluginDependency</string>
 					<string>127.IBPluginDependency</string>
 					<string>128.IBPluginDependency</string>
 					<string>129.IBEditorWindowLastContentRect</string>
@@ -9234,7 +9252,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{757, 156}, {287, 603}}</string>
+					<string>{{759, 188}, {287, 623}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -9319,6 +9337,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{183, 556}, {196, 113}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{136, 548}, {196, 113}}</string>
@@ -9358,7 +9377,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{858, 921}, {375, 224}}</string>
+					<string>{{651, 750}, {375, 224}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableArray">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -9695,7 +9714,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1223</int>
+			<int key="maxID">1224</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

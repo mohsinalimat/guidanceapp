@@ -26,6 +26,7 @@
 					   [NSNumber numberWithFloat:-7], 
 					   [NSNumber numberWithFloat:-6], 
 					   [NSNumber numberWithFloat:-5], 
+					   [NSNumber numberWithFloat:-4.5], 
 					   [NSNumber numberWithFloat:-4], 
 					   [NSNumber numberWithFloat:-3.5], 
 					   [NSNumber numberWithFloat:-3], 

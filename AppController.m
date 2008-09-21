@@ -333,9 +333,17 @@ static AppController *sharedAppController = nil;
 	} else if(displayNextPrayerTime == 1) {
 		
 		// display amount of time left until the next prayer
-		float hours = floor([prayerTime timeIntervalSinceNow]/3600);
-		float minutes = ceil(([prayerTime timeIntervalSinceNow] - (hours * 3600)) / 60);
-		timeDisplay = [NSString stringWithFormat:@"-%.0f:%02.0f",hours,minutes];
+		int hours = floor([prayerTime timeIntervalSinceNow]/3600);
+		int minutes = ceil(([prayerTime timeIntervalSinceNow] - (hours * 3600)) / 60);
+		
+		if(minutes >= 60) {
+			int additionalHours = floor(minutes / 60);	
+			hours += additionalHours;
+			minutes -= additionalHours * 60;
+		}
+		
+		
+		timeDisplay = [NSString stringWithFormat:@"-%i:%02i",hours,minutes];
 		
 	} else if(displayNextPrayerTime == 2) {
 		
