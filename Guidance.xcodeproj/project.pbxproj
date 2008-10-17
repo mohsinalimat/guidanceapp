@@ -103,6 +103,7 @@
 		8457C42A0D01201F00BFAF0C /* SoundHigh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundHigh.png; sourceTree = SOURCE_ROOT; };
 		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
 		847F38F80E6C5E26003BBF38 /* GuidanceHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GuidanceHelp; sourceTree = "<group>"; };
+		8491FD700E9F0D5A004D2797 /* pauseItunes.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; path = pauseItunes.scpt; sourceTree = "<group>"; };
 		84985D860D63FA92008447D3 /* WelcomeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeController.h; sourceTree = "<group>"; };
 		84985D870D63FA92008447D3 /* WelcomeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeController.m; sourceTree = "<group>"; };
 		84A4D5C00CCBED0C0080B17D /* PrayerTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrayerTimes.h; sourceTree = "<group>"; };
@@ -203,6 +204,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				84031FA30CCDBEE8005DA599 /* Credits.rtf */,
+				8491FD700E9F0D5A004D2797 /* pauseItunes.scpt */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
