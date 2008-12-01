@@ -38,32 +38,60 @@
 	<real>17.5</real>
 	<key>CustomSunsetAngle</key>
 	<real>15.5</real>
-	<key>EnableSound</key>
-	<true/>
-	<key>SoundFile</key>
-	<integer>0</integer>
-	<key>UserSound</key>
+	<key>EnableSilentMode</key>
 	<false/>
-	<key>UserSoundFile</key>
+	<key>PauseItunes</key>
+	<true/>
+	<key>FajrAdhanOption</key>
+	<integer>0</integer>
+	<key>FajrAdhanUserSound</key>
+	<false/>
+	<key>FajrAdhanUserSoundFile</key>
 	<string></string>
-	<key>PlayAdhanForFajr</key>
-	<true/>
-	<key>PlayAdhanForDhuhur</key>
-	<true/>
-	<key>PlayAdhanForAsr</key>
-	<true/>
-	<key>PlayAdhanForMaghrib</key>
-	<true/>
-	<key>PlayAdhanForIsha</key>
-	<true/>
+	<key>DhuhurAdhanOption</key>
+	<integer>0</integer>
+	<key>DhuhurAdhanUserSound</key>
+	<false/>
+	<key>DhuhurAdhanUserSoundFile</key>
+	<string></string>
+	<key>AsrAdhanOption</key>
+	<integer>0</integer>
+	<key>AsrAdhanUserSound</key>
+	<false/>
+	<key>AsrAdhanUserSoundFile</key>
+	<string></string>
+	<key>MaghribAdhanOption</key>
+	<integer>0</integer>
+	<key>MaghribAdhanUserSound</key>
+	<false/>
+	<key>MaghribAdhanUserSoundFile</key>
+	<string></string>
+	<key>IshaAdhanOption</key>
+	<integer>0</integer>
+	<key>IshaAdhanUserSound</key>
+	<false/>
+	<key>IshaAdhanUserSoundFile</key>
+	<string></string>
 	<key>FajrReminder</key>
 	<false/>
 	<key>MinutesBeforeFajr</key>
 	<integer>45</integer>
+	<key>FajrReminderAdhanOption</key>
+	<integer>0</integer>
+	<key>FajrReminderAdhanUserSound</key>
+	<false/>
+	<key>FajrReminderAdhanUserSoundFile</key>
+	<string></string>
 	<key>ShuruqReminder</key>
 	<false/>
 	<key>MinutesBeforeShuruq</key>
 	<integer>30</integer>
+	<key>ShuruqReminderAdhanOption</key>
+	<integer>0</integer>
+	<key>ShuruqReminderAdhanUserSound</key>
+	<false/>
+	<key>ShuruqReminderAdhanUserSoundFile</key>
+	<string></string>
 	<key>EnableGrowl</key>
 	<true/>
 	<key>StickyGrowl</key>

@@ -91,6 +91,7 @@
 	int minutesBeforeShuruq;
 	BOOL enableGrowl;
 	BOOL stickyGrowl;
+	BOOL pauseItunesPref;
 }
 
 
@@ -112,6 +113,7 @@
 - (void) playAdhan:(int)prayerIndex;
 - (BOOL) isAdhanPlaying;
 - (void) stopAdhan;
+- (void) pauseItunes;
 
 - (void) loadPreferences;
 - (void) applyPrefs;

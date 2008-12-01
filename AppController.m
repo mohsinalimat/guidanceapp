@@ -14,7 +14,6 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {	
-	
 	//create user defaults object
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
@@ -524,6 +523,7 @@ static AppController *sharedAppController = nil;
 		if(enableSound && playAdhanForIsha && ![ishaTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = ishaTime;
 			[self playAdhan:5];
+			NSLog(@"play adhan for isha");
 		}
 	}
 	
@@ -573,7 +573,12 @@ static AppController *sharedAppController = nil;
 
 - (void) playAdhan:(int)prayerIndex 
 {
+	NSLog(@"play adhan");
 	if(![self isAdhanPlaying]) {
+		
+		if(pauseItunesPref) {
+			[self pauseItunes];
+		}
 		
 		adhanIsPlaying = YES;
 		currentAdhan = prayerIndex;
@@ -630,6 +635,19 @@ static AppController *sharedAppController = nil;
 }
 
 
+- (void) pauseItunes 
+{
+	NSURL *scriptURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"pauseItunes" ofType:@"scpt"]];
+	NSDictionary *errors = [NSDictionary dictionary];
+	
+	NSAppleScript *pauseItunesScript = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:&errors];
+	
+	[pauseItunesScript executeAndReturnError:&errors];
+	
+	[pauseItunesScript release];
+}
+
+
 
 
 /*
@@ -681,6 +699,7 @@ static AppController *sharedAppController = nil;
 	minutesBeforeShuruq = [userDefaults integerForKey:@"MinutesBeforeShuruq"];
 	enableGrowl = [userDefaults boolForKey:@"EnableGrowl"];
 	stickyGrowl = [userDefaults boolForKey:@"StickyGrowl"];
+	pauseItunesPref = [userDefaults boolForKey:@"PauseItunes"];
 }
 
 

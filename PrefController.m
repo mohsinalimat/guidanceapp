@@ -60,12 +60,11 @@
 	
 	// gray out any options that need to be grayed out
 	[self systemTimezoneToggle:self];
-	[self enableSoundToggle:self];
 	[self enableGrowlToggle:self];
-	[self displayNextPrayerToggle:self];	
+	[self displayNextPrayerToggle:self];
 	[self shuruqReminderToggle:self];
 	[self fajrReminderToggle:self];
-	
+	[self enableSilentModeToggle:self];
 
 	// if user selected file still exists, add that item to the adhan drop down
 	if([fileManager fileExistsAtPath:[userDefaults stringForKey:@"UserSoundFile"]]) {
@@ -427,10 +426,14 @@
     if ([shuruqReminder state] == NSOffState)
 	{
 		[minutesBeforeShuruq setEnabled:NO];
+		[shuruqReminderAdhanOption setEnabled:NO];
+		[shuruqReminderAdhanPreview setEnabled:NO];
 	} 
 	else 
 	{
-		[minutesBeforeShuruq setEnabled:YES];	
+		[minutesBeforeShuruq setEnabled:YES];
+		[shuruqReminderAdhanOption setEnabled:YES];
+		[shuruqReminderAdhanPreview setEnabled:YES];
 	}
 	
 	[self saveAndApply];
@@ -441,10 +444,14 @@
     if ([fajrReminder state] == NSOffState)
 	{
 		[minutesBeforeFajr setEnabled:NO];
+		[fajrReminderAdhanOption setEnabled:NO];
+		[fajrReminderAdhanPreview setEnabled:NO];
 	} 
 	else 
 	{
 		[minutesBeforeFajr setEnabled:YES];	
+		[fajrReminderAdhanOption setEnabled:YES];
+		[fajrReminderAdhanPreview setEnabled:YES];
 	}
 	
 	[self saveAndApply];
@@ -464,64 +471,84 @@
 	[self saveAndApply];
 }
 
-- (IBAction)enableSoundToggle:(id)sender
+- (IBAction)enableSilentModeToggle:(id)sender
 {
-    if ([enableSound state] == NSOffState)
+	if ([enableSilent state] == NSOnState)
 	{
-		[previewSound setEnabled:NO];
-		[soundFile setEnabled:NO];
-		[soundFileTitleText setTextColor:[NSColor grayColor]];
-		[playFajr setEnabled:NO];
-		[playFajrTitleText setTextColor:[NSColor grayColor]];
-		[playDhuhur setEnabled:NO];
-		[playDhuhurTitleText setTextColor:[NSColor grayColor]];
-		[playAsr setEnabled:NO];
-		[playAsrTitleText setTextColor:[NSColor grayColor]];
-		[playMaghrib setEnabled:NO];
-		[playMaghribTitleText setTextColor:[NSColor grayColor]];
-		[playIsha setEnabled:NO];
-		[playIshaTitleText setTextColor:[NSColor grayColor]];
+		[fajrAdhanOption setEnabled:NO];
+		[fajrAdhanPreview setEnabled:NO];
+		[dhuhurAdhanOption setEnabled:NO];
+		[dhuhurAdhanPreview setEnabled:NO];
+		[asrAdhanOption setEnabled:NO];
+		[asrAdhanPreview setEnabled:NO];
+		[maghribAdhanOption setEnabled:NO];
+		[maghribAdhanPreview setEnabled:NO];
+		[ishaAdhanOption setEnabled:NO];
+		[ishaAdhanPreview setEnabled:NO];
+		
+		[fajrAdhanTitleText setTextColor:[NSColor grayColor]];
+		[dhuhurAdhanTitleText setTextColor:[NSColor grayColor]];
+		[asrAdhanTitleText setTextColor:[NSColor grayColor]];
+		[maghribAdhanTitleText setTextColor:[NSColor grayColor]];
+		[ishaAdhanTitleText setTextColor:[NSColor grayColor]];
 		
 		[shuruqReminder setEnabled:NO];
 		[minutesBeforeShuruq setEnabled:NO];
 		[minutesBeforeShuruqText setTextColor:[NSColor grayColor]];
+		[shuruqReminderAdhanOption setEnabled:NO];
+		[shuruqReminderAdhanPreview setEnabled:NO];
 		
 		[fajrReminder setEnabled:NO];
 		[minutesBeforeFajr setEnabled:NO];
 		[minutesBeforeFajrText setTextColor:[NSColor grayColor]];
+		[fajrReminderAdhanOption setEnabled:NO];
+		[fajrReminderAdhanPreview setEnabled:NO];		
+		
+		[pauseItunes setEnabled:NO];
 	}
 	else
 	{
-		[previewSound setEnabled:YES];
-		[soundFile setEnabled:YES];
-		[soundFileTitleText setTextColor:[NSColor blackColor]];
-		[playFajr setEnabled:YES];
-		[playFajrTitleText setTextColor:[NSColor blackColor]];
-		[playDhuhur setEnabled:YES];
-		[playDhuhurTitleText setTextColor:[NSColor blackColor]];
-		[playAsr setEnabled:YES];	
-		[playAsrTitleText setTextColor:[NSColor blackColor]];	
-		[playMaghrib setEnabled:YES];
-		[playMaghribTitleText setTextColor:[NSColor blackColor]];
-		[playIsha setEnabled:YES];
-		[playIshaTitleText setTextColor:[NSColor blackColor]];
-				
+		[fajrAdhanOption setEnabled:YES];
+		[fajrAdhanPreview setEnabled:YES];
+		[dhuhurAdhanOption setEnabled:YES];
+		[dhuhurAdhanPreview setEnabled:YES];
+		[asrAdhanOption setEnabled:YES];
+		[asrAdhanPreview setEnabled:YES];
+		[maghribAdhanOption setEnabled:YES];
+		[maghribAdhanPreview setEnabled:YES];
+		[ishaAdhanOption setEnabled:YES];
+		[ishaAdhanPreview setEnabled:YES];		
+		
+		[fajrAdhanTitleText setTextColor:[NSColor blackColor]];
+		[dhuhurAdhanTitleText setTextColor:[NSColor blackColor]];
+		[asrAdhanTitleText setTextColor:[NSColor blackColor]];	
+		[maghribAdhanTitleText setTextColor:[NSColor blackColor]];
+		[ishaAdhanTitleText setTextColor:[NSColor blackColor]];
+		
 		[shuruqReminder setEnabled:YES];
-			if([shuruqReminder state] == NSOnState) { 
-				[minutesBeforeShuruq setEnabled:YES];
-			}	
+		if([shuruqReminder state] == NSOnState) {
+			[minutesBeforeShuruq setEnabled:YES];
+			[shuruqReminderAdhanOption setEnabled:YES];
+			[shuruqReminderAdhanPreview setEnabled:YES];
+		}	
 		[minutesBeforeShuruqText setTextColor:[NSColor blackColor]];
 		
-		
 		[fajrReminder setEnabled:YES];
-			if([fajrReminder state] == NSOnState) { 
-				[minutesBeforeFajr setEnabled:YES];
-			}
+		if([fajrReminder state] == NSOnState) { 
+			[minutesBeforeFajr setEnabled:YES];
+			[fajrReminderAdhanOption setEnabled:YES];
+			[fajrReminderAdhanPreview setEnabled:YES];
+		}
 		[minutesBeforeFajrText setTextColor:[NSColor blackColor]];
+		
+		[pauseItunes setEnabled:YES];
 	}
 	
 	[self saveAndApply];
 }
+
+
+
 
 - (IBAction)playPreview:(id)sender
 {

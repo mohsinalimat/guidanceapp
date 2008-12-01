@@ -48,26 +48,41 @@
 	/**********/
 	/* ALERTS */
 	/**********/
-	IBOutlet NSButton *enableSound;
-    IBOutlet NSPopUpButton *soundFile;
-	IBOutlet NSTextField *soundFileTitleText;
-    IBOutlet NSButton *previewSound;
-	IBOutlet NSButton *playFajr;
-	IBOutlet NSTextField *playFajrTitleText;	
-    IBOutlet NSButton *playDhuhur;
-	IBOutlet NSTextField *playDhuhurTitleText;
-    IBOutlet NSButton *playAsr;
-	IBOutlet NSTextField *playAsrTitleText;
-    IBOutlet NSButton *playMaghrib;
-	IBOutlet NSTextField *playMaghribTitleText;
-    IBOutlet NSButton *playIsha;
-	IBOutlet NSTextField *playIshaTitleText;
+	IBOutlet NSButton *enableSilent;
+	
+	IBOutlet NSPopUpButton *soundFile;
+	IBOutlet NSButton *previewSound;
+	
+	IBOutlet NSPopUpButton *fajrAdhanOption;
+    IBOutlet NSButton *fajrAdhanPreview;
+	IBOutlet NSPopUpButton *dhuhurAdhanOption;
+    IBOutlet NSButton *dhuhurAdhanPreview;
+	IBOutlet NSPopUpButton *asrAdhanOption;
+    IBOutlet NSButton *asrAdhanPreview;
+	IBOutlet NSPopUpButton *maghribAdhanOption;
+    IBOutlet NSButton *maghribAdhanPreview;	
+	IBOutlet NSPopUpButton *ishaAdhanOption;
+    IBOutlet NSButton *ishaAdhanPreview;
+	
+	IBOutlet NSTextField *fajrAdhanTitleText;
+	IBOutlet NSTextField *dhuhurAdhanTitleText;
+	IBOutlet NSTextField *asrAdhanTitleText;
+	IBOutlet NSTextField *maghribAdhanTitleText;
+	IBOutlet NSTextField *ishaAdhanTitleText;
+	
 	IBOutlet NSButton *shuruqReminder;
 	IBOutlet NSTextField *minutesBeforeShuruq;
-	IBOutlet NSTextField *minutesBeforeShuruqText;	
+	IBOutlet NSTextField *minutesBeforeShuruqText;
+	IBOutlet NSPopUpButton *shuruqReminderAdhanOption;
+    IBOutlet NSButton *shuruqReminderAdhanPreview;
+	
 	IBOutlet NSButton *fajrReminder;
 	IBOutlet NSTextField *minutesBeforeFajr;
 	IBOutlet NSTextField *minutesBeforeFajrText;
+	IBOutlet NSPopUpButton *fajrReminderAdhanOption;
+    IBOutlet NSButton *fajrReminderAdhanPreview;
+
+	IBOutlet NSButton *pauseItunes;
 	IBOutlet NSButton *enableGrowl;	
 	IBOutlet NSButton *stickyGrowl;
 	BOOL playingPreview;
@@ -117,7 +132,7 @@
 - (IBAction)shuruqReminderToggle:(id)sender;
 - (IBAction)fajrReminderToggle:(id)sender;
 - (IBAction)enableGrowlToggle:(id)sender;
-- (IBAction)enableSoundToggle:(id)sender;
+- (IBAction)enableSilentModeToggle:(id)sender;
 - (IBAction)playPreview:(id)sender;
 - (IBAction)selectAdhan:(id)sender;
 - (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful;
