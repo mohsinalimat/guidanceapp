@@ -1,3 +1,11 @@
+//
+//  PrefController.m
+//  Guidance
+//
+//  Created by ameir on 10/21/07.
+//  Copyright 2007 Batoul Apps. All rights reserved.
+//
+
 #import "PrefController.h"
 
 @implementation PrefController
@@ -52,6 +60,17 @@
 					   nil] retain];	
 	
 	
+	playingStatus = [NSMutableArray arrayWithObjects:	
+						[NSNumber numberWithBool:NO],
+						[NSNumber numberWithBool:NO],
+						[NSNumber numberWithBool:NO],
+						[NSNumber numberWithBool:NO],
+						[NSNumber numberWithBool:NO],
+						[NSNumber numberWithBool:NO],
+						[NSNumber numberWithBool:NO],
+					nil];
+	
+	[playingStatus retain];
 	
 	// grey out disabled menu bar display options
 	[displayNextPrayerName setAutoenablesItems:NO];
@@ -66,6 +85,7 @@
 	[self fajrReminderToggle:self];
 	[self enableSilentModeToggle:self];
 
+	//FIXME
 	// if user selected file still exists, add that item to the adhan drop down
 	if([fileManager fileExistsAtPath:[userDefaults stringForKey:@"UserSoundFile"]]) {
 		[self insertUserAdhan:[userDefaults stringForKey:@"UserSoundFile"]];
@@ -78,8 +98,14 @@
 		}
 	}
 	
-	// select the adhan choice in the adhan drop down
-	[soundFile selectItemAtIndex:[userDefaults integerForKey:@"SoundFile"]];
+	// select the adhan choice in the adhan drop down for each one
+	[fajrAdhanOption selectItemAtIndex:[userDefaults integerForKey:@"FajrAdhanOption"]];
+	[dhuhurAdhanOption selectItemAtIndex:[userDefaults integerForKey:@"DhuhurAdhanOption"]];
+	[asrAdhanOption selectItemAtIndex:[userDefaults integerForKey:@"AsrAdhanOption"]];
+	[maghribAdhanOption selectItemAtIndex:[userDefaults integerForKey:@"MaghribAdhanOption"]];
+	[ishaAdhanOption selectItemAtIndex:[userDefaults integerForKey:@"IshaAdhanOption"]];
+	[shuruqReminderAdhanOption selectItemAtIndex:[userDefaults integerForKey:@"ShuruqReminderAdhanOption"]];
+	[fajrReminderAdhanOption selectItemAtIndex:[userDefaults integerForKey:@"FajrReminderAdhanOption"]];
 	
 	
 	//if custom sunrise and sunset angles exist, insert them in the method drop down
@@ -374,7 +400,6 @@
 	[method selectItemAtIndex:[userDefaults integerForKey:@"Method"]];
 }
 
-
 - (IBAction)saveCustomMethod: (id)sender 
 {
 	[NSApp endSheet:customMethodSheet];	
@@ -407,14 +432,11 @@
 	}	
 }
 
-
 - (IBAction)getMethodHelp: (id)sender
 {
 	NSString *bookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
 	[[NSHelpManager sharedHelpManager] openHelpAnchor:@"method"  inBook:bookName];
 }
-
-
 
 
 /*******************/
@@ -547,48 +569,181 @@
 	[self saveAndApply];
 }
 
+- (IBAction)previewFajr:(id)sender
+{
+	[self playPreview:1];
+}
 
+- (IBAction)previewDhuhur:(id)sender
+{
+	[self playPreview:2];	
+}
 
+- (IBAction)previewAsr:(id)sender
+{
+	[self playPreview:3];	
+}
 
-- (IBAction)playPreview:(id)sender
+- (IBAction)previewMaghrib:(id)sender
+{
+	[self playPreview:4];	
+}
+
+- (IBAction)previewIsha:(id)sender
+{
+	[self playPreview:5];	
+}
+
+- (IBAction)previewShuruqReminder:(id)sender
+{
+	[self playPreview:6];	
+}
+
+- (IBAction)previewFajrReminder:(id)sender
+{
+	[self playPreview:7];	
+}
+
+- (void) playPreview:(int)prayer
 {
 	if(![[AppController sharedController] isAdhanPlaying])
 	{
-		if (!playingPreview)
-		{
-			// play sound
-			switch ([soundFile indexOfSelectedItem])
-			{
-				case 1:		sound = [NSSound soundNamed:@"makkah"]; break;
-				case 2:		sound = [NSSound soundNamed:@"alaqsa"]; break;
-				case 3:		sound = [NSSound soundNamed:@"istanbul"]; break;
-				case 5:		sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:@"UserSoundFile"] byReference:NO]; break;
-				case 0:
-				default:	sound = [NSSound soundNamed:@"yusufislam"]; break;
-			}
-			
-			[sound setDelegate:self];
-			[sound play];
-			
-			// change button text to "Stop"
-			if([sound isPlaying]) 
-			{
-				[previewSound setTitle:@"Stop"];
-				playingPreview = !playingPreview;
-			}
-		}
-		else
-		{
-			// stop sound
-			[sound stop];
+		switch (prayer) {
+			case 1:
+				if (!playingPreview) {
+					[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
+					[self playAdhan:[fajrAdhanOption indexOfSelectedItem] withUserFile:[userDefaults stringForKey:@"FajrAdhanUserSoundFile"]];
+					[fajrAdhanPreview setImage:[NSImage imageNamed:@"Stop"]];
+					[fajrAdhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
+				} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
+					[sound stop];
+				}
+				break;
+			case 2:
+				if (!playingPreview) {
+					[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
+					[self playAdhan:[dhuhurAdhanOption indexOfSelectedItem] withUserFile:[userDefaults stringForKey:@"DhuhurAdhanUserSoundFile"]];
+					[dhuhurAdhanPreview setImage:[NSImage imageNamed:@"Stop"]];
+					[dhuhurAdhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
+				} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
+					[sound stop];
+				}
+				break;
+			case 3:
+				if (!playingPreview) {
+					[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
+					[self playAdhan:[asrAdhanOption indexOfSelectedItem] withUserFile:[userDefaults stringForKey:@"AsrAdhanUserSoundFile"]];
+					[asrAdhanPreview setImage:[NSImage imageNamed:@"Stop"]];
+					[asrAdhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
+				} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
+					[sound stop];
+				}
+				break;
+			case 4:
+				if (!playingPreview) {
+					[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
+					[self playAdhan:[maghribAdhanOption indexOfSelectedItem] withUserFile:[userDefaults stringForKey:@"MaghribAdhanUserSoundFile"]];
+					[maghribAdhanPreview setImage:[NSImage imageNamed:@"Stop"]];
+					[maghribAdhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
+				} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
+					[sound stop];
+				}
+				break;
+			case 5:
+				if (!playingPreview) {
+					[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
+					[self playAdhan:[ishaAdhanOption indexOfSelectedItem] withUserFile:[userDefaults stringForKey:@"IshaAdhanUserSoundFile"]];
+					[ishaAdhanPreview setImage:[NSImage imageNamed:@"Stop"]];
+					[ishaAdhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
+				} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
+					[sound stop];
+				}
+				break;
+			case 6:
+				if (!playingPreview) {
+					[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
+					[self playAdhan:[shuruqReminderAdhanOption indexOfSelectedItem] withUserFile:[userDefaults stringForKey:@"ShuruqReminderAdhanUserSoundFile"]];
+					[shuruqReminderAdhanPreview setImage:[NSImage imageNamed:@"Stop"]];
+					[shuruqReminderAdhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
+				} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
+					[sound stop];
+				}
+				break;
+			case 7:
+				if (!playingPreview) {
+					[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
+					[self playAdhan:[fajrReminderAdhanOption indexOfSelectedItem] withUserFile:[userDefaults stringForKey:@"FajrReminderAdhanUserSoundFile"]];
+					[fajrReminderAdhanPreview setImage:[NSImage imageNamed:@"Stop"]];
+					[fajrReminderAdhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
+				} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
+					[sound stop];
+				}
+				break;
+			default:
+				break;		
 		}
 	}
 }
 
+
+- (void) playAdhan:(int)adhanIndex withUserFile:(NSString *)customFile
+{
+	// play sound
+	switch (adhanIndex)
+	{
+		case 1:		
+			sound = [NSSound soundNamed:@"makkah"]; 
+			break;
+		case 2:
+			sound = [NSSound soundNamed:@"alaqsa"]; 
+			break;
+		case 3:
+			sound = [NSSound soundNamed:@"istanbul"];
+			break;
+		case 5:
+			sound = [[NSSound alloc] initWithContentsOfFile:customFile byReference:NO];
+			break;
+		case 0:
+			sound = [NSSound soundNamed:@"yusufislam"];
+			break;
+		default:
+			break;
+	}
+	
+	playingPreview = YES;
+	[sound setDelegate:self];
+	[sound play];
+}
+
+
 - (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
 {
-	[previewSound setTitle:@"Preview"];
 	playingPreview = NO;
+	
+	//reset all objects in status array
+	[playingStatus replaceObjectAtIndex:0 withObject:[NSNumber numberWithBool:NO]];
+	[playingStatus replaceObjectAtIndex:1 withObject:[NSNumber numberWithBool:NO]];
+	[playingStatus replaceObjectAtIndex:2 withObject:[NSNumber numberWithBool:NO]];
+	[playingStatus replaceObjectAtIndex:3 withObject:[NSNumber numberWithBool:NO]];
+	[playingStatus replaceObjectAtIndex:4 withObject:[NSNumber numberWithBool:NO]];
+	[playingStatus replaceObjectAtIndex:5 withObject:[NSNumber numberWithBool:NO]];
+	[playingStatus replaceObjectAtIndex:6 withObject:[NSNumber numberWithBool:NO]];
+	
+	//reset all buttons to the play symbol
+	[fajrAdhanPreview setImage:[NSImage imageNamed:@"Play"]];
+	[fajrAdhanPreview setAlternateImage:[NSImage imageNamed:@"PlayAlt"]];
+	[dhuhurAdhanPreview setImage:[NSImage imageNamed:@"Play"]];
+	[dhuhurAdhanPreview setAlternateImage:[NSImage imageNamed:@"PlayAlt"]];
+	[asrAdhanPreview setImage:[NSImage imageNamed:@"Play"]];
+	[asrAdhanPreview setAlternateImage:[NSImage imageNamed:@"PlayAlt"]];
+	[maghribAdhanPreview setImage:[NSImage imageNamed:@"Play"]];
+	[maghribAdhanPreview setAlternateImage:[NSImage imageNamed:@"PlayAlt"]];
+	[ishaAdhanPreview setImage:[NSImage imageNamed:@"Play"]];
+	[ishaAdhanPreview setAlternateImage:[NSImage imageNamed:@"PlayAlt"]];
+	[shuruqReminderAdhanPreview setImage:[NSImage imageNamed:@"Play"]];
+	[shuruqReminderAdhanPreview setAlternateImage:[NSImage imageNamed:@"PlayAlt"]];
+	[fajrReminderAdhanPreview setImage:[NSImage imageNamed:@"Play"]];
+	[fajrReminderAdhanPreview setAlternateImage:[NSImage imageNamed:@"PlayAlt"]];
 }
 
 
@@ -597,7 +752,8 @@
 
 - (IBAction)selectAdhan:(id)sender 
 {
-
+	//FIXME
+	/*
 	if([[soundFile titleOfSelectedItem] isEqualToString:@"Select..."]) {
 	
 		NSArray *adhanFileTypes = [NSArray arrayWithObjects:@"mp3", @"wav",@"m4a",nil];
@@ -629,6 +785,7 @@
 	}
 	
 	[self saveAndApply];
+	*/
 }
 
 - (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info
@@ -640,12 +797,15 @@
 
 		[userDefaults setBool:YES forKey:@"UserSound"];		
 		[userDefaults setInteger:5 forKey:@"SoundFile"];
-		[soundFile selectItemAtIndex:5];
+		
+		//FIXME
+		//[soundFile selectItemAtIndex:5];
 		
 	} else {
 	
 		[userDefaults setBool:NO forKey:@"UserSound"];
-		[soundFile selectItemAtIndex:[userDefaults integerForKey:@"SoundFile"]];
+		//FIXME
+		//[soundFile selectItemAtIndex:[userDefaults integerForKey:@"SoundFile"]];
 		
 	}
 	
@@ -653,6 +813,8 @@
 }
 
 - (void) insertUserAdhan: (NSString *) userSoundFileName {
+	//FIXME
+	/*
 	NSString *onlyName = [[NSString alloc] initWithString:[userSoundFileName lastPathComponent]];
 	if([soundFile numberOfItems] <= 6) {
 		[soundFile insertItemWithTitle:onlyName atIndex:5];
@@ -661,6 +823,7 @@
 		[soundFile removeItemAtIndex:5];
 		[soundFile insertItemWithTitle:onlyName atIndex:5];
 	}
+	 */
 }
 
 

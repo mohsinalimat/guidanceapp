@@ -29,6 +29,10 @@
 		84342B020CE675D900DDE111 /* status_prayerTime.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84342AFF0CE675D900DDE111 /* status_prayerTime.tiff */; };
 		84342B030CE675D900DDE111 /* status_notTime.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84342B000CE675D900DDE111 /* status_notTime.tiff */; };
 		84342B320CE68B7B00DDE111 /* status_sound.png in Resources */ = {isa = PBXBuildFile; fileRef = 84342B310CE68B7B00DDE111 /* status_sound.png */; };
+		843F53520EE4CD0A002B9BF9 /* Play.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 843F53500EE4CD0A002B9BF9 /* Play.tiff */; };
+		843F53530EE4CD0A002B9BF9 /* Stop.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 843F53510EE4CD0A002B9BF9 /* Stop.tiff */; };
+		843F53580EE4CF0D002B9BF9 /* PlayAlt.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 843F53560EE4CF0D002B9BF9 /* PlayAlt.tiff */; };
+		843F53590EE4CF0D002B9BF9 /* StopAlt.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 843F53570EE4CF0D002B9BF9 /* StopAlt.tiff */; };
 		8457C42B0D01201F00BFAF0C /* SoundLow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8457C4290D01201F00BFAF0C /* SoundLow.png */; };
 		8457C42C0D01201F00BFAF0C /* SoundHigh.png in Resources */ = {isa = PBXBuildFile; fileRef = 8457C42A0D01201F00BFAF0C /* SoundHigh.png */; };
 		8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
@@ -100,6 +104,10 @@
 		84342B000CE675D900DDE111 /* status_notTime.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = status_notTime.tiff; sourceTree = SOURCE_ROOT; };
 		84342B310CE68B7B00DDE111 /* status_sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_sound.png; sourceTree = SOURCE_ROOT; };
 		843C4E2A0CCBE610000DAEB4 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
+		843F53500EE4CD0A002B9BF9 /* Play.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Play.tiff; sourceTree = "<group>"; };
+		843F53510EE4CD0A002B9BF9 /* Stop.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Stop.tiff; sourceTree = "<group>"; };
+		843F53560EE4CF0D002B9BF9 /* PlayAlt.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = PlayAlt.tiff; sourceTree = "<group>"; };
+		843F53570EE4CF0D002B9BF9 /* StopAlt.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = StopAlt.tiff; sourceTree = "<group>"; };
 		8457C4290D01201F00BFAF0C /* SoundLow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundLow.png; sourceTree = SOURCE_ROOT; };
 		8457C42A0D01201F00BFAF0C /* SoundHigh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundHigh.png; sourceTree = SOURCE_ROOT; };
 		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
@@ -238,6 +246,10 @@
 				84FAC4DE0CD020370005CDA0 /* guidanceIcon.icns */,
 				84A956BA0E68A80D008BDB67 /* error.png */,
 				84A956BB0E68A80D008BDB67 /* check.png */,
+				843F53500EE4CD0A002B9BF9 /* Play.tiff */,
+				843F53510EE4CD0A002B9BF9 /* Stop.tiff */,
+				843F53560EE4CF0D002B9BF9 /* PlayAlt.tiff */,
+				843F53570EE4CF0D002B9BF9 /* StopAlt.tiff */,
 				8457C4290D01201F00BFAF0C /* SoundLow.png */,
 				8457C42A0D01201F00BFAF0C /* SoundHigh.png */,
 				84BEB0E80DAAEC1600F2BB87 /* Advanced.tiff */,
@@ -391,6 +403,10 @@
 				84A956BC0E68A80D008BDB67 /* error.png in Resources */,
 				84A956BD0E68A80D008BDB67 /* check.png in Resources */,
 				847F39110E6C5E26003BBF38 /* GuidanceHelp in Resources */,
+				843F53520EE4CD0A002B9BF9 /* Play.tiff in Resources */,
+				843F53530EE4CD0A002B9BF9 /* Stop.tiff in Resources */,
+				843F53580EE4CF0D002B9BF9 /* PlayAlt.tiff in Resources */,
+				843F53590EE4CF0D002B9BF9 /* StopAlt.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

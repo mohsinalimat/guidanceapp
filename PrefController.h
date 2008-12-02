@@ -1,3 +1,11 @@
+//
+//  PrefController.h
+//  Guidance
+//
+//  Created by ameir on 10/21/07.
+//  Copyright 2007 Batoul Apps. All rights reserved.
+//
+
 #import <Cocoa/Cocoa.h>
 #import "DBPrefsWindowController.h"
 #import "AppController.h"
@@ -50,9 +58,6 @@
 	/**********/
 	IBOutlet NSButton *enableSilent;
 	
-	IBOutlet NSPopUpButton *soundFile;
-	IBOutlet NSButton *previewSound;
-	
 	IBOutlet NSPopUpButton *fajrAdhanOption;
     IBOutlet NSButton *fajrAdhanPreview;
 	IBOutlet NSPopUpButton *dhuhurAdhanOption;
@@ -85,6 +90,7 @@
 	IBOutlet NSButton *pauseItunes;
 	IBOutlet NSButton *enableGrowl;	
 	IBOutlet NSButton *stickyGrowl;
+	NSMutableArray *playingStatus;
 	BOOL playingPreview;
 	NSSound *sound;
 	
@@ -97,55 +103,60 @@
 
 
 /* UI FUNCTIONS */
-- (IBAction)showWindow:(id)sender;
-- (void)awakeFromNib;
-- (void)setupToolbar;
-- (void)windowDidLoad;
+- (IBAction) showWindow:(id)sender;
+- (void) awakeFromNib;
+- (void) setupToolbar;
+- (void) windowDidLoad;
 
 
 /* GENERAL FUNCTIONS */
-- (IBAction)displayNextPrayerToggle:(id)sender;
-- (IBAction)selectDisplayNextPrayerOption:(id)sender;
-- (IBAction)displayIconToggle:(id)sender;
-- (IBAction)startAtLoginToggle:(id)sender;
-- (IBAction)checkForUpdates:(id)sender;
-- (BOOL)startsAtLogin;
+- (IBAction) displayNextPrayerToggle:(id)sender;
+- (IBAction) selectDisplayNextPrayerOption:(id)sender;
+- (IBAction) displayIconToggle:(id)sender;
+- (IBAction) startAtLoginToggle:(id)sender;
+- (IBAction) checkForUpdates:(id)sender;
+- (BOOL) startsAtLogin;
 
 
 /* LOCATION FUNCTIONS */
-- (IBAction)lookupLocation:(id)sender;
-- (IBAction)systemTimezoneToggle:(id)sender;
-- (IBAction)selectTimezone:(id)sender;
-- (void)locationSearch;
+- (IBAction) lookupLocation:(id)sender;
+- (IBAction) systemTimezoneToggle:(id)sender;
+- (IBAction) selectTimezone:(id)sender;
+- (void) locationSearch;
 
 
 /* PRAYER TIME FUNCTIONS */
-- (IBAction)selectMethod:(id)sender;
-- (IBAction)saveCustomMethod: (id)sender;
-- (IBAction)cancelCustomMethod: (id)sender;
-- (IBAction)getMethodHelp: (id)sender;
-- (void)customMethodClosed:(NSWindow *)sheet;
-- (void)insertCustomMethod;
+- (IBAction) selectMethod:(id)sender;
+- (IBAction) saveCustomMethod: (id)sender;
+- (IBAction) cancelCustomMethod: (id)sender;
+- (IBAction) getMethodHelp: (id)sender;
+- (void) customMethodClosed:(NSWindow *)sheet;
+- (void) insertCustomMethod;
 
 
 /* ALERT FUNCTIONS */
-- (IBAction)shuruqReminderToggle:(id)sender;
-- (IBAction)fajrReminderToggle:(id)sender;
-- (IBAction)enableGrowlToggle:(id)sender;
-- (IBAction)enableSilentModeToggle:(id)sender;
-- (IBAction)playPreview:(id)sender;
-- (IBAction)selectAdhan:(id)sender;
+- (IBAction) shuruqReminderToggle:(id)sender;
+- (IBAction) fajrReminderToggle:(id)sender;
+- (IBAction) enableGrowlToggle:(id)sender;
+- (IBAction) enableSilentModeToggle:(id)sender;
+- (void) playAdhan:(int)adhanIndex withUserFile:(NSString *)customFile;
+- (void) playPreview:(int)prayer;
+- (IBAction) previewFajr:(id)sender;
+- (IBAction) previewDhuhur:(id)sender;
+- (IBAction) previewAsr:(id)sender;
+- (IBAction) previewMaghrib:(id)sender;
+- (IBAction) previewIsha:(id)sender;
+- (IBAction) previewShuruqReminder:(id)sender;
+- (IBAction) previewFajrReminder:(id)sender;
+- (IBAction) selectAdhan:(id)sender;
 - (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful;
 - (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info;
 - (void) insertUserAdhan:(NSString *) userSoundFileName;
 
 
 /* MISC FUNCTIONS */
-- (IBAction)applyChange:(id)sender;
-- (void)saveAndApply;
-
+- (IBAction) applyChange:(id)sender;
+- (void) saveAndApply;
 
 
 @end
-
-

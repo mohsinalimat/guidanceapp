@@ -1,21 +1,19 @@
 //
 //  DBPrefsWindowController.m
+//  Guidance
+//
+//  Created by ameir on 10/21/07.
+//  Copyright 2007 Batoul Apps. All rights reserved.
 //
 
 #import "DBPrefsWindowController.h"
 
-
 static DBPrefsWindowController *_sharedPrefsWindowController = nil;
-
 
 @implementation DBPrefsWindowController
 
-
-
-
 #pragma mark -
 #pragma mark Class Methods
-
 
 + (DBPrefsWindowController *)sharedPrefsWindowController
 {
@@ -25,9 +23,6 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	return _sharedPrefsWindowController;
 }
 
-
-
-
 + (NSString *)nibName
 	// Subclasses can override this to use a nib with a different name.
 {
@@ -35,11 +30,8 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 }
 
 
-
-
 #pragma mark -
 #pragma mark Setup & Teardown
-
 
 - (id)initWithWindow:(NSWindow *)window
   // -initWithWindow: is the designated initializer for NSWindowController.
@@ -66,9 +58,6 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	(void)window;  // To prevent compiler warnings.
 }
 
-
-
-
 - (void)windowDidLoad
 {
 		// Create a new window to display the preference views.
@@ -87,9 +76,6 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	[[self window] setShowsToolbarButton:NO];
 }
 
-
-
-
 - (void) dealloc {
 	[toolbarIdentifiers release];
 	[toolbarViews release];
@@ -99,11 +85,8 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 }
 
 
-
-
 #pragma mark -
 #pragma mark Configuration
-
 
 - (void)setupToolbar
 {
@@ -111,18 +94,12 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	// toolbar by calling -addView:label: or -addView:label:image:.
 }
 
-
-
-
 - (void)addView:(NSView *)view label:(NSString *)label
 {
 	[self addView:view
 			label:label
 			image:[NSImage imageNamed:label]];
 }
-
-
-
 
 - (void)addView:(NSView *)view label:(NSString *)label image:(NSImage *)image
 {
@@ -144,35 +121,23 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 }
 
 
-
-
 #pragma mark -
 #pragma mark Accessor Methods
-
 
 - (BOOL)crossFade
 {
     return _crossFade;
 }
 
-
-
-
 - (void)setCrossFade:(BOOL)fade
 {
     _crossFade = fade;
 }
 
-
-
-
 - (BOOL)shiftSlowsAnimation
 {
     return _shiftSlowsAnimation;
 }
-
-
-
 
 - (void)setShiftSlowsAnimation:(BOOL)slows
 {
@@ -180,11 +145,8 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 }
 
 
-
-
 #pragma mark -
 #pragma mark Overriding Methods
-
 
 - (IBAction)showWindow:(id)sender 
 {
@@ -197,9 +159,6 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	[toolbarItems removeAllObjects];
 	[self setupToolbar];
 
-	NSAssert (([toolbarIdentifiers count] > 0),
-			  @"No items were added to the toolbar in -setupToolbar.");
-	
 	if ([[self window] toolbar] == nil) {
 		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"DBPreferencesToolbar"];
 		[toolbar setAllowsUserCustomization:NO];
@@ -221,11 +180,8 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 }
 
 
-
-
 #pragma mark -
 #pragma mark Toolbar
-
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
@@ -234,9 +190,6 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	(void)toolbar;
 }
 
-
-
-
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar 
 {
 	return toolbarIdentifiers;
@@ -244,17 +197,11 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	(void)toolbar;
 }
 
-
-
-
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
 {
 	return toolbarIdentifiers;
 	(void)toolbar;
 }
-
-
-
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)willBeInserted 
 {
@@ -263,33 +210,28 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	(void)willBeInserted;
 }
 
-
-
-
 - (void)toggleActivePreferenceView:(NSToolbarItem *)toolbarItem
 {
 	[self displayViewForIdentifier:[toolbarItem itemIdentifier] animate:YES];
 }
 
-
-
 - (void)displayViewForIdentifier:(NSString *)identifier animate:(BOOL)animate
 {
-		// Find the view we want to display.
+	// Find the view we want to display.
 	NSView *newView = [toolbarViews objectForKey:identifier];
 	
-		// See if there are any visible views.
+	// See if there are any visible views.
 	NSView *oldView = nil;
 	if ([[contentSubview subviews] count] > 0) {
-			// Get a list of all of the views in the window. Usually at this
-			// point there is just one visible view. But if the last fade
-			// hasn't finished, we need to get rid of it now before we move on.
+		// Get a list of all of the views in the window. Usually at this
+		// point there is just one visible view. But if the last fade
+		// hasn't finished, we need to get rid of it now before we move on.
 		NSEnumerator *subviewsEnum = [[contentSubview subviews] reverseObjectEnumerator];
 		
-			// The first one (last one added) is our visible view.
+		// The first one (last one added) is our visible view.
 		oldView = [subviewsEnum nextObject];
 		
-			// Remove any others.
+		// Remove any others.
 		NSView *reallyOldView = nil;
 		while ((reallyOldView = [subviewsEnum nextObject]) != nil) {
 			[reallyOldView removeFromSuperviewWithoutNeedingDisplay];
@@ -316,11 +258,8 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 }
 
 
-
-
 #pragma mark -
 #pragma mark Cross-Fading Methods
-
 
 - (void)crossFadeView:(NSView *)oldView withView:(NSView *)newView
 {
@@ -357,36 +296,30 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	[viewAnimation startAnimation];
 }
 
-
-
-
 - (void)animationDidEnd:(NSAnimation *)animation
 {
 	NSView *subview;
 	
-		// Get a list of all of the views in the window. Hopefully
-		// at this point there are two. One is visible and one is hidden.
+	// Get a list of all of the views in the window. Hopefully
+	// at this point there are two. One is visible and one is hidden.
 	NSEnumerator *subviewsEnum = [[contentSubview subviews] reverseObjectEnumerator];
 	
-		// This is our visible view. Just get past it.
+	// This is our visible view. Just get past it.
 	subview = [subviewsEnum nextObject];
 
-		// Remove everything else. There should be just one, but
-		// if the user does a lot of fast clicking, we might have
-		// more than one to remove.
+	// Remove everything else. There should be just one, but
+	// if the user does a lot of fast clicking, we might have
+	// more than one to remove.
 	while ((subview = [subviewsEnum nextObject]) != nil) {
 		[subview removeFromSuperviewWithoutNeedingDisplay];
 	}
 
-		// This is a work-around that prevents the first
-		// toolbar icon from becoming highlighted.
+	// This is a work-around that prevents the first
+	// toolbar icon from becoming highlighted.
 	[[self window] makeFirstResponder:nil];
 
 	(void)animation;
 }
-
-
-
 
 - (NSRect)frameForView:(NSView *)view
 	// Calculate the window size for the new view.
