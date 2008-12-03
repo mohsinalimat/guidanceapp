@@ -700,7 +700,10 @@
 		case 3:
 			sound = [NSSound soundNamed:@"istanbul"];
 			break;
-		case 5:
+		case 4:
+			sound = [NSSound soundNamed:@"fajr"];
+			break;
+		case 6:
 			sound = [[NSSound alloc] initWithContentsOfFile:customFile byReference:NO];
 			break;
 		case 0:
