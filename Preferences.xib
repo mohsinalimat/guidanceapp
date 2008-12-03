@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1046"/>
+			<integer value="83"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -574,7 +574,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="102861513">
-												<int key="NSCellFlags">-2080244224</int>
+												<int key="NSCellFlags">67239424</int>
 												<int key="NSCellFlags2">0</int>
 												<string key="NSContents">Play Adhan           </string>
 												<reference key="NSSupport" ref="1018205841"/>
@@ -698,7 +698,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="1068048427">
-												<int key="NSCellFlags">-2080244224</int>
+												<int key="NSCellFlags">67239424</int>
 												<int key="NSCellFlags2">0</int>
 												<string key="NSContents">Play Adhan</string>
 												<reference key="NSSupport" ref="1018205841"/>
@@ -1503,9 +1503,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<string key="NSKeyEquivalent"/>
 												<int key="NSPeriodicDelay">400</int>
 												<int key="NSPeriodicInterval">75</int>
-												<object class="NSMenuItem" key="NSMenuItem" id="154764470">
+												<object class="NSMenuItem" key="NSMenuItem" id="238388701">
 													<reference key="NSMenu" ref="852525130"/>
-													<string key="NSTitle">Yusuf Islam Adhan</string>
+													<string key="NSTitle">Fajr Adhan</string>
 													<string key="NSKeyEquiv"/>
 													<int key="NSKeyEquivModMask">1048576</int>
 													<int key="NSMnemonicLoc">2147483647</int>
@@ -1520,7 +1520,17 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 													<string key="NSTitle">OtherViews</string>
 													<object class="NSMutableArray" key="NSMenuItems">
 														<bool key="EncodedWithXMLCoder">YES</bool>
-														<reference ref="154764470"/>
+														<object class="NSMenuItem" id="154764470">
+															<reference key="NSMenu" ref="852525130"/>
+															<string key="NSTitle">Yusuf Islam Adhan</string>
+															<string key="NSKeyEquiv"/>
+															<int key="NSKeyEquivModMask">1048576</int>
+															<int key="NSMnemonicLoc">2147483647</int>
+															<reference key="NSOnImage" ref="29241760"/>
+															<reference key="NSMixedImage" ref="106143623"/>
+															<string key="NSAction">_popUpItemAction:</string>
+															<reference key="NSTarget" ref="880783245"/>
+														</object>
 														<object class="NSMenuItem" id="463546832">
 															<reference key="NSMenu" ref="852525130"/>
 															<string key="NSTitle">Makkah Adhan</string>
@@ -1554,17 +1564,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<string key="NSAction">_popUpItemAction:</string>
 															<reference key="NSTarget" ref="880783245"/>
 														</object>
-														<object class="NSMenuItem" id="238388701">
-															<reference key="NSMenu" ref="852525130"/>
-															<string key="NSTitle">Fajr Adhan</string>
-															<string key="NSKeyEquiv"/>
-															<int key="NSKeyEquivModMask">1048576</int>
-															<int key="NSMnemonicLoc">2147483647</int>
-															<reference key="NSOnImage" ref="29241760"/>
-															<reference key="NSMixedImage" ref="106143623"/>
-															<string key="NSAction">_popUpItemAction:</string>
-															<reference key="NSTarget" ref="880783245"/>
-														</object>
+														<reference ref="238388701"/>
 														<object class="NSMenuItem" id="665053445">
 															<reference key="NSMenu" ref="852525130"/>
 															<bool key="NSIsDisabled">YES</bool>
@@ -1591,6 +1591,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 														</object>
 													</object>
 												</object>
+												<int key="NSSelectedIndex">4</int>
 												<int key="NSPreferredEdge">1</int>
 												<bool key="NSUsesItemFromMenu">YES</bool>
 												<bool key="NSAltersState">YES</bool>
@@ -1637,9 +1638,9 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<string key="NSKeyEquivalent"/>
 												<int key="NSPeriodicDelay">400</int>
 												<int key="NSPeriodicInterval">75</int>
-												<object class="NSMenuItem" key="NSMenuItem" id="894617144">
+												<object class="NSMenuItem" key="NSMenuItem" id="630734315">
 													<reference key="NSMenu" ref="36764009"/>
-													<string key="NSTitle">Yusuf Islam Adhan</string>
+													<string key="NSTitle">Fajr Adhan</string>
 													<string key="NSKeyEquiv"/>
 													<int key="NSKeyEquivModMask">1048576</int>
 													<int key="NSMnemonicLoc">2147483647</int>
@@ -1654,7 +1655,17 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 													<string key="NSTitle">OtherViews</string>
 													<object class="NSMutableArray" key="NSMenuItems">
 														<bool key="EncodedWithXMLCoder">YES</bool>
-														<reference ref="894617144"/>
+														<object class="NSMenuItem" id="894617144">
+															<reference key="NSMenu" ref="36764009"/>
+															<string key="NSTitle">Yusuf Islam Adhan</string>
+															<string key="NSKeyEquiv"/>
+															<int key="NSKeyEquivModMask">1048576</int>
+															<int key="NSMnemonicLoc">2147483647</int>
+															<reference key="NSOnImage" ref="29241760"/>
+															<reference key="NSMixedImage" ref="106143623"/>
+															<string key="NSAction">_popUpItemAction:</string>
+															<reference key="NSTarget" ref="260487859"/>
+														</object>
 														<object class="NSMenuItem" id="165117616">
 															<reference key="NSMenu" ref="36764009"/>
 															<string key="NSTitle">Makkah Adhan</string>
@@ -1688,17 +1699,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 															<string key="NSAction">_popUpItemAction:</string>
 															<reference key="NSTarget" ref="260487859"/>
 														</object>
-														<object class="NSMenuItem" id="630734315">
-															<reference key="NSMenu" ref="36764009"/>
-															<string key="NSTitle">Fajr Adhan</string>
-															<string key="NSKeyEquiv"/>
-															<int key="NSKeyEquivModMask">1048576</int>
-															<int key="NSMnemonicLoc">2147483647</int>
-															<reference key="NSOnImage" ref="29241760"/>
-															<reference key="NSMixedImage" ref="106143623"/>
-															<string key="NSAction">_popUpItemAction:</string>
-															<reference key="NSTarget" ref="260487859"/>
-														</object>
+														<reference ref="630734315"/>
 														<object class="NSMenuItem" id="968507419">
 															<reference key="NSMenu" ref="36764009"/>
 															<bool key="NSIsDisabled">YES</bool>
@@ -1725,6 +1726,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 														</object>
 													</object>
 												</object>
+												<int key="NSSelectedIndex">4</int>
 												<int key="NSPreferredEdge">1</int>
 												<bool key="NSUsesItemFromMenu">YES</bool>
 												<bool key="NSAltersState">YES</bool>
@@ -6641,38 +6643,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<int key="connectionID">1326</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedIndex: values.FajrReminderAdhanOption</string>
-						<reference key="source" ref="941359933"/>
-						<reference key="destination" ref="380112615"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="941359933"/>
-							<reference key="NSDestination" ref="380112615"/>
-							<string key="NSLabel">selectedIndex: values.FajrReminderAdhanOption</string>
-							<string key="NSBinding">selectedIndex</string>
-							<string key="NSKeyPath">values.FajrReminderAdhanOption</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">1327</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedIndex: values.ShuruqReminderAdhanOption</string>
-						<reference key="source" ref="1042301596"/>
-						<reference key="destination" ref="380112615"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1042301596"/>
-							<reference key="NSDestination" ref="380112615"/>
-							<string key="NSLabel">selectedIndex: values.ShuruqReminderAdhanOption</string>
-							<string key="NSBinding">selectedIndex</string>
-							<string key="NSKeyPath">values.ShuruqReminderAdhanOption</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">1328</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">previewFajr:</string>
 						<reference key="source" ref="1001"/>
@@ -6727,6 +6697,102 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="558388307"/>
 					</object>
 					<int key="connectionID">1335</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectFajrAdhan:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="816887388"/>
+					</object>
+					<int key="connectionID">1343</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectDhuhurAdhan:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="986393467"/>
+					</object>
+					<int key="connectionID">1344</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectAsrAdhan:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="911816567"/>
+					</object>
+					<int key="connectionID">1345</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectMaghribAdhan:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1045814811"/>
+					</object>
+					<int key="connectionID">1346</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectIshaAdhan:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="364883130"/>
+					</object>
+					<int key="connectionID">1347</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectShuruqReminderAdhan:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="941359933"/>
+					</object>
+					<int key="connectionID">1349</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectFajrReminderAdhan:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1042301596"/>
+					</object>
+					<int key="connectionID">1350</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">selectedIndex: values.ShuruqReminderAdhanOption</string>
+						<reference key="source" ref="941359933"/>
+						<reference key="destination" ref="380112615"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="941359933"/>
+							<reference key="NSDestination" ref="380112615"/>
+							<string key="NSLabel">selectedIndex: values.ShuruqReminderAdhanOption</string>
+							<string key="NSBinding">selectedIndex</string>
+							<string key="NSKeyPath">values.ShuruqReminderAdhanOption</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1352</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">selectedIndex: values.FajrReminderAdhanOption</string>
+						<reference key="source" ref="1042301596"/>
+						<reference key="destination" ref="380112615"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1042301596"/>
+							<reference key="NSDestination" ref="380112615"/>
+							<string key="NSLabel">selectedIndex: values.FajrReminderAdhanOption</string>
+							<string key="NSBinding">selectedIndex</string>
+							<string key="NSKeyPath">values.FajrReminderAdhanOption</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1353</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">applyChange:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="824445973"/>
+					</object>
+					<int key="connectionID">1354</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -10816,7 +10882,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{313, 87}, {196, 133}}</string>
+					<string>{{324, 98}, {196, 133}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{136, 548}, {196, 113}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -10828,11 +10894,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{313, 299}, {196, 133}}</string>
+					<string>{{324, 310}, {196, 133}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{136, 548}, {196, 113}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{313, 15}, {196, 133}}</string>
+					<string>{{324, 26}, {196, 133}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{136, 548}, {196, 113}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -11091,7 +11157,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{223, 45}, {375, 462}}</string>
+					<string>{{234, 56}, {375, 462}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableArray">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -11204,7 +11270,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1342</int>
+			<int key="maxID">1354</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -11258,9 +11324,15 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<string>previewMaghrib:</string>
 							<string>previewShuruqReminder:</string>
 							<string>saveCustomMethod:</string>
-							<string>selectAdhan:</string>
+							<string>selectAsrAdhan:</string>
+							<string>selectDhuhurAdhan:</string>
 							<string>selectDisplayNextPrayerOption:</string>
+							<string>selectFajrAdhan:</string>
+							<string>selectFajrReminderAdhan:</string>
+							<string>selectIshaAdhan:</string>
+							<string>selectMaghribAdhan:</string>
 							<string>selectMethod:</string>
+							<string>selectShuruqReminderAdhan:</string>
 							<string>selectTimezone:</string>
 							<string>showWindow:</string>
 							<string>shuruqReminderToggle:</string>
@@ -11269,6 +11341,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

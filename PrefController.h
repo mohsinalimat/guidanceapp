@@ -56,6 +56,17 @@
 	/**********/
 	/* ALERTS */
 	/**********/
+	
+	NSPopUpButton *adhanOption;
+	NSButton *adhanPreview;
+	NSString *prayerAdhanKey;
+	NSString *customAdhanKey;
+	NSString *customAdhanFileKey;
+	
+	NSMutableArray *playingStatus;
+	BOOL playingPreview;
+	NSSound *sound;
+	
 	IBOutlet NSButton *enableSilent;
 	
 	IBOutlet NSPopUpButton *fajrAdhanOption;
@@ -90,9 +101,7 @@
 	IBOutlet NSButton *pauseItunes;
 	IBOutlet NSButton *enableGrowl;	
 	IBOutlet NSButton *stickyGrowl;
-	NSMutableArray *playingStatus;
-	BOOL playingPreview;
-	NSSound *sound;
+	
 	
 	/********/
 	/* MISC */
@@ -135,12 +144,13 @@
 
 
 /* ALERT FUNCTIONS */
+- (void) setAlertGlobals:(int)prayer;
+
 - (IBAction) shuruqReminderToggle:(id)sender;
 - (IBAction) fajrReminderToggle:(id)sender;
 - (IBAction) enableGrowlToggle:(id)sender;
 - (IBAction) enableSilentModeToggle:(id)sender;
-- (void) playAdhan:(int)adhanIndex withUserFile:(NSString *)customFile;
-- (void) playPreview:(int)prayer;
+
 - (IBAction) previewFajr:(id)sender;
 - (IBAction) previewDhuhur:(id)sender;
 - (IBAction) previewAsr:(id)sender;
@@ -148,10 +158,22 @@
 - (IBAction) previewIsha:(id)sender;
 - (IBAction) previewShuruqReminder:(id)sender;
 - (IBAction) previewFajrReminder:(id)sender;
-- (IBAction) selectAdhan:(id)sender;
+- (void) playPreview:(int)prayer;
 - (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful;
+- (void) resetPreviewButtons;
+
+- (IBAction) selectFajrAdhan:(id)sender;
+- (IBAction) selectDhuhurAdhan:(id)sender;
+- (IBAction) selectAsrAdhan:(id)sender;
+- (IBAction) selectMaghribAdhan:(id)sender;
+- (IBAction) selectIshaAdhan:(id)sender;
+- (IBAction) selectShuruqReminderAdhan:(id)sender;
+- (IBAction) selectFajrReminderAdhan:(id)sender;
+
+- (void) selectCustomAdhan;
 - (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info;
-- (void) insertUserAdhan:(NSString *) userSoundFileName;
+- (void) insertCustomAdhan: (NSString *)fileName toAdhanOption: (NSPopUpButton *) adhanOption;
+- (void) restoreCustomAdhans;
 
 
 /* MISC FUNCTIONS */
