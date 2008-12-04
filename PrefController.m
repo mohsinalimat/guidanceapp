@@ -824,7 +824,7 @@
 
 	} else if([adhanOption indexOfSelectedItem] == 8) {
 
-		[userDefaults setInteger:8 forKey:prayerAdhanKey];
+		[userDefaults setInteger:[adhanOption indexOfSelectedItem] forKey:prayerAdhanKey];
 		[userDefaults setBool:YES forKey:customAdhanKey];
 		[self saveAndApply];
 	}
