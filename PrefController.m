@@ -80,6 +80,8 @@
 	[customAdhanKey retain];
 	[customAdhanFileKey retain];
 	
+	[tempSelection retain];
+	
 	// grey out disabled menu bar display options
 	[displayNextPrayerName setAutoenablesItems:NO];
 	[displayNextPrayerTime setAutoenablesItems:NO];
@@ -667,30 +669,36 @@
 			switch ([adhanOption indexOfSelectedItem])
 			{
 				case 0:
+					return;
+				case 1:
+					return;
+				case 2:	
 					sound = [NSSound soundNamed:@"yusufislam"];
 					break;
-				case 1:		
+				case 3:		
 					sound = [NSSound soundNamed:@"makkah"]; 
 					break;
-				case 2:
+				case 4:
 					sound = [NSSound soundNamed:@"alaqsa"]; 
 					break;
-				case 3:
+				case 5:
 					sound = [NSSound soundNamed:@"istanbul"];
 					break;
-				case 4:
+				case 6:
 					sound = [NSSound soundNamed:@"fajr"];
 					break;
-				case 6:
+				case 7:
+					return;
+				case 8:
 					if([fileManager fileExistsAtPath:[userDefaults stringForKey:customAdhanFileKey]]) {
 						sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:customAdhanFileKey] byReference:NO];
 					} else {
 						// remove custom file option and 
 						// go back to default adhan
-						[adhanOption removeItemAtIndex:6];
-						[adhanOption removeItemAtIndex:5];
-						[adhanOption selectItemAtIndex:0];
-						[userDefaults setInteger:0 forKey:prayerAdhanKey];
+						[adhanOption removeItemAtIndex:8];
+						[adhanOption removeItemAtIndex:7];
+						[adhanOption selectItemAtIndex:2];
+						[userDefaults setInteger:2 forKey:prayerAdhanKey];
 						[userDefaults setBool:NO forKey:customAdhanKey];
 						[self saveAndApply];
 						return;
@@ -807,19 +815,19 @@
 			didEndSelector:
 			@selector(selectAdhanClosed:returnCode:contextInfo:) 
 			contextInfo: nil];
-		
-	} else if([adhanOption indexOfSelectedItem] <= 4) {
-		
+
+	} else if([adhanOption indexOfSelectedItem] <= 6) {
+
 		[userDefaults setInteger:[adhanOption indexOfSelectedItem] forKey:prayerAdhanKey];
 		[userDefaults setBool:NO forKey:customAdhanKey];
-		
-	} else if([adhanOption indexOfSelectedItem] == 6) {
-		
-		[userDefaults setInteger:6 forKey:prayerAdhanKey];
+		[self saveAndApply];
+
+	} else if([adhanOption indexOfSelectedItem] == 8) {
+
+		[userDefaults setInteger:8 forKey:prayerAdhanKey];
 		[userDefaults setBool:YES forKey:customAdhanKey];
+		[self saveAndApply];
 	}
-	
-	[self saveAndApply];
 }
 
 - (void) selectAdhanClosed: (NSOpenPanel *) openPanel returnCode: (int) code contextInfo: (void *) info
@@ -830,15 +838,16 @@
 		[self insertCustomAdhan:[[openPanel filenames] objectAtIndex: 0] toAdhanOption:adhanOption];
 
 		[userDefaults setBool:YES forKey:customAdhanKey];		
-		[userDefaults setInteger:6 forKey:prayerAdhanKey];
+		[userDefaults setInteger:8 forKey:prayerAdhanKey];
 		
-		[adhanOption selectItemAtIndex:6];
+		[adhanOption selectItemAtIndex:8];
 		
 	} else {
-	
-		[userDefaults setBool:NO forKey:customAdhanKey];
-		[adhanOption selectItemAtIndex:[userDefaults integerForKey:prayerAdhanKey]];
+		if([userDefaults integerForKey:prayerAdhanKey] != 8) {
+			[userDefaults setBool:NO forKey:customAdhanKey];
+		}
 		
+		[adhanOption selectItemAtIndex:[userDefaults integerForKey:prayerAdhanKey]];
 	}
 	
 	[self saveAndApply];
@@ -848,12 +857,12 @@
 - (void) insertCustomAdhan: (NSString *)fileName toAdhanOption: (NSPopUpButton *) adhanButton
 {
 	NSString *onlyName = [[NSString alloc] initWithString:[fileName lastPathComponent]];
-	if([adhanButton numberOfItems] <= 7) {
-		[adhanButton insertItemWithTitle:onlyName atIndex:6];
-		[[adhanButton menu] insertItem:[NSMenuItem separatorItem] atIndex:7];
+	if([adhanButton numberOfItems] <= 9) {
+		[adhanButton insertItemWithTitle:onlyName atIndex:8];
+		[[adhanButton menu] insertItem:[NSMenuItem separatorItem] atIndex:9];
 	} else {
-		[adhanButton removeItemAtIndex:6];
-		[adhanButton insertItemWithTitle:onlyName atIndex:6];
+		[adhanButton removeItemAtIndex:8];
+		[adhanButton insertItemWithTitle:onlyName atIndex:8];
 	}
 }
 
@@ -868,7 +877,7 @@
 			// if file no longer exists then remove that choice from the user preferences
 			if([userDefaults boolForKey:customAdhanKey]) {
 				[userDefaults setBool:NO forKey:customAdhanKey];
-				[userDefaults setInteger:0 forKey:prayerAdhanKey];
+				[userDefaults setInteger:2 forKey:prayerAdhanKey];
 			}
 		}
 	}

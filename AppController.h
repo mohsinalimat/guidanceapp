@@ -76,15 +76,46 @@
 	int asrOffset;
 	int maghribOffset;
 	int ishaOffset;
-	BOOL enableSound;
-	int soundFile;
-	BOOL userSound;
-	NSString *userSoundFile;
-	BOOL playAdhanForFajr;
-	BOOL playAdhanForDhuhur;
-	BOOL playAdhanForAsr;
-	BOOL playAdhanForMaghrib;
-	BOOL playAdhanForIsha;
+	
+	
+	BOOL silentMode;
+	
+	//fajr alert options
+	int fajrAdhanOption;
+	BOOL fajrAdhanUserSound;
+	NSString *fajrAdhanUserSoundFile;
+
+	//dhuhur alert options
+	int dhuhurAdhanOption;
+	BOOL dhuhurAdhanUserSound;
+	NSString *dhuhurAdhanUserSoundFile;
+	
+	//asr alert options
+	int asrAdhanOption;
+	BOOL asrAdhanUserSound;
+	NSString *asrAdhanUserSoundFile;
+	
+	//maghrib alert options
+	int maghribAdhanOption;
+	BOOL maghribAdhanUserSound;
+	NSString *maghribAdhanUserSoundFile;
+	
+	//isha alert options
+	int ishaAdhanOption;
+	BOOL ishaAdhanUserSound;
+	NSString *ishaAdhanUserSoundFile;
+	
+	//shuruq reminder alert options
+	int shuruqReminderAdhanOption;
+	BOOL shuruqReminderAdhanUserSound;
+	NSString *shuruqReminderAdhanUserSoundFile;
+	
+	//fajr reminder alert options
+	int fajrReminderAdhanOption;
+	BOOL fajrReminderAdhanUserSound;
+	NSString *fajrReminderAdhanUserSoundFile;
+	
+	
 	BOOL fajrReminder;
 	int minutesBeforeFajr;
 	BOOL shuruqReminder;
@@ -92,6 +123,11 @@
 	BOOL enableGrowl;
 	BOOL stickyGrowl;
 	BOOL pauseItunesPref;
+	
+	//current values
+	BOOL userSound;
+	NSString *userSoundFile;
+	int soundFile;
 }
 
 

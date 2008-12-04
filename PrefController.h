@@ -62,6 +62,7 @@
 	NSString *prayerAdhanKey;
 	NSString *customAdhanKey;
 	NSString *customAdhanFileKey;
+	NSNumber *tempSelection;
 	
 	NSMutableArray *playingStatus;
 	BOOL playingPreview;
