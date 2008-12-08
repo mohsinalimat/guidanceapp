@@ -35,8 +35,8 @@ static AppController *sharedAppController = nil;
 
 	adhanIsPlaying = NO;
 	currentAdhan = 0;
-	adhanOptions = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", nil];
-	[adhanOptions retain];
+	adhanList = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", @"fajr", nil];
+	[adhanList retain];
 	
 	[self checkPrayerStatus];
 	
@@ -54,7 +54,7 @@ static AppController *sharedAppController = nil;
 	
 	// bring  up welcome window if this is the first time the program has been ran 
 	// or if the preferences are incompatible
-	if(firstRun || preferencesVersion < [self getBuildNumber]) {
+	if(firstRun) {
 		[[WelcomeController sharedWelcomeWindowController] showWindow:nil];
 		[[[WelcomeController sharedWelcomeWindowController] window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
@@ -446,6 +446,9 @@ static AppController *sharedAppController = nil;
 		
 		if(!silentMode && fajrAdhanOption != 0 && ![fajrTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = fajrTime;
+			userSound = fajrAdhanUserSound;
+			userSoundFile = fajrAdhanUserSoundFile;
+			adhanOption = fajrAdhanOption;
 			[self playAdhan:1];
 		}
 	}
@@ -465,6 +468,9 @@ static AppController *sharedAppController = nil;
 		
 		if(!silentMode && dhuhurAdhanOption != 0 && ![dhuhurTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = dhuhurTime;
+			userSound = dhuhurAdhanUserSound;
+			userSoundFile = dhuhurAdhanUserSoundFile;
+			adhanOption = dhuhurAdhanOption;
 			[self playAdhan:2];
 		}
 	}
@@ -484,6 +490,9 @@ static AppController *sharedAppController = nil;
 		
 		if(!silentMode && asrAdhanOption != 0 && ![asrTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = asrTime;
+			userSound = asrAdhanUserSound;
+			userSoundFile = asrAdhanUserSoundFile;
+			adhanOption = asrAdhanOption;
 			[self playAdhan:3];
 		}
 	}
@@ -503,6 +512,9 @@ static AppController *sharedAppController = nil;
 		
 		if(!silentMode && maghribAdhanOption != 0 && ![maghribTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = maghribTime;
+			userSound = maghribAdhanUserSound;
+			userSoundFile = maghribAdhanUserSoundFile;
+			adhanOption = maghribAdhanOption;
 			[self playAdhan:4];
 		}
 	}
@@ -522,8 +534,10 @@ static AppController *sharedAppController = nil;
 		
 		if(!silentMode && ishaAdhanOption != 0 && ![ishaTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = ishaTime;
+			userSound = ishaAdhanUserSound;
+			userSoundFile = ishaAdhanUserSoundFile;
+			adhanOption = ishaAdhanOption;
 			[self playAdhan:5];
-			NSLog(@"play adhan for isha");
 		}
 	}
 	
@@ -542,6 +556,9 @@ static AppController *sharedAppController = nil;
 		
 		if(!silentMode && fajrReminderAdhanOption != 0 && ![fajrReminderTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = fajrReminderTime;
+			userSound = fajrReminderAdhanUserSound;
+			userSoundFile = fajrReminderAdhanUserSoundFile;
+			adhanOption = fajrReminderAdhanOption;
 			[self playAdhan:0];
 		}	
 		
@@ -562,6 +579,9 @@ static AppController *sharedAppController = nil;
 		
 		if(!silentMode && shuruqReminderAdhanOption != 0 && ![shuruqReminderTime isEqualToDate:lastAdhanAlert]) {
 			lastAdhanAlert = shuruqReminderTime;
+			userSound = shuruqReminderAdhanUserSound;
+			userSoundFile = shuruqReminderAdhanUserSoundFile;
+			adhanOption = shuruqReminderAdhanOption;
 			[self playAdhan:0];
 		}	
 		
@@ -573,7 +593,6 @@ static AppController *sharedAppController = nil;
 
 - (void) playAdhan:(int)prayerIndex 
 {
-	NSLog(@"play adhan");
 	if(![self isAdhanPlaying]) {
 		
 		if(pauseItunesPref) {
@@ -587,7 +606,7 @@ static AppController *sharedAppController = nil;
 		if(userSound) {
 			adhan = [[NSSound alloc] initWithContentsOfFile:userSoundFile byReference:YES];
 		} else {
-			adhan = [NSSound soundNamed:[adhanOptions objectAtIndex:soundFile]];
+			adhan = [NSSound soundNamed:[adhanList objectAtIndex:adhanOption-2]];
 		}	
 		
 		[adhan setDelegate:self];
@@ -687,39 +706,39 @@ static AppController *sharedAppController = nil;
 	silentMode = [userDefaults boolForKey:@"EnableSilentMode"];
 	
 	//fajr alert options
-	fajrAdhanOption = [userDefaults boolForKey:@""];
-	fajrAdhanUserSound = [userDefaults integerForKey:@""];
-	fajrAdhanUserSoundFile = [userDefaults stringForKey:@""];
+	fajrAdhanOption = [userDefaults integerForKey:@"FajrAdhanOption"];
+	fajrAdhanUserSound = [userDefaults boolForKey:@"FajrAdhanUserSound"];
+	fajrAdhanUserSoundFile = [userDefaults stringForKey:@"FajrAdhanUserSoundFile"];
 	
 	//dhuhur alert options
-	dhuhurAdhanOption = [userDefaults boolForKey:@""];
-	dhuhurAdhanUserSound = [userDefaults integerForKey:@""];
-	dhuhurAdhanUserSoundFile = [userDefaults stringForKey:@""];
+	dhuhurAdhanOption = [userDefaults integerForKey:@"DhuhurAdhanOption"];
+	dhuhurAdhanUserSound = [userDefaults boolForKey:@"DhuhurAdhanUserSound"];
+	dhuhurAdhanUserSoundFile = [userDefaults stringForKey:@"DhuhurAdhanUserSoundFile"];
 	
 	//asr alert options
-	asrAdhanOption = [userDefaults boolForKey:@""];
-	asrAdhanUserSound = [userDefaults integerForKey:@""];
-	asrAdhanUserSoundFile = [userDefaults stringForKey:@""];
+	asrAdhanOption = [userDefaults integerForKey:@"AsrAdhanOption"];
+	asrAdhanUserSound = [userDefaults boolForKey:@"AsrAdhanUserSound"];
+	asrAdhanUserSoundFile = [userDefaults stringForKey:@"AsrAdhanUserSoundFile"];
 	
 	//maghrib alert options
-	maghribAdhanOption = [userDefaults boolForKey:@""];
-	maghribAdhanUserSound = [userDefaults integerForKey:@""];
-	maghribAdhanUserSoundFile = [userDefaults stringForKey:@""];
+	maghribAdhanOption = [userDefaults integerForKey:@"MaghribAdhanOption"];
+	maghribAdhanUserSound = [userDefaults boolForKey:@"MaghribAdhanUserSound"];
+	maghribAdhanUserSoundFile = [userDefaults stringForKey:@"MaghribAdhanUserSoundFile"];
 	
 	//isha alert options
-	ishaAdhanOption = [userDefaults boolForKey:@""];
-	ishaAdhanUserSound = [userDefaults integerForKey:@""];
-	ishaAdhanUserSoundFile = [userDefaults stringForKey:@""];
+	ishaAdhanOption = [userDefaults integerForKey:@"IshaAdhanOption"];
+	ishaAdhanUserSound = [userDefaults boolForKey:@"IshaAdhanUserSound"];
+	ishaAdhanUserSoundFile = [userDefaults stringForKey:@"IshaAdhanUserSoundFile"];
 	
 	//shuruq reminder alert options
-	shuruqReminderAdhanOption = [userDefaults boolForKey:@""];
-	shuruqReminderAdhanUserSound = [userDefaults integerForKey:@""];
-	shuruqReminderAdhanUserSoundFile = [userDefaults stringForKey:@""];
+	shuruqReminderAdhanOption = [userDefaults integerForKey:@"ShuruqReminderAdhanOption"];
+	shuruqReminderAdhanUserSound = [userDefaults boolForKey:@"ShuruqReminderAdhanUserSound"];
+	shuruqReminderAdhanUserSoundFile = [userDefaults stringForKey:@"ShuruqReminderAdhanUserSoundFile"];
 	
 	//fajr reminder alert options
-	fajrReminderAdhanOption = [userDefaults boolForKey:@""];
-	fajrReminderAdhanUserSound = [userDefaults integerForKey:@""];
-	fajrReminderAdhanUserSoundFile = [userDefaults stringForKey:@""];
+	fajrReminderAdhanOption = [userDefaults integerForKey:@"FajrReminderAdhanOption"];
+	fajrReminderAdhanUserSound = [userDefaults boolForKey:@"FajrReminderAdhanUserSound"];
+	fajrReminderAdhanUserSoundFile = [userDefaults stringForKey:@"FajrReminderAdhanUserSoundFile"];
 	
 	fajrReminder = [userDefaults boolForKey:@"FajrReminder"];
 	minutesBeforeFajr = [userDefaults integerForKey:@"MinutesBeforeFajr"];

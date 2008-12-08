@@ -49,7 +49,7 @@
 	NSSound *adhan;
 	int currentAdhan;
 	BOOL adhanIsPlaying;
-	NSArray *adhanOptions;
+	NSArray *adhanList;
 	
 	
 	/* PREFERENCES */
@@ -127,7 +127,7 @@
 	//current values
 	BOOL userSound;
 	NSString *userSoundFile;
-	int soundFile;
+	int adhanOption;
 }
 
 
