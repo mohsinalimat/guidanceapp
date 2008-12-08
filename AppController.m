@@ -595,6 +595,14 @@ static AppController *sharedAppController = nil;
 {
 	if(![self isAdhanPlaying]) {
 		
+		//if somehow an invalid index is passed in then default to adhan at index 2
+		//or if an invalid custom file is passed then play adhan at index 2
+		if( ((adhanOption < 2 || adhanOption > 6) && !userSound) || (userSound && ![[NSFileManager defaultManager] fileExistsAtPath:userSoundFile]) ) {
+			userSound = NO;
+			adhanOption = 2;
+		}	
+		
+		
 		if(pauseItunesPref) {
 			[self pauseItunes];
 		}

@@ -43,31 +43,31 @@
 	<key>PauseItunes</key>
 	<true/>
 	<key>FajrAdhanOption</key>
-	<integer>4</integer>
+	<integer>6</integer>
 	<key>FajrAdhanUserSound</key>
 	<false/>
 	<key>FajrAdhanUserSoundFile</key>
 	<string></string>
 	<key>DhuhurAdhanOption</key>
-	<integer>0</integer>
+	<integer>2</integer>
 	<key>DhuhurAdhanUserSound</key>
 	<false/>
 	<key>DhuhurAdhanUserSoundFile</key>
 	<string></string>
 	<key>AsrAdhanOption</key>
-	<integer>0</integer>
+	<integer>2</integer>
 	<key>AsrAdhanUserSound</key>
 	<false/>
 	<key>AsrAdhanUserSoundFile</key>
 	<string></string>
 	<key>MaghribAdhanOption</key>
-	<integer>0</integer>
+	<integer>2</integer>
 	<key>MaghribAdhanUserSound</key>
 	<false/>
 	<key>MaghribAdhanUserSoundFile</key>
 	<string></string>
 	<key>IshaAdhanOption</key>
-	<integer>0</integer>
+	<integer>2</integer>
 	<key>IshaAdhanUserSound</key>
 	<false/>
 	<key>IshaAdhanUserSoundFile</key>
@@ -77,7 +77,7 @@
 	<key>MinutesBeforeFajr</key>
 	<integer>45</integer>
 	<key>FajrReminderAdhanOption</key>
-	<integer>4</integer>
+	<integer>6</integer>
 	<key>FajrReminderAdhanUserSound</key>
 	<false/>
 	<key>FajrReminderAdhanUserSoundFile</key>
@@ -87,7 +87,7 @@
 	<key>MinutesBeforeShuruq</key>
 	<integer>30</integer>
 	<key>ShuruqReminderAdhanOption</key>
-	<integer>4</integer>
+	<integer>6</integer>
 	<key>ShuruqReminderAdhanUserSound</key>
 	<false/>
 	<key>ShuruqReminderAdhanUserSoundFile</key>

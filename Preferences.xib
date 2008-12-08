@@ -570,13 +570,13 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<object class="NSButton" id="162126133">
 											<reference key="NSNextResponder" ref="12819140"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{16, 88}, {93, 18}}</string>
+											<string key="NSFrame">{{16, 88}, {154, 18}}</string>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="102861513">
 												<int key="NSCellFlags">67239424</int>
 												<int key="NSCellFlags2">0</int>
-												<string key="NSContents">Play Adhan           </string>
+												<string key="NSContents">Fajr reminder           </string>
 												<reference key="NSSupport" ref="1018205841"/>
 												<reference key="NSControlView" ref="162126133"/>
 												<int key="NSButtonFlags">1211912703</int>
@@ -597,7 +597,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<object class="NSTextField" id="282030736">
 											<reference key="NSNextResponder" ref="12819140"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{111, 86}, {34, 22}}</string>
+											<string key="NSFrame">{{127, 86}, {34, 22}}</string>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="338021971">
@@ -678,7 +678,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<object class="NSTextField" id="579366481">
 											<reference key="NSNextResponder" ref="12819140"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{148, 89}, {155, 17}}</string>
+											<string key="NSFrame">{{164, 89}, {155, 17}}</string>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="565348160">
@@ -694,13 +694,13 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<object class="NSButton" id="868789386">
 											<reference key="NSNextResponder" ref="12819140"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{15, 158}, {92, 18}}</string>
+											<string key="NSFrame">{{15, 158}, {107, 18}}</string>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="1068048427">
 												<int key="NSCellFlags">67239424</int>
 												<int key="NSCellFlags2">0</int>
-												<string key="NSContents">Play Adhan</string>
+												<string key="NSContents">Fajr reminder</string>
 												<reference key="NSSupport" ref="1018205841"/>
 												<reference key="NSControlView" ref="868789386"/>
 												<int key="NSButtonFlags">1211912703</int>
@@ -716,7 +716,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<object class="NSTextField" id="82739592">
 											<reference key="NSNextResponder" ref="12819140"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{146, 160}, {172, 17}}</string>
+											<string key="NSFrame">{{163, 160}, {172, 17}}</string>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="529769104">
@@ -732,7 +732,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 										<object class="NSTextField" id="303135180">
 											<reference key="NSNextResponder" ref="12819140"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{110, 157}, {33, 22}}</string>
+											<string key="NSFrame">{{127, 157}, {33, 22}}</string>
 											<reference key="NSSuperview" ref="12819140"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="132332257">
