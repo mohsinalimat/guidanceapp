@@ -20,6 +20,12 @@ static AppController *sharedAppController = nil;
 	NSDictionary *appDefaults = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 	[userDefaults registerDefaults:appDefaults];
 	
+	menuBarAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+	    [NSColor redColor], NSForegroundColorAttributeName,
+	    [NSFont menuBarFontOfSize:0.0], NSFontAttributeName,
+	    nil];
+	wasItunesRunning = NO;
+
 	[self createAppMenu];
 	
 	[self loadPreferences];
@@ -160,7 +166,15 @@ static AppController *sharedAppController = nil;
 	[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 	[dateFormatter setDateStyle:NSDateFormatterNoStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	if ([self clockShows24Hr])
+		[dateFormatter setDateFormat:@"HH:mm"];
+	else {
+		// Use regional formatting, might require 24hr formatting
+		[dateFormatter setDateStyle:NSDateFormatterNoStyle];
+		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	}
 	
+	[hijriItem setTitle:[self hijriDate]];
 	[fajrItem setTitle:[NSString stringWithFormat:@"Fajr:\t\t %@",[dateFormatter stringFromDate:fajrTime]]];
 	[shuruqItem setTitle:[NSString stringWithFormat:@"Shuruq:\t\t %@",[dateFormatter stringFromDate:shuruqTime]]];
 	[dhuhurItem setTitle:[NSString stringWithFormat:@"Dhuhur:\t\t %@",[dateFormatter stringFromDate:dhuhurTime]]];
@@ -171,6 +185,18 @@ static AppController *sharedAppController = nil;
 	[dateFormatter release];
 }
 
+/*
+ * return true if the clock is using 24 hour format
+ */
+- (BOOL) clockShows24Hr
+{
+	CFStringRef clockID = CFSTR("com.apple.MenuBarClock");
+	CFStringRef use24HourClock = CFSTR("Use24HourClock");
+	
+	Boolean hasKey;
+	BOOL result = CFPreferencesGetAppBooleanValue(use24HourClock, clockID, &hasKey);
+	return (hasKey && result);
+}
 
 
 
@@ -221,6 +247,8 @@ static AppController *sharedAppController = nil;
 	
 	if(displayNextPrayer) {
 		
+		BOOL startingSoon = NO;
+		const double soonEnough = 3600.0;  // 30 minutes
 		if([fajrTime timeIntervalSinceNow] >= 0 || ([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60)) {
 			
 			if([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60) {
@@ -230,6 +258,7 @@ static AppController *sharedAppController = nil;
 				
 				nextPrayerNameDisplay = [self getNameDisplay:@"Fajr"];
 				nextPrayerTimeDisplay = [self getTimeDisplay:fajrTime];
+				startingSoon = [fajrTime timeIntervalSinceNow] <= soonEnough;
 			}
 			
 		} else if([shuruqTime timeIntervalSinceNow] >= 0 || ([shuruqTime timeIntervalSinceNow] <= 0 && [shuruqTime timeIntervalSinceNow] > -60)) {
@@ -241,6 +270,7 @@ static AppController *sharedAppController = nil;
 				
 				nextPrayerNameDisplay = [self getNameDisplay:@"Shuruq"];
 				nextPrayerTimeDisplay = [self getTimeDisplay:shuruqTime];
+				startingSoon = [shuruqTime timeIntervalSinceNow] <= soonEnough;
 			}
 			
 		} else if([dhuhurTime timeIntervalSinceNow] >= 0 || ([dhuhurTime timeIntervalSinceNow] <= 0 && [dhuhurTime timeIntervalSinceNow] > -60)) {
@@ -252,6 +282,7 @@ static AppController *sharedAppController = nil;
 				
 				nextPrayerNameDisplay = [self getNameDisplay:@"Dhuhur"];
 				nextPrayerTimeDisplay = [self getTimeDisplay:dhuhurTime];
+				startingSoon = [dhuhurTime timeIntervalSinceNow] <= soonEnough;
 			}
 			
 		} else if([asrTime timeIntervalSinceNow] >= 0 || ([asrTime timeIntervalSinceNow] <= 0 && [asrTime timeIntervalSinceNow] > -60)) {
@@ -263,6 +294,7 @@ static AppController *sharedAppController = nil;
 				
 				nextPrayerNameDisplay = [self getNameDisplay:@"Asr"];
 				nextPrayerTimeDisplay = [self getTimeDisplay:asrTime];
+				startingSoon = [asrTime timeIntervalSinceNow] <= soonEnough;
 			}
 			
 		} else if([maghribTime timeIntervalSinceNow] >= 0 || ([maghribTime timeIntervalSinceNow] <= 0 && [maghribTime timeIntervalSinceNow] > -60)) {
@@ -274,6 +306,7 @@ static AppController *sharedAppController = nil;
 				
 				nextPrayerNameDisplay = [self getNameDisplay:@"Maghrib"];
 				nextPrayerTimeDisplay = [self getTimeDisplay:maghribTime];
+				startingSoon = [maghribTime timeIntervalSinceNow] <= soonEnough;
 			}
 			
 		} else if([ishaTime timeIntervalSinceNow] >= 0 || ([ishaTime timeIntervalSinceNow] <= 0 && [ishaTime timeIntervalSinceNow] > -60)) {
@@ -285,15 +318,24 @@ static AppController *sharedAppController = nil;
 				
 				nextPrayerNameDisplay = [self getNameDisplay:@"Isha"];
 				nextPrayerTimeDisplay = [self getTimeDisplay:ishaTime];
+				startingSoon = [ishaTime timeIntervalSinceNow] <= soonEnough;
 			}
 			
 		} else {
 			
 			nextPrayerNameDisplay = [self getNameDisplay:@"Fajr"];
 			nextPrayerTimeDisplay = [self getTimeDisplay:tomorrowFajrTime];
+			startingSoon = [tomorrowFajrTime timeIntervalSinceNow] <= soonEnough;
 		}
 		
-		[menuBar setTitle:[NSString stringWithFormat:@"%@ %@", nextPrayerNameDisplay, nextPrayerTimeDisplay]];
+		NSString *title = [NSString stringWithFormat:@"%@ %@", nextPrayerNameDisplay, nextPrayerTimeDisplay];
+		if (!startingSoon) {
+			[menuBar setTitle:title];
+		} else {
+			NSAttributedString *ac = [[NSAttributedString alloc] initWithString:title attributes:menuBarAttributes];
+			[menuBar setAttributedTitle:ac];
+			[ac release];
+		}
 		
 	} else {
 		[menuBar setTitle:@""];
@@ -639,6 +681,7 @@ static AppController *sharedAppController = nil;
 
 - (void) stopAdhan
 {
+	[self continueItunes];
 	[adhan stop];
 }
 
@@ -669,11 +712,26 @@ static AppController *sharedAppController = nil;
 	
 	NSAppleScript *pauseItunesScript = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:&errors];
 	
-	[pauseItunesScript executeAndReturnError:&errors];
+	wasItunesRunning = [[pauseItunesScript executeAndReturnError:&errors] booleanValue];
 	
 	[pauseItunesScript release];
 }
 
+- (void) continueItunes
+{
+	if (pauseItunesPref && wasItunesRunning) {
+		NSURL *scriptURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"continueItunes" ofType:@"scpt"]];
+		NSDictionary *errors = [NSDictionary dictionary];
+		
+		NSAppleScript *continueItunesScript = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:&errors];
+		
+		[[continueItunesScript executeAndReturnError:&errors] booleanValue];
+		
+		[continueItunesScript release];
+	}
+	wasItunesRunning = NO;
+}
+		
 
 
 
@@ -709,6 +767,7 @@ static AppController *sharedAppController = nil;
 	asrOffset = [userDefaults integerForKey:@"AsrOffset"];
 	maghribOffset = [userDefaults integerForKey:@"MaghribOffset"];
 	ishaOffset = [userDefaults integerForKey:@"IshaOffset"];
+	hijriOffset = [userDefaults integerForKey:@"HijriOffset"];
 	
 	// alert preferences
 	silentMode = [userDefaults boolForKey:@"EnableSilentMode"];
@@ -1028,6 +1087,33 @@ static AppController *sharedAppController = nil;
 }
 
 
+- (NSString *) hijriDate
+{
+	NSTimeInterval hijriOffsetInSeconds = (hijriOffset - 3) * 60 * 60 * 24.0;
+	NSCalendar *islamic = [[NSCalendar alloc] initWithCalendarIdentifier:NSIslamicCivilCalendar];
+	unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit;
+	NSDate *date = [NSDate dateWithTimeIntervalSinceNow:hijriOffsetInSeconds];
+	NSDateComponents *comps = [islamic components:unitFlags fromDate:date];
+	NSString *month;
+	switch ([comps month]) {
+		case 1: month = @"Muharram"; break;
+		case 2: month = @"Safar"; break;
+		case 3: month = @"Rabi Al-Awwal"; break;
+		case 4: month = @"Rabi Al-Thani"; break;
+		case 5: month = @"Jumada Al-Awwal"; break;
+		case 6: month = @"Jumada Al-Thani"; break;
+		case 7: month = @"Rajab"; break;
+		case 8: month = @"Sha'ban"; break;
+		case 9: month = @"Ramadhan"; break;
+		case 10: month = @"Shawwal"; break;
+		case 11: month = @"Dhul Qa'idah"; break;
+		case 12: month = @"Dhul Hijjah"; break;
+	}
+
+	NSString *str = [NSString stringWithFormat:@"%2d %@ %d",
+					 [comps day], month, [comps year]];
+	return str;
+}
 
 @end
 

@@ -22,6 +22,7 @@
 	/* GUI */
 	NSStatusItem *menuBar;
 	IBOutlet NSMenu *appMenu;
+	IBOutlet NSMenuItem *hijriItem;
 	IBOutlet NSMenuItem *fajrItem;
 	IBOutlet NSMenuItem *shuruqItem;
 	IBOutlet NSMenuItem *dhuhurItem;
@@ -50,6 +51,7 @@
 	int currentAdhan;
 	BOOL adhanIsPlaying;
 	NSArray *adhanList;
+	NSDictionary *menuBarAttributes;	
 	
 	
 	/* PREFERENCES */
@@ -76,6 +78,7 @@
 	int asrOffset;
 	int maghribOffset;
 	int ishaOffset;
+	int hijriOffset;
 	
 	
 	BOOL silentMode;
@@ -128,6 +131,7 @@
 	BOOL userSound;
 	NSString *userSoundFile;
 	int adhanOption;
+	BOOL wasItunesRunning;
 }
 
 
@@ -150,9 +154,11 @@
 - (BOOL) isAdhanPlaying;
 - (void) stopAdhan;
 - (void) pauseItunes;
+- (void) continueItunes;
 
 - (void) loadPreferences;
 - (void) applyPrefs;
+- (BOOL) clockShows24Hr;
 
 
 - (void) checkForUpdate:(BOOL)quiet;
@@ -171,6 +177,7 @@
 - (void) growlNotificationWasClicked:(id)clickContext;
 - (BOOL) isGrowlInstalled;
 
+- (NSString *) hijriDate;
 
 
 @end
