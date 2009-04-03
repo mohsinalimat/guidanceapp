@@ -185,6 +185,7 @@ static AppController *sharedAppController = nil;
 	[dateFormatter release];
 }
 
+
 /*
  * return true if the clock is using 24 hour format
  */
@@ -197,8 +198,6 @@ static AppController *sharedAppController = nil;
 	BOOL result = CFPreferencesGetAppBooleanValue(use24HourClock, clockID, &hasKey);
 	return (hasKey && result);
 }
-
-
 
 
 /*
@@ -646,7 +645,7 @@ static AppController *sharedAppController = nil;
 		
 		
 		if(pauseItunesPref) {
-			[self pauseItunes];
+			wasItunesRunning = [self pauseItunes];
 		}
 		
 		adhanIsPlaying = YES;
@@ -681,7 +680,6 @@ static AppController *sharedAppController = nil;
 
 - (void) stopAdhan
 {
-	[self continueItunes];
 	[adhan stop];
 }
 
@@ -701,10 +699,12 @@ static AppController *sharedAppController = nil;
 		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
 	}
 	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
-	
 }
 
 
+/*
+ * pause itunes if its currently running and playing music
+ */
 - (void) pauseItunes 
 {
 	NSURL *scriptURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"pauseItunes" ofType:@"scpt"]];
@@ -712,28 +712,11 @@ static AppController *sharedAppController = nil;
 	
 	NSAppleScript *pauseItunesScript = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:&errors];
 	
-	wasItunesRunning = [[pauseItunesScript executeAndReturnError:&errors] booleanValue];
+	[pauseItunesScript executeAndReturnError:&errors];
 	
 	[pauseItunesScript release];
 }
-
-- (void) continueItunes
-{
-	if (pauseItunesPref && wasItunesRunning) {
-		NSURL *scriptURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"continueItunes" ofType:@"scpt"]];
-		NSDictionary *errors = [NSDictionary dictionary];
 		
-		NSAppleScript *continueItunesScript = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:&errors];
-		
-		[[continueItunesScript executeAndReturnError:&errors] booleanValue];
-		
-		[continueItunesScript release];
-	}
-	wasItunesRunning = NO;
-}
-		
-
-
 
 /*
  * load all the values from the user preferences file into variables

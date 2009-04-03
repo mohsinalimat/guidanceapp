@@ -131,7 +131,6 @@
 	BOOL userSound;
 	NSString *userSoundFile;
 	int adhanOption;
-	BOOL wasItunesRunning;
 }
 
 
@@ -154,7 +153,6 @@
 - (BOOL) isAdhanPlaying;
 - (void) stopAdhan;
 - (void) pauseItunes;
-- (void) continueItunes;
 
 - (void) loadPreferences;
 - (void) applyPrefs;
