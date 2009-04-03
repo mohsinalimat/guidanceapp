@@ -110,6 +110,9 @@
 	//select the timezone in the timezone drop down
 	[timezone selectItemAtIndex:[timezoneArray indexOfObject:[NSNumber numberWithFloat:[userDefaults floatForKey:@"Timezone"]]]];
 
+	// select volume
+	[volumeSlider setFloatValue:[userDefaults floatForKey:@"AdhanVolume"]];
+	
 	// check if Guidance still starts at login and modify the checkbox and preference value 
 	// to reflect this because user can modify this externally in the system preferences
 	if([self startsAtLogin]) {
@@ -237,6 +240,7 @@
                 [loginItems removeObjectAtIndex:i];
         }
 	}
+	[loginObject release];
 
     CFPreferencesSetValue((CFStringRef) @"AutoLaunchedApplicationDictionary", loginItems, (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost); 
 	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
@@ -497,12 +501,14 @@
 		[maghribAdhanPreview setEnabled:NO];
 		[ishaAdhanOption setEnabled:NO];
 		[ishaAdhanPreview setEnabled:NO];
+		[volumeSlider setEnabled:NO];
 		
 		[fajrAdhanTitleText setTextColor:[NSColor grayColor]];
 		[dhuhurAdhanTitleText setTextColor:[NSColor grayColor]];
 		[asrAdhanTitleText setTextColor:[NSColor grayColor]];
 		[maghribAdhanTitleText setTextColor:[NSColor grayColor]];
 		[ishaAdhanTitleText setTextColor:[NSColor grayColor]];
+		[volumeText setTextColor:[NSColor grayColor]];
 		
 		[shuruqReminder setEnabled:NO];
 		[minutesBeforeShuruq setEnabled:NO];
@@ -530,12 +536,14 @@
 		[maghribAdhanPreview setEnabled:YES];
 		[ishaAdhanOption setEnabled:YES];
 		[ishaAdhanPreview setEnabled:YES];		
+		[volumeSlider setEnabled:YES];
 		
 		[fajrAdhanTitleText setTextColor:[NSColor blackColor]];
 		[dhuhurAdhanTitleText setTextColor:[NSColor blackColor]];
 		[asrAdhanTitleText setTextColor:[NSColor blackColor]];	
 		[maghribAdhanTitleText setTextColor:[NSColor blackColor]];
 		[ishaAdhanTitleText setTextColor:[NSColor blackColor]];
+		[volumeText setTextColor:[NSColor blackColor]];
 		
 		[shuruqReminder setEnabled:YES];
 		if([shuruqReminder state] == NSOnState) {
@@ -665,7 +673,8 @@
 		if (!playingPreview) {
 			
 			[playingStatus replaceObjectAtIndex:prayer-1 withObject:[NSNumber numberWithBool:YES]];
-			
+
+			NSString *path;
 			switch ([adhanOption indexOfSelectedItem])
 			{
 				case 0:
@@ -673,25 +682,25 @@
 				case 1:
 					return;
 				case 2:	
-					sound = [NSSound soundNamed:@"yusufislam"];
+					path = [[NSBundle mainBundle] pathForResource:@"yusufislam" ofType:@"mp3"];
 					break;
 				case 3:		
-					sound = [NSSound soundNamed:@"makkah"]; 
+					path = [[NSBundle mainBundle] pathForResource:@"makkah" ofType:@"mp3"];
 					break;
 				case 4:
-					sound = [NSSound soundNamed:@"alaqsa"]; 
+					path = [[NSBundle mainBundle] pathForResource:@"alaqsa" ofType:@"mp3"];
 					break;
 				case 5:
-					sound = [NSSound soundNamed:@"istanbul"];
+					path = [[NSBundle mainBundle] pathForResource:@"istanbul" ofType:@"mp3"];
 					break;
 				case 6:
-					sound = [NSSound soundNamed:@"fajr"];
+					path = [[NSBundle mainBundle] pathForResource:@"fajr" ofType:@"mp3"];
 					break;
 				case 7:
 					return;
 				case 8:
 					if([fileManager fileExistsAtPath:[userDefaults stringForKey:customAdhanFileKey]]) {
-						sound = [[NSSound alloc] initWithContentsOfFile:[userDefaults stringForKey:customAdhanFileKey] byReference:NO];
+						path = [userDefaults stringForKey:customAdhanFileKey];
 					} else {
 						// remove custom file option and 
 						// go back to default adhan
@@ -705,8 +714,10 @@
 					}
 					break;
 				default:
-					break;
+					return;
 			}
+			
+			sound = [[QTMovie movieWithURL:[NSURL fileURLWithPath:path] error:nil] retain];
 			
 			if([userDefaults boolForKey:@"PauseItunes"]) {
 				[[AppController sharedController] pauseItunes];	
@@ -716,18 +727,31 @@
 			[adhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
 			
 			playingPreview = YES;
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:sound];
 			[sound setDelegate:self];
+			[sound setVolume:[volumeSlider floatValue]];
 			[sound play];
 			
 		} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
 			[sound stop];
+			[self soundDidEnd:nil];
 		}
 	}
 }
 
-- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
+- (void)volumeChanged:(id)sender {
+	float v = [volumeSlider floatValue];
+	[userDefaults setFloat:v forKey:@"AdhanVolume"];
+	if (playingPreview && sound)
+		[sound setVolume:v];
+	[self saveAndApply];
+}
+
+
+- (void) soundDidEnd:(id)notification
 {
 	[self resetPreviewButtons];
+	[sound release];
 }
 
 - (void) resetPreviewButtons 
@@ -864,6 +888,7 @@
 		[adhanButton removeItemAtIndex:8];
 		[adhanButton insertItemWithTitle:onlyName atIndex:8];
 	}
+	[onlyName release];
 }
 
 - (void) restoreCustomAdhans

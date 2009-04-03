@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <QTKit/QTKit.h>
 #import "DBPrefsWindowController.h"
 #import "AppController.h"
 
@@ -66,7 +67,7 @@
 	
 	NSMutableArray *playingStatus;
 	BOOL playingPreview;
-	NSSound *sound;
+	QTMovie *sound;
 	
 	IBOutlet NSButton *enableSilent;
 	
@@ -80,12 +81,14 @@
     IBOutlet NSButton *maghribAdhanPreview;	
 	IBOutlet NSPopUpButton *ishaAdhanOption;
     IBOutlet NSButton *ishaAdhanPreview;
+	IBOutlet NSSlider *volumeSlider;
 	
 	IBOutlet NSTextField *fajrAdhanTitleText;
 	IBOutlet NSTextField *dhuhurAdhanTitleText;
 	IBOutlet NSTextField *asrAdhanTitleText;
 	IBOutlet NSTextField *maghribAdhanTitleText;
 	IBOutlet NSTextField *ishaAdhanTitleText;
+	IBOutlet NSTextField *volumeText;
 	
 	IBOutlet NSButton *shuruqReminder;
 	IBOutlet NSTextField *minutesBeforeShuruq;
@@ -160,7 +163,8 @@
 - (IBAction) previewShuruqReminder:(id)sender;
 - (IBAction) previewFajrReminder:(id)sender;
 - (void) playPreview:(int)prayer;
-- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful;
+- (IBAction)volumeChanged:(id)sender;
+- (void) soundDidEnd:(id)notification;
 - (void) resetPreviewButtons;
 
 - (IBAction) selectFajrAdhan:(id)sender;
