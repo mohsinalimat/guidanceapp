@@ -118,7 +118,6 @@
 	BOOL fajrReminderAdhanUserSound;
 	NSString *fajrReminderAdhanUserSoundFile;
 	
-	
 	BOOL fajrReminder;
 	int minutesBeforeFajr;
 	BOOL shuruqReminder;
@@ -126,6 +125,7 @@
 	BOOL enableGrowl;
 	BOOL stickyGrowl;
 	BOOL pauseItunesPref;
+	NSCalendar *islamicCalendar;
 	
 	//current values
 	BOOL userSound;

@@ -24,7 +24,9 @@ static AppController *sharedAppController = nil;
 	    [NSColor redColor], NSForegroundColorAttributeName,
 	    [NSFont menuBarFontOfSize:0.0], NSFontAttributeName,
 	    nil];
-	wasItunesRunning = NO;
+	
+	//islamicCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSIslamicCivilCalendar];
+	islamicCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSIslamicCalendar];
 
 	[self createAppMenu];
 	
@@ -169,7 +171,6 @@ static AppController *sharedAppController = nil;
 	if ([self clockShows24Hr])
 		[dateFormatter setDateFormat:@"HH:mm"];
 	else {
-		// Use regional formatting, might require 24hr formatting
 		[dateFormatter setDateStyle:NSDateFormatterNoStyle];
 		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 	}
@@ -187,7 +188,7 @@ static AppController *sharedAppController = nil;
 
 
 /*
- * return true if the clock is using 24 hour format
+ * return true if the system clock is using a 24 hour format
  */
 - (BOOL) clockShows24Hr
 {
@@ -645,7 +646,7 @@ static AppController *sharedAppController = nil;
 		
 		
 		if(pauseItunesPref) {
-			wasItunesRunning = [self pauseItunes];
+			[self pauseItunes];
 		}
 		
 		adhanIsPlaying = YES;
@@ -1070,32 +1071,25 @@ static AppController *sharedAppController = nil;
 }
 
 
+/*
+ *
+ */
 - (NSString *) hijriDate
 {
 	NSTimeInterval hijriOffsetInSeconds = (hijriOffset - 3) * 60 * 60 * 24.0;
-	NSCalendar *islamic = [[NSCalendar alloc] initWithCalendarIdentifier:NSIslamicCivilCalendar];
-	unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit;
-	NSDate *date = [NSDate dateWithTimeIntervalSinceNow:hijriOffsetInSeconds];
-	NSDateComponents *comps = [islamic components:unitFlags fromDate:date];
-	NSString *month;
-	switch ([comps month]) {
-		case 1: month = @"Muharram"; break;
-		case 2: month = @"Safar"; break;
-		case 3: month = @"Rabi Al-Awwal"; break;
-		case 4: month = @"Rabi Al-Thani"; break;
-		case 5: month = @"Jumada Al-Awwal"; break;
-		case 6: month = @"Jumada Al-Thani"; break;
-		case 7: month = @"Rajab"; break;
-		case 8: month = @"Sha'ban"; break;
-		case 9: month = @"Ramadhan"; break;
-		case 10: month = @"Shawwal"; break;
-		case 11: month = @"Dhul Qa'idah"; break;
-		case 12: month = @"Dhul Hijjah"; break;
-	}
 
-	NSString *str = [NSString stringWithFormat:@"%2d %@ %d",
-					 [comps day], month, [comps year]];
-	return str;
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+	[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+	[dateFormatter setCalendar:islamicCalendar];
+
+	NSDate *date = [NSDate dateWithTimeIntervalSinceNow:hijriOffsetInSeconds];
+	NSString *hijriDateString = [dateFormatter stringFromDate:date];
+	
+	[dateFormatter release];
+	
+	return hijriDateString;
 }
 
 @end
