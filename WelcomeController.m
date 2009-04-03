@@ -145,7 +145,8 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
     CFPreferencesSetValue((CFStringRef) @"AutoLaunchedApplicationDictionary", loginItems, (CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost); 
 	CFPreferencesSynchronize((CFStringRef) @"loginwindow", kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 	
-    [loginItems release];	
+    [loginItems release];
+	[loginObject release];
 }
 
 
