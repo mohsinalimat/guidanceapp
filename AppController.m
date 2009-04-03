@@ -25,7 +25,6 @@ static AppController *sharedAppController = nil;
 	    [NSFont menuBarFontOfSize:0.0], NSFontAttributeName,
 	    nil];
 	
-	//islamicCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSIslamicCivilCalendar];
 	islamicCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSIslamicCalendar];
 
 	[self createAppMenu];
@@ -86,7 +85,6 @@ static AppController *sharedAppController = nil;
 	[appMenu setAutoenablesItems:NO];
 	
 	muteAdhan = [[NSMenuItem alloc] initWithTitle:@"Mute Adhan" action:@selector(stopAdhan) keyEquivalent:@""];
-	[muteAdhan retain];
 	
 	// default all status icons to not time
 	[fajrItem setImage:[NSImage imageNamed:@"status_notTime"]];
@@ -248,10 +246,10 @@ static AppController *sharedAppController = nil;
 	if(displayNextPrayer) {
 		
 		BOOL startingSoon = NO;
-		const double soonEnough = 3600.0;  // 30 minutes
+		const double soonEnough = 30.0 * 60.0;  // 30 minutes
 		if([fajrTime timeIntervalSinceNow] >= 0 || ([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60)) {
 			
-			if([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60) {
+ 			if([fajrTime timeIntervalSinceNow] <= 0 && [fajrTime timeIntervalSinceNow] > -60) {
 				nextPrayerNameDisplay = @"Fajr";
 				nextPrayerTimeDisplay = @"Time";
 			} else {
@@ -329,12 +327,12 @@ static AppController *sharedAppController = nil;
 		}
 		
 		NSString *title = [NSString stringWithFormat:@"%@ %@", nextPrayerNameDisplay, nextPrayerTimeDisplay];
-		if (!startingSoon) {
-			[menuBar setTitle:title];
+		if (startingSoon) {
+			NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:menuBarAttributes];
+			[menuBar setAttributedTitle:attributedTitle];
+			[attributedTitle release];			
 		} else {
-			NSAttributedString *ac = [[NSAttributedString alloc] initWithString:title attributes:menuBarAttributes];
-			[menuBar setAttributedTitle:ac];
-			[ac release];
+			[menuBar setTitle:title];
 		}
 		
 	} else {
@@ -653,13 +651,17 @@ static AppController *sharedAppController = nil;
 		currentAdhan = prayerIndex;
 		[self setStatusIcons];
 		
+		
 		if(userSound) {
-			adhan = [[NSSound alloc] initWithContentsOfFile:userSoundFile byReference:YES];
+			adhanFile = [NSURL fileURLWithPath:userSoundFile];
 		} else {
-			adhan = [NSSound soundNamed:[adhanList objectAtIndex:adhanOption-2]];
+			adhanFile = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[adhanList objectAtIndex:adhanOption -2] ofType:@"mp3"]];
 		}	
 		
-		[adhan setDelegate:self];
+		adhan = [[QTMovie movieWithURL:adhanFile error:nil] retain];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:adhan];
+		[adhan setVolume:adhanVolume];
 		[adhan play];
 		
 		//add mute adhan menu item 
@@ -682,6 +684,7 @@ static AppController *sharedAppController = nil;
 - (void) stopAdhan
 {
 	[adhan stop];
+	//[self soundDidEnd:nil];
 }
 
 
@@ -689,7 +692,7 @@ static AppController *sharedAppController = nil;
  * sets currentlyPlayingAdhan to blank, removes sound icon, 
  * and removes mute adhan button and sets prayer items action to nothing
  */
-- (void) sound:(NSSound *)sound didFinishPlaying:(BOOL)playbackSuccessful
+- (void)soundDidEnd:(id)aNotification
 {
 	adhanIsPlaying = NO;
 	currentAdhan = 0;
@@ -699,7 +702,9 @@ static AppController *sharedAppController = nil;
 	if([appMenu indexOfItem:muteAdhan] > -1) {
 		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
 	}
-	if([appMenu indexOfItem:fajrItem] != 0) [appMenu removeItemAtIndex:0];
+
+	if([appMenu indexOfItem:hijriItem] != 0) [appMenu removeItemAtIndex:0];
+	[adhan release];
 }
 
 
@@ -714,10 +719,10 @@ static AppController *sharedAppController = nil;
 	NSAppleScript *pauseItunesScript = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:&errors];
 	
 	[pauseItunesScript executeAndReturnError:&errors];
-	
+
 	[pauseItunesScript release];
 }
-		
+
 
 /*
  * load all the values from the user preferences file into variables
@@ -781,6 +786,11 @@ static AppController *sharedAppController = nil;
 	ishaAdhanUserSound = [userDefaults boolForKey:@"IshaAdhanUserSound"];
 	ishaAdhanUserSoundFile = [userDefaults stringForKey:@"IshaAdhanUserSoundFile"];
 	
+	adhanVolume = [userDefaults floatForKey:@"AdhanVolume"];
+	// update sound directly
+	if ([self isAdhanPlaying])
+		[adhan setVolume:adhanVolume];
+
 	//shuruq reminder alert options
 	shuruqReminderAdhanOption = [userDefaults integerForKey:@"ShuruqReminderAdhanOption"];
 	shuruqReminderAdhanUserSound = [userDefaults boolForKey:@"ShuruqReminderAdhanUserSound"];
@@ -1072,7 +1082,8 @@ static AppController *sharedAppController = nil;
 
 
 /*
- *
+ * modify the hijri date based off the manual adjustment set in preferences and then
+ * returned a formatted string representation of the hijri date using NSDateFormatter
  */
 - (NSString *) hijriDate
 {

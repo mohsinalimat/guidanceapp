@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Growl-WithInstaller/Growl.h>
+#import <QTKit/QTKit.h>
 #import "Prayer.h"
 #import "PrayerTimes.h"
 #import "PrefController.h"
@@ -47,11 +48,12 @@
 	NSDate *lastAdhanAlert;
 	NSDate *lastGrowlAlert;
 	NSTimer *timer;
-	NSSound *adhan;
+	QTMovie *adhan;
 	int currentAdhan;
 	BOOL adhanIsPlaying;
 	NSArray *adhanList;
 	NSDictionary *menuBarAttributes;	
+	NSCalendar *islamicCalendar;
 	
 	
 	/* PREFERENCES */
@@ -118,6 +120,8 @@
 	BOOL fajrReminderAdhanUserSound;
 	NSString *fajrReminderAdhanUserSoundFile;
 	
+	float adhanVolume;
+	
 	BOOL fajrReminder;
 	int minutesBeforeFajr;
 	BOOL shuruqReminder;
@@ -125,12 +129,12 @@
 	BOOL enableGrowl;
 	BOOL stickyGrowl;
 	BOOL pauseItunesPref;
-	NSCalendar *islamicCalendar;
 	
 	//current values
 	BOOL userSound;
 	NSString *userSoundFile;
 	int adhanOption;
+	NSURL *adhanFile;
 }
 
 
@@ -176,6 +180,7 @@
 - (BOOL) isGrowlInstalled;
 
 - (NSString *) hijriDate;
+- (void)soundDidEnd:(id) notification;
 
 
 @end
