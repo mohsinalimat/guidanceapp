@@ -26,6 +26,7 @@
 		84262DFA0CE1153E00359AA1 /* Alerts.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262DF90CE1153E00359AA1 /* Alerts.tiff */; };
 		84262E190CE1156D00359AA1 /* Location.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E180CE1156D00359AA1 /* Location.tiff */; };
 		84262E240CE1173F00359AA1 /* Prayer Times.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E230CE1173F00359AA1 /* Prayer Times.tiff */; };
+		843065EB0F86C2D80042113F /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 843065EA0F86C2D80042113F /* QTKit.framework */; };
 		84342B020CE675D900DDE111 /* status_prayerTime.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84342AFF0CE675D900DDE111 /* status_prayerTime.tiff */; };
 		84342B030CE675D900DDE111 /* status_notTime.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84342B000CE675D900DDE111 /* status_notTime.tiff */; };
 		84342B320CE68B7B00DDE111 /* status_sound.png in Resources */ = {isa = PBXBuildFile; fileRef = 84342B310CE68B7B00DDE111 /* status_sound.png */; };
@@ -102,6 +103,7 @@
 		84262DF90CE1153E00359AA1 /* Alerts.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Alerts.tiff; sourceTree = "<group>"; };
 		84262E180CE1156D00359AA1 /* Location.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Location.tiff; sourceTree = "<group>"; };
 		84262E230CE1173F00359AA1 /* Prayer Times.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Prayer Times.tiff"; sourceTree = "<group>"; };
+		843065EA0F86C2D80042113F /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		84342AFF0CE675D900DDE111 /* status_prayerTime.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = status_prayerTime.tiff; sourceTree = SOURCE_ROOT; };
 		84342B000CE675D900DDE111 /* status_notTime.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = status_notTime.tiff; sourceTree = SOURCE_ROOT; };
 		84342B310CE68B7B00DDE111 /* status_sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_sound.png; sourceTree = SOURCE_ROOT; };
@@ -137,6 +139,7 @@
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */,
+				843065EB0F86C2D80042113F /* QTKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,6 +172,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				843065EA0F86C2D80042113F /* QTKit.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
