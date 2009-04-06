@@ -77,7 +77,7 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 	
 	NSString *urlSafeUserLocation =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) userLocation, NULL, NULL, kCFStringEncodingUTF8) autorelease];
 	
-	NSString *urlString = [NSString stringWithFormat:@"http://guidanceapp.com/geocode-google.php?location=%@",urlSafeUserLocation];
+	NSString *urlString = [NSString stringWithFormat:@"http://batoulapps.net/services/guidance/geocode-google.php?location=%@",urlSafeUserLocation];
 	
 	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
 	
