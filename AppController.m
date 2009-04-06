@@ -684,7 +684,7 @@ static AppController *sharedAppController = nil;
 - (void) stopAdhan
 {
 	[adhan stop];
-	//[self soundDidEnd:nil];
+	[self soundDidEnd:nil];
 }
 
 
