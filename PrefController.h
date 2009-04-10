@@ -32,7 +32,6 @@
 	IBOutlet NSTextField *displayNextPrayerTimeTitleText;
 	IBOutlet NSButton *displayIcon;
 	IBOutlet NSButton *startAtLogin;
-	IBOutlet NSButton *checkForUpdates;	
 	
 	/************/
 	/* LOCATION */
@@ -127,7 +126,6 @@
 - (IBAction) selectDisplayNextPrayerOption:(id)sender;
 - (IBAction) displayIconToggle:(id)sender;
 - (IBAction) startAtLoginToggle:(id)sender;
-- (IBAction) checkForUpdates:(id)sender;
 - (BOOL) startsAtLogin;
 
 

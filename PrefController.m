@@ -270,11 +270,6 @@
 	return starts;
 }
 
-- (IBAction)checkForUpdates:(id)sender
-{
-	[[AppController sharedController] checkForUpdate:NO];
-}
-
 
 /**********************/
 /* LOCATION FUNCTIONS */

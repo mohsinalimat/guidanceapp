@@ -57,7 +57,7 @@ static AppController *sharedAppController = nil;
 	}
 	
 	//check for new version
-	[self checkForUpdate:YES]; 	
+	[[SUUpdater sharedUpdater] checkForUpdatesInBackground];
 	
 	// bring  up welcome window if this is the first time the program has been ran 
 	// or if the preferences are incompatible
@@ -214,7 +214,6 @@ static AppController *sharedAppController = nil;
 	if(currentDay != [[[NSCalendar currentCalendar] components:(NSDayCalendarUnit) fromDate:[NSDate date]] day]) {
 		[self setPrayerTimes];
 		[self displayPrayerTimes];
-		if(checkForUpdates) [self checkForUpdate:YES];
 	}
 	
 	// set menu bar title
@@ -732,7 +731,6 @@ static AppController *sharedAppController = nil;
 	// startup preferences
 	firstRun = [userDefaults boolForKey:@"FirstRun"];	
 	preferencesVersion = [userDefaults integerForKey:@"PreferencesVersion"];
-	checkForUpdates = [userDefaults boolForKey:@"CheckForUpdates"];
 	
 	// general preferences
 	displayIcon = [userDefaults boolForKey:@"DisplayIcon"];
@@ -872,57 +870,6 @@ static AppController *sharedAppController = nil;
 	[[PrefController sharedPrefsWindowController] showWindow:nil];
 	[[[PrefController sharedPrefsWindowController] window] makeKeyAndOrderFront:nil];
 	[NSApp activateIgnoringOtherApps:YES];
-}
-
-
-
-
-
-/********************/
-/* UPDATE FUNCTIONS */
-/********************/
-
-/*
- * checks for new version based on the build number
- */
-- (void) checkForUpdate:(BOOL)quiet
-{
-	int currentBuild = [self getBuildNumber];
-	
-	NSDictionary *productVersionDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:@"http://guidanceapp.com/version.xml"]];
-	int latestBuild = [[productVersionDict valueForKey:@"build"] intValue];
-	NSString *latestVersionNumber = [productVersionDict valueForKey:@"version"];
-    
-	if([productVersionDict count] > 0 ) 
-	{
-		if(currentBuild >= latestBuild && !quiet)
-		{
-			// tell user software is up to date
-			[NSApp activateIgnoringOtherApps:YES];
-			NSRunAlertPanel(NSLocalizedString(@"Your Software is up to date", @"Title of alert when a the user's software is up to date."),
-							NSLocalizedString(@"You have the most recent version of Guidance.", @"Alert text when the user's software is up to date."),
-							NSLocalizedString(@"OK", @"OK"), nil, nil);
-		}
-		else if(currentBuild < latestBuild)
-		{
-			// tell user to download a new version
-			[NSApp activateIgnoringOtherApps:YES];
-			int button = NSRunAlertPanel(NSLocalizedString(@"A New Version is Available", @"Title of alert when a the user's software is not up to date."),
-										 [NSString stringWithFormat:NSLocalizedString(@"A new version of Guidance is available (version %@ r%i). Would you like to download the new version now?", @"Alert text when the user's software is not up to date."), latestVersionNumber,latestBuild],
-										 NSLocalizedString(@"OK", @"OK"),
-										 NSLocalizedString(@"Cancel", @"Cancel"), nil);
-			if(NSOKButton == button)
-			{
-				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://guidanceapp.com/download/"]];
-			}
-		}
-	} else if(!quiet) {
-		// tell user unable to check for update
-		[NSApp activateIgnoringOtherApps:YES];
-		NSRunAlertPanel(NSLocalizedString(@"Unable to check for updates", @"Title of alert"),
-						NSLocalizedString(@"Guidance is currently unable to check for updates.", @"Alert text"),
-						NSLocalizedString(@"OK", @"OK"), nil, nil);
-	}
 }
 
 

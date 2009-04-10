@@ -21,9 +21,11 @@
 	<key>CFBundleSignature</key>
 	<string>Gdnc</string>
 	<key>CFBundleVersion</key>
-	<string>151</string>
+	<string>163</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.2</string>
+	<key>SUFeedURL</key>
+	<string>http://batoulapps.net/services/guidance/appcast.xml</string>
 	<key>LSUIElement</key>
 	<string>1</string>
 	<key>NSMainNibFile</key>
@@ -34,5 +36,7 @@
 	<string>Guidance Help</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>GuidanceHelp</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
 </dict>
 </plist>

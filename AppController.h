@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Growl-WithInstaller/Growl.h>
+#import <Sparkle/Sparkle.h>
 #import <QTKit/QTKit.h>
 #import "Prayer.h"
 #import "PrayerTimes.h"
@@ -162,8 +163,6 @@
 - (void) applyPrefs;
 - (BOOL) clockShows24Hr;
 
-
-- (void) checkForUpdate:(BOOL)quiet;
 - (NSString *) getVersion;
 - (int) getBuildNumber;
 

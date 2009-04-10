@@ -26,6 +26,8 @@
 		84262DFA0CE1153E00359AA1 /* Alerts.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262DF90CE1153E00359AA1 /* Alerts.tiff */; };
 		84262E190CE1156D00359AA1 /* Location.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E180CE1156D00359AA1 /* Location.tiff */; };
 		84262E240CE1173F00359AA1 /* Prayer Times.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84262E230CE1173F00359AA1 /* Prayer Times.tiff */; };
+		8427DAB70F8F0A430066245C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8427DAB60F8F0A430066245C /* Sparkle.framework */; };
+		8427DAD60F8F0EB70066245C /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8427DAB60F8F0A430066245C /* Sparkle.framework */; };
 		843065EB0F86C2D80042113F /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 843065EA0F86C2D80042113F /* QTKit.framework */; };
 		84342B020CE675D900DDE111 /* status_prayerTime.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84342AFF0CE675D900DDE111 /* status_prayerTime.tiff */; };
 		84342B030CE675D900DDE111 /* status_notTime.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 84342B000CE675D900DDE111 /* status_notTime.tiff */; };
@@ -37,6 +39,7 @@
 		8457C42B0D01201F00BFAF0C /* SoundLow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8457C4290D01201F00BFAF0C /* SoundLow.png */; };
 		8457C42C0D01201F00BFAF0C /* SoundHigh.png in Resources */ = {isa = PBXBuildFile; fileRef = 8457C42A0D01201F00BFAF0C /* SoundHigh.png */; };
 		8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */; };
+		845D58770F8FAD6900328F89 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 845D58760F8FAD6900328F89 /* dsa_pub.pem */; };
 		84693AE80F841F3000B2911B /* continueItunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 84693AE70F841F1900B2911B /* continueItunes.scpt */; };
 		846A91C70EE62C7E00BDD132 /* fajr.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 846A91C60EE62C7E00BDD132 /* fajr.mp3 */; };
 		847F39110E6C5E26003BBF38 /* GuidanceHelp in Resources */ = {isa = PBXBuildFile; fileRef = 847F38F80E6C5E26003BBF38 /* GuidanceHelp */; };
@@ -63,6 +66,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				8427DAD60F8F0EB70066245C /* Sparkle.framework in CopyFiles */,
 				84AFF17C0CD9647D00D0BF00 /* Growl-WithInstaller.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -103,6 +107,7 @@
 		84262DF90CE1153E00359AA1 /* Alerts.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Alerts.tiff; sourceTree = "<group>"; };
 		84262E180CE1156D00359AA1 /* Location.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Location.tiff; sourceTree = "<group>"; };
 		84262E230CE1173F00359AA1 /* Prayer Times.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "Prayer Times.tiff"; sourceTree = "<group>"; };
+		8427DAB60F8F0A430066245C /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		843065EA0F86C2D80042113F /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		84342AFF0CE675D900DDE111 /* status_prayerTime.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = status_prayerTime.tiff; sourceTree = SOURCE_ROOT; };
 		84342B000CE675D900DDE111 /* status_notTime.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = status_notTime.tiff; sourceTree = SOURCE_ROOT; };
@@ -115,6 +120,7 @@
 		8457C4290D01201F00BFAF0C /* SoundLow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundLow.png; sourceTree = SOURCE_ROOT; };
 		8457C42A0D01201F00BFAF0C /* SoundHigh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SoundHigh.png; sourceTree = SOURCE_ROOT; };
 		8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Growl-WithInstaller.framework"; sourceTree = SOURCE_ROOT; };
+		845D58760F8FAD6900328F89 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		84693AE70F841F1900B2911B /* continueItunes.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; path = continueItunes.scpt; sourceTree = "<group>"; };
 		846A91C60EE62C7E00BDD132 /* fajr.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fajr.mp3; sourceTree = "<group>"; };
 		847F38F80E6C5E26003BBF38 /* GuidanceHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GuidanceHelp; sourceTree = "<group>"; };
@@ -140,6 +146,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				8458D7740D00DD8F00F9EB07 /* Growl-WithInstaller.framework in Frameworks */,
 				843065EB0F86C2D80042113F /* QTKit.framework in Frameworks */,
+				8427DAB70F8F0A430066245C /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +170,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8427DAB60F8F0A430066245C /* Sparkle.framework */,
 				8458D7730D00DD8F00F9EB07 /* Growl-WithInstaller.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
@@ -221,6 +229,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				84031FA30CCDBEE8005DA599 /* Credits.rtf */,
+				845D58760F8FAD6900328F89 /* dsa_pub.pem */,
 				84BA75480EE35DCF00A9671B /* pauseItunes.scpt */,
 				84693AE70F841F1900B2911B /* continueItunes.scpt */,
 			);
@@ -419,6 +428,7 @@
 				843F53580EE4CF0D002B9BF9 /* PlayAlt.tiff in Resources */,
 				843F53590EE4CF0D002B9BF9 /* StopAlt.tiff in Resources */,
 				846A91C70EE62C7E00BDD132 /* fajr.mp3 in Resources */,
+				845D58770F8FAD6900328F89 /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
