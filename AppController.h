@@ -46,6 +46,7 @@
 	NSDate *shuruqReminderTime;
 	
 	int currentDay;
+	float currentTimezone;
 	NSDate *lastAdhanAlert;
 	NSDate *lastGrowlAlert;
 	NSTimer *timer;

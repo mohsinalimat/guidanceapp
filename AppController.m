@@ -143,7 +143,7 @@ static AppController *sharedAppController = nil;
 	
 	[todaysPrayerTimes setDate:[NSDate date]];
 	currentDay = [[[NSCalendar currentCalendar] components:(NSDayCalendarUnit) fromDate:[NSDate date]] day];
-	
+	currentTimezone = ((float)[[NSTimeZone systemTimeZone] secondsFromGMT])/3600;
 	
 	fajrTime = [[todaysPrayerTimes getFajrTime] retain];
 	shuruqTime = [[todaysPrayerTimes getShuruqTime] retain];
@@ -200,7 +200,7 @@ static AppController *sharedAppController = nil;
 
 
 /*
- * check prayer time if seconds is 0 or if its been more than 60 seconds since the last check
+ * check prayer time every second
  */
 - (void) runLoop
 {		
@@ -210,10 +210,14 @@ static AppController *sharedAppController = nil;
 
 - (void) checkPrayerStatus
 {
-	// if its a new day, recalculate and display the prayer times and check for updates
-	if(currentDay != [[[NSCalendar currentCalendar] components:(NSDayCalendarUnit) fromDate:[NSDate date]] day]) {
+	// if its a new day or dst has changed, recalculate and display the prayer times and check for updates
+	if(currentDay != [[[NSCalendar currentCalendar] components:(NSDayCalendarUnit) fromDate:[NSDate date]] day] ||
+	   currentTimezone != ((float)[[NSTimeZone systemTimeZone] secondsFromGMT])/3600) {
 		[self setPrayerTimes];
 		[self displayPrayerTimes];
+		if([[SUUpdater sharedUpdater] automaticallyChecksForUpdates]) {
+			[[SUUpdater sharedUpdater] checkForUpdatesInBackground];
+		}
 	}
 	
 	// set menu bar title
