@@ -45,6 +45,11 @@ static AppController *sharedAppController = nil;
 	adhanList = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", @"fajr", nil];
 	[adhanList retain];
 	
+	//set up adhan qtmovie object
+	adhan = [[QTMovie alloc] init];
+	[adhan setDelegate:self];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:adhan];
+	
 	[self checkPrayerStatus];
 	
 	//running loop that checks prayer times every second
@@ -661,9 +666,7 @@ static AppController *sharedAppController = nil;
 			adhanFile = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[adhanList objectAtIndex:adhanOption -2] ofType:@"mp3"]];
 		}	
 		
-		adhan = [[QTMovie movieWithURL:adhanFile error:nil] retain];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:adhan];
+		[adhan initWithURL:adhanFile error:nil];
 		[adhan setVolume:adhanVolume];
 		[adhan play];
 		
@@ -707,7 +710,6 @@ static AppController *sharedAppController = nil;
 	}
 
 	if([appMenu indexOfItem:hijriItem] != 0) [appMenu removeItemAtIndex:0];
-	[adhan release];
 }
 
 

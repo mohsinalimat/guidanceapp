@@ -113,6 +113,11 @@
 	// select volume
 	[volumeSlider setFloatValue:[userDefaults floatForKey:@"AdhanVolume"]];
 	
+	//create sound object
+	sound = [[QTMovie alloc] init];
+	[sound setDelegate:self];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:nil];
+	
 	// check if Guidance still starts at login and modify the checkbox and preference value 
 	// to reflect this because user can modify this externally in the system preferences
 	if([self startsAtLogin]) {
@@ -712,7 +717,7 @@
 					return;
 			}
 			
-			sound = [[QTMovie movieWithURL:[NSURL fileURLWithPath:path] error:nil] retain];
+			[sound initWithURL:[NSURL fileURLWithPath:path] error:nil];
 			
 			if([userDefaults boolForKey:@"PauseItunes"]) {
 				[[AppController sharedController] pauseItunes];	
@@ -722,17 +727,24 @@
 			[adhanPreview setAlternateImage:[NSImage imageNamed:@"StopAlt"]];
 			
 			playingPreview = YES;
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:sound];
-			[sound setDelegate:self];
+
 			[sound setVolume:[volumeSlider floatValue]];
 			[sound play];
 			
 		} else if(playingPreview && [[playingStatus objectAtIndex:prayer-1] boolValue]) {
 			[sound stop];
 			[self soundDidEnd:nil];
+			
 		}
 	}
 }
+
+
+- (void) soundDidEnd:(id)notification
+{
+	[self resetPreviewButtons];
+}
+
 
 - (void)volumeChanged:(id)sender {
 	float v = [volumeSlider floatValue];
@@ -742,12 +754,6 @@
 	[self saveAndApply];
 }
 
-
-- (void) soundDidEnd:(id)notification
-{
-	[self resetPreviewButtons];
-	[sound release];
-}
 
 - (void) resetPreviewButtons 
 {
