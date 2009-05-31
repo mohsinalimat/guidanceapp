@@ -47,8 +47,6 @@ static AppController *sharedAppController = nil;
 	
 	//set up adhan qtmovie object
 	adhan = [[QTMovie alloc] init];
-	[adhan setDelegate:self];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:adhan];
 	
 	[self checkPrayerStatus];
 	
@@ -666,7 +664,11 @@ static AppController *sharedAppController = nil;
 			adhanFile = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[adhanList objectAtIndex:adhanOption -2] ofType:@"mp3"]];
 		}	
 		
-		[adhan initWithURL:adhanFile error:nil];
+		[adhan release];
+		adhan = [[QTMovie movieWithURL:adhanFile error:nil] retain];
+		[adhan setDelegate:self];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:adhan];
+		
 		[adhan setVolume:adhanVolume];
 		[adhan play];
 		

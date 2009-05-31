@@ -3,7 +3,7 @@
 //  Guidance
 //
 //  Created by Matthew Crenshaw on 11/8/07.
-//  Copyright 2007 BatoulApps. All rights reserved.
+//  Copyright 2007 Batoul Apps. All rights reserved.
 //
 
 #import "AboutController.h"

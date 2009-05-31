@@ -115,8 +115,6 @@
 	
 	//create sound object
 	sound = [[QTMovie alloc] init];
-	[sound setDelegate:self];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:nil];
 	
 	// check if Guidance still starts at login and modify the checkbox and preference value 
 	// to reflect this because user can modify this externally in the system preferences
@@ -717,7 +715,11 @@
 					return;
 			}
 			
-			[sound initWithURL:[NSURL fileURLWithPath:path] error:nil];
+			[sound release];
+			sound = [[QTMovie movieWithURL:[NSURL fileURLWithPath:path] error:nil] retain];
+			[sound setDelegate:self];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:nil];
+			
 			
 			if([userDefaults boolForKey:@"PauseItunes"]) {
 				[[AppController sharedController] pauseItunes];	
