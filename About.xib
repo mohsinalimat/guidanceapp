@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.02">
+<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9E17</string>
-		<string key="IBDocument.InterfaceBuilderVersion">670</string>
-		<string key="IBDocument.AppKitVersion">949.33</string>
-		<string key="IBDocument.HIToolboxVersion">352.00</string>
+		<string key="IBDocument.SystemVersion">9J61</string>
+		<string key="IBDocument.InterfaceBuilderVersion">677</string>
+		<string key="IBDocument.AppKitVersion">949.46</string>
+		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="52"/>
@@ -14,6 +14,15 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<string>com.apple.InterfaceBuilderKit</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+		</object>
+		<object class="NSMutableDictionary" key="IBDocument.Metadata">
+			<bool key="EncodedWithXMLCoder">YES</bool>
+			<object class="NSArray" key="dict.sortedKeys">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+			</object>
+			<object class="NSMutableArray" key="dict.values">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -180,17 +189,18 @@
 										<object class="NSTextView" id="24467965">
 											<reference key="NSNextResponder" ref="765348607"/>
 											<int key="NSvFlags">2322</int>
-											<string key="NSFrameSize">{340, 223}</string>
+											<string key="NSFrameSize">{340, 256}</string>
 											<reference key="NSSuperview" ref="765348607"/>
 											<object class="NSTextContainer" key="NSTextContainer" id="1024553782">
 												<object class="NSLayoutManager" key="NSLayoutManager">
 													<object class="NSTextStorage" key="NSTextStorage">
 														<object class="NSMutableString" key="NSString">
-															<bytes key="NS.bytes">IAogIERldmVsb3BlcnMKICBBbWVpciBBbC1ab3ViaSBhbmQgTWF0dGhldyBDcmVuc2hhdwogCiAgTG9j
-YXRpb24gQ29vcmRpbmF0ZXMgTG9va3VwCiAgSWJyYWhlZW0gS2hhbGlmYQogCiAgTm9tZW5jbGF0dXJh
-bCBDb25jZXB0IEFydGlzdAogIEZhaGFkIFJhaG1hbgoKICBUaGVvcmV0aWNhbCBDb25zdWx0YW50CiAg
-QWtlZiBSYWhtYW4KIAogQWRoYW4gcmVjaXRlZCBieSBZdXN1ZiBJc2xhbSB1c2VkIHdpdGgKIHBlcm1p
-c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
+															<bytes key="NS.bytes">IAogIERldmVsb3BlcnMKICBBbWVpciBBbC1ab3ViaSBhbmQgTWF0dGhldyBDcmVuc2hhdwogCiAgQ29k
+ZSBDb250cmlidXRpb25zCiAgTWFobW9vZCBBbGkKIAogIExvY2F0aW9uIENvb3JkaW5hdGVzIExvb2t1
+cAogIElicmFoZWVtIEtoYWxpZmEKIAogIE5vbWVuY2xhdHVyYWwgQ29uY2VwdCBBcnRpc3QKICBGYWhh
+ZCBSYWhtYW4KIAogIFRoZW9yZXRpY2FsIENvbnN1bHRhbnQKICBBa2VmIFJhaG1hbgogCiAKIEFkaGFu
+IHJlY2l0ZWQgYnkgWXVzdWYgSXNsYW0gdXNlZCB3aXRoCiBwZXJtaXNzaW9uIG9mIEphbWFsIFJlY29y
+ZHMKIHd3dy5qYW1hbHJlY29yZHMuY29tCg</bytes>
 														</object>
 														<object class="NSMutableArray" key="NSAttributes">
 															<bool key="EncodedWithXMLCoder">YES</bool>
@@ -315,14 +325,11 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 																<object class="NSMutableArray" key="dict.values">
 																	<bool key="EncodedWithXMLCoder">YES</bool>
 																	<object class="NSFont">
-																		<string key="NSName">Helvetica</string>
+																		<string key="NSName">Helvetica-Bold</string>
 																		<double key="NSSize">7.000000e+00</double>
 																		<int key="NSfFlags">16</int>
 																	</object>
-																	<object class="NSParagraphStyle" id="1039477744">
-																		<int key="NSAlignment">4</int>
-																		<nil key="NSTabStops"/>
-																	</object>
+																	<reference ref="198760671"/>
 																</object>
 															</object>
 															<object class="NSDictionary">
@@ -356,24 +363,10 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 																		<double key="NSSize">6.000000e+00</double>
 																		<int key="NSfFlags">16</int>
 																	</object>
-																	<reference ref="1039477744"/>
-																</object>
-															</object>
-															<object class="NSDictionary">
-																<bool key="EncodedWithXMLCoder">YES</bool>
-																<object class="NSMutableArray" key="dict.sortedKeys">
-																	<bool key="EncodedWithXMLCoder">YES</bool>
-																	<string>NSFont</string>
-																	<string>NSParagraphStyle</string>
-																</object>
-																<object class="NSMutableArray" key="dict.values">
-																	<bool key="EncodedWithXMLCoder">YES</bool>
-																	<object class="NSFont">
-																		<string key="NSName">Helvetica</string>
-																		<double key="NSSize">8.000000e+00</double>
-																		<int key="NSfFlags">16</int>
+																	<object class="NSParagraphStyle" id="1039477744">
+																		<int key="NSAlignment">4</int>
+																		<nil key="NSTabStops"/>
 																	</object>
-																	<reference ref="1039477744"/>
 																</object>
 															</object>
 															<object class="NSDictionary">
@@ -422,7 +415,7 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 															</object>
 														</object>
 														<object class="NSMutableData" key="NSAttributeInfo">
-															<bytes key="NS.bytes">AQABAQICCgMBBCUFAQQBBgEEHQcUBAEIAQQeBxEEGAcPBAEJAgRFChQLAQQ</bytes>
+															<bytes key="NS.bytes">AQABAQICCgMBBCUFAQQBBgEEFAcPBAEGHgcUBAEIAQQeBxAEAQgBBAEIFwcPBAMIAgRFCRQKAQQ</bytes>
 														</object>
 														<nil key="NSDelegate"/>
 													</object>
@@ -496,7 +489,7 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 										</object>
 									</object>
 									<string key="NSFrame">{{1, 1}, {340, 146}}</string>
-									<string key="NSBounds">{{0, 77}, {340, 146}}</string>
+									<string key="NSBounds">{{0, 103}, {340, 146}}</string>
 									<reference key="NSSuperview" ref="788693510"/>
 									<reference key="NSNextKeyView" ref="24467965"/>
 									<reference key="NSDocView" ref="24467965"/>
@@ -518,8 +511,8 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 									<bool key="NSEnabled">YES</bool>
 									<reference key="NSTarget" ref="788693510"/>
 									<string key="NSAction">_doScroller:</string>
-									<double key="NSCurValue">1.000000e+00</double>
-									<double key="NSPercent">6.547085e-01</double>
+									<double key="NSCurValue">9.363636e-01</double>
+									<double key="NSPercent">5.703125e-01</double>
 								</object>
 								<object class="NSScroller" id="126111090">
 									<reference key="NSNextResponder" ref="788693510"/>
@@ -529,7 +522,7 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 									<int key="NSsFlags">1</int>
 									<reference key="NSTarget" ref="788693510"/>
 									<string key="NSAction">_doScroller:</string>
-									<double key="NSCurValue">9.367090e-01</double>
+									<double key="NSCurValue">1.000000e+00</double>
 									<double key="NSPercent">9.456522e-01</double>
 								</object>
 							</object>
@@ -842,9 +835,9 @@ c3Npb24gb2YgSmFtYWwgUmVjb3Jkcwogd3d3LmphbWFscmVjb3Jkcy5jb20KA</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{561, 716}, {584, 247}}</string>
+					<string>{{375, 152}, {584, 247}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{561, 716}, {584, 247}}</string>
+					<string>{{375, 152}, {584, 247}}</string>
 					<reference ref="9"/>
 					<string>{{61, 246}, {584, 247}}</string>
 					<string>{3.40282e+38, 3.40282e+38}</string>
