@@ -42,6 +42,7 @@
 		845D58770F8FAD6900328F89 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 845D58760F8FAD6900328F89 /* dsa_pub.pem */; };
 		84693AE80F841F3000B2911B /* continueItunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 84693AE70F841F1900B2911B /* continueItunes.scpt */; };
 		846A91C70EE62C7E00BDD132 /* fajr.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 846A91C60EE62C7E00BDD132 /* fajr.mp3 */; };
+		84710FD711CC75EB00B4F5AE /* dua.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 84710FD611CC75EB00B4F5AE /* dua.m4a */; };
 		847F39110E6C5E26003BBF38 /* GuidanceHelp in Resources */ = {isa = PBXBuildFile; fileRef = 847F38F80E6C5E26003BBF38 /* GuidanceHelp */; };
 		84985D880D63FA92008447D3 /* WelcomeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84985D870D63FA92008447D3 /* WelcomeController.m */; };
 		84A4D5C20CCBED0C0080B17D /* PrayerTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4D5C10CCBED0C0080B17D /* PrayerTimes.m */; };
@@ -123,6 +124,7 @@
 		845D58760F8FAD6900328F89 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		84693AE70F841F1900B2911B /* continueItunes.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; path = continueItunes.scpt; sourceTree = "<group>"; };
 		846A91C60EE62C7E00BDD132 /* fajr.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fajr.mp3; sourceTree = "<group>"; };
+		84710FD611CC75EB00B4F5AE /* dua.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = dua.m4a; sourceTree = "<group>"; };
 		847F38F80E6C5E26003BBF38 /* GuidanceHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GuidanceHelp; sourceTree = "<group>"; };
 		84985D860D63FA92008447D3 /* WelcomeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeController.h; sourceTree = "<group>"; };
 		84985D870D63FA92008447D3 /* WelcomeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeController.m; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				8421DB5C0CD8024F00BC4D4D /* makkah.mp3 */,
 				8421DB5D0CD8024F00BC4D4D /* yusufislam.mp3 */,
 				846A91C60EE62C7E00BDD132 /* fajr.mp3 */,
+				84710FD611CC75EB00B4F5AE /* dua.m4a */,
 			);
 			name = Adhans;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 				843F53590EE4CF0D002B9BF9 /* StopAlt.tiff in Resources */,
 				846A91C70EE62C7E00BDD132 /* fajr.mp3 in Resources */,
 				845D58770F8FAD6900328F89 /* dsa_pub.pem in Resources */,
+				84710FD711CC75EB00B4F5AE /* dua.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,6 +520,7 @@
 					i386,
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -531,6 +536,7 @@
 					i386,
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;

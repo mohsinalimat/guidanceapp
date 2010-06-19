@@ -41,15 +41,11 @@ static AboutController *_sharedAboutWindowController = nil;
 	[creditsBox setHidden:YES];
 }
 
-- (void)setVersionText:(NSString *)version
+- (void)setVersionText:(NSString *)version buildNumber:(int)number
 {
-	[guidanceVersion setStringValue:[@"Version " stringByAppendingString:version]];
+	[guidanceVersion setStringValue:[NSString stringWithFormat:@"Version %@ (%i)",version,number]];
 }
 
-- (void)setBuildNumber:(int)build
-{
-	[guidanceBuild setStringValue:[NSString stringWithFormat:@"(r%i)",build]];
-}
 
 - (IBAction)toggleCredits:(NSButton *)sender
 {

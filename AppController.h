@@ -86,6 +86,7 @@
 	
 	
 	BOOL silentMode;
+	BOOL skipDua;
 	
 	//fajr alert options
 	int fajrAdhanOption;

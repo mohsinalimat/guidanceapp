@@ -17,6 +17,7 @@
 	IBOutlet NSProgressIndicator *lookupIndicator;
 	IBOutlet NSWindow *welcomeWindow;
 	IBOutlet NSButton *startAtLogin;
+	IBOutlet NSImageView *lookupStatusImage;
 	
 	NSUserDefaults *userDefaults;
 }

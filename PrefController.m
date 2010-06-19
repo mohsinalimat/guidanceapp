@@ -521,6 +521,7 @@
 		[fajrReminderAdhanPreview setEnabled:NO];		
 		
 		[pauseItunes setEnabled:NO];
+		[playDua setEnabled:NO];
 	}
 	else
 	{
@@ -560,6 +561,7 @@
 		[minutesBeforeFajrText setTextColor:[NSColor blackColor]];
 		
 		[pauseItunes setEnabled:YES];
+		[playDua setEnabled:YES];
 	}
 	
 	[self saveAndApply];

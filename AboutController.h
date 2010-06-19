@@ -13,7 +13,6 @@
 	
 	IBOutlet NSScrollView *creditsBox;
 	IBOutlet NSTextField *guidanceVersion;
-	IBOutlet NSTextField *guidanceBuild;
 }
 
 + (AboutController *)sharedAboutWindowController;
@@ -23,8 +22,6 @@
 
 - (IBAction)toggleCredits:(NSButton *)sender;
 
-- (void)setVersionText:(NSString *)version;
-
-- (void)setBuildNumber:(int)build;
+- (void)setVersionText:(NSString *)version buildNumber:(int)number;
 
 @end

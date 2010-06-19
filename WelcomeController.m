@@ -43,6 +43,8 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 		[startAtLogin setState:0];
 		[userDefaults setBool:NO forKey:@"StartAtLogin"];
 	}
+	
+	[lookupStatusImage setImage:nil];
 }
 
 - (IBAction)done:(id)sender
@@ -68,7 +70,7 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 }
 
 - (BOOL)locationLookup {
-	[lookupIndicator setDisplayedWhenStopped:YES];
+	[lookupStatusImage setImage:nil];
 	[lookupIndicator startAnimation:self];	
 	[lookupStatus setStringValue:@"Looking up latitude and longitude..."];
 	[welcomeWindow display];
@@ -97,12 +99,14 @@ static WelcomeController *_sharedWelcomeWindowController = nil;
 			[userDefaults setValue:[coordDict valueForKey:@"address"] forKey:@"Location"];	
 			
 			[lookupStatus setStringValue:@"Your location has been set"];
+			[lookupStatusImage setImage:[NSImage imageNamed:@"check"]];
 			[lookupStatus setTextColor:[NSColor blackColor]];
 			[lookupIndicator stopAnimation:self];
 		}
 		else
 		{
 			[lookupStatus setStringValue:@"Error: Unable to find location"];
+			[lookupStatusImage setImage:[NSImage imageNamed:@"error"]];
 			[lookupStatus setTextColor:[NSColor redColor]];
 			[lookupIndicator stopAnimation:self];
 		}

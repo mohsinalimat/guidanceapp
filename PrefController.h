@@ -101,6 +101,7 @@
 	IBOutlet NSPopUpButton *fajrReminderAdhanOption;
     IBOutlet NSButton *fajrReminderAdhanPreview;
 
+	IBOutlet NSButton *playDua;
 	IBOutlet NSButton *pauseItunes;
 	IBOutlet NSButton *enableGrowl;	
 	IBOutlet NSButton *stickyGrowl;

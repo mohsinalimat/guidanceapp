@@ -14,6 +14,8 @@ static AppController *sharedAppController = nil;
 
 - (void)awakeFromNib
 {	
+	[[NSApplication sharedApplication] setDelegate:self];
+	
 	//create user defaults object
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
@@ -40,6 +42,7 @@ static AppController *sharedAppController = nil;
 	lastAdhanAlert = [[NSDate dateWithTimeIntervalSinceNow:-1] retain];
 	lastGrowlAlert = [[NSDate dateWithTimeIntervalSinceNow:-1] retain];
 
+	skipDua = NO;
 	adhanIsPlaying = NO;
 	currentAdhan = 0;
 	adhanList = [NSArray arrayWithObjects:@"yusufislam", @"makkah", @"alaqsa", @"istanbul", @"fajr", nil];
@@ -691,6 +694,7 @@ static AppController *sharedAppController = nil;
 
 - (void) stopAdhan
 {
+	skipDua = YES;
 	[adhan stop];
 	[self soundDidEnd:nil];
 }
@@ -702,16 +706,31 @@ static AppController *sharedAppController = nil;
  */
 - (void)soundDidEnd:(id)aNotification
 {
-	adhanIsPlaying = NO;
-	currentAdhan = 0;
-	[self setStatusIcons];
-	
-	//remove "Mute Adhan" option
-	if([appMenu indexOfItem:muteAdhan] > -1) {
-		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
-	}
+	if([userDefaults boolForKey:@"PlayDua"] && !skipDua) {
+		[adhan release];
+		adhanFile = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"dua" ofType:@"m4a"]];
+		adhan = [[QTMovie movieWithURL:adhanFile error:nil] retain];
+		[adhan setDelegate:self];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:adhan];
+		
+		[adhan setVolume:adhanVolume];
+		[adhan play];	
+		
+		skipDua = YES;
+	} else {
+		adhanIsPlaying = NO;
+		currentAdhan = 0;
+		[self setStatusIcons];
+		
+		//remove "Mute Adhan" option
+		if([appMenu indexOfItem:muteAdhan] > -1) {
+			[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
+		}
 
-	if([appMenu indexOfItem:hijriItem] != 0) [appMenu removeItemAtIndex:0];
+		if([appMenu indexOfItem:hijriItem] != 0) [appMenu removeItemAtIndex:0];
+		
+		skipDua = NO;
+	}
 }
 
 
@@ -865,8 +884,7 @@ static AppController *sharedAppController = nil;
 	[[AboutController sharedAboutWindowController] showWindow:nil];
 	[[[AboutController sharedAboutWindowController] window] makeKeyAndOrderFront:nil];
 	[NSApp activateIgnoringOtherApps:YES];
-	[[AboutController sharedAboutWindowController] setVersionText:[self getVersion]];
-	[[AboutController sharedAboutWindowController] setBuildNumber:[self getBuildNumber]];
+	[[AboutController sharedAboutWindowController] setVersionText:[self getVersion] buildNumber:[self getBuildNumber]];
 }
 
 
@@ -1056,6 +1074,11 @@ static AppController *sharedAppController = nil;
 	[dateFormatter release];
 	
 	return hijriDateString;
+}
+
+- (void)applicationWillTerminate : (NSNotification *)aNotification
+{
+	[userDefaults synchronize];	
 }
 
 @end
