@@ -313,18 +313,37 @@
 }
 
 - (void)locationSearch
-{
+{		
 	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
 	
 	NSString *userLocation = [location stringValue];
+	NSDictionary *coordDict;
+	BOOL manualCoordinates = NO;
+	BOOL valid = NO;
 	
-	NSString *urlSafeUserLocation =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) userLocation, NULL, NULL, kCFStringEncodingUTF8) autorelease];
+	//check for manual coordinates
+	NSArray *coordArray = [userLocation componentsSeparatedByString:@","];
+	if([coordArray count] == 2) {
+		if([[coordArray objectAtIndex:0] doubleValue] != 0.0 && [[coordArray objectAtIndex:0] doubleValue] != 0.0) {
+			manualCoordinates = YES;
+			if(fabs([[coordArray objectAtIndex:0] doubleValue]) <= 90 && fabs([[coordArray objectAtIndex:0] doubleValue]) <= 180) {
+				valid = YES;
+				coordDict = [NSDictionary dictionaryWithObjects:
+											[NSArray arrayWithObjects:[NSNumber numberWithDouble:[[coordArray objectAtIndex:0] doubleValue]], [NSNumber numberWithDouble:[[coordArray objectAtIndex:1] doubleValue]], userLocation, nil] 
+													forKeys:[NSArray arrayWithObjects:@"latitude", @"longitude", @"address", nil]];
+			}
+		}
+	}
 	
-	NSString *urlString = [NSString stringWithFormat:@"http://batoulapps.net/services/guidance/geocode-google.php?location=%@",urlSafeUserLocation];
+	if(!manualCoordinates) {
+		NSString *urlSafeUserLocation =[(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) userLocation, NULL, NULL, kCFStringEncodingUTF8) autorelease];
 	
-	NSDictionary *coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
+		NSString *urlString = [NSString stringWithFormat:@"http://batoulapps.net/services/guidance/geocode-google.php?location=%@",urlSafeUserLocation];
 	
-	BOOL valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
+		coordDict = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:urlString]];
+	
+		valid = (BOOL) [[coordDict valueForKey:@"valid"] intValue];
+	}
 	
 	[lookupIndicator stopAnimation:nil];
 	
