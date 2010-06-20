@@ -177,10 +177,17 @@
 
 - (void)calcTimes:(NSDate *)calcDate
 {	
+	// default to fajr time being valid
+	BOOL validFajrTime = YES;
+	
+	// default isha time being valid
+	BOOL validIshaTime = YES;
+	
 	
 	float timezoneValue = 0;
 	
 	if(systemTimezone) {
+		[NSTimeZone resetSystemTimeZone];
 		timezoneValue = ((float)[[NSTimeZone systemTimeZone] secondsFromGMT])/3600;
 	} else {
 		timezoneValue = timezone;
@@ -252,7 +259,13 @@
 						 - (0.040849 * sin(2*beta)));
 	
 	double r = 15.0 * timezoneValue;
+	
+	// dhuhr calculation
 	double z = 12.0 + ((r - Longitude) / 15.0) - (t / 60.0);
+	
+	
+	// maghrib calculation
+	double u;
 	
 	double xu = sin([PrayerTimes deg2rad:(-0.8333 - 0.0347
 										  * [PrayerTimes sign:Altitude]
@@ -262,41 +275,41 @@
 	/ (cos([PrayerTimes deg2rad:d])
 	   * cos([PrayerTimes deg2rad:Latitude]));
 	
-	double u;
-	
-	if (xu >= -1 && xu <= 1)
-	{
+	if (xu >= -1 && xu <= 1) {
 		u = [PrayerTimes rad2deg:(1/15.0 * acos(xu))];
-	}
-	else
-	{
-		if (xu < -1)
-		{
-			// no sunset
-		}
-		else
-		{
-			// no sunrise
-		}
+	} else {
+		//invalid location
+		return;
 	}
 	
-	//fajr time calc
+	
+	// fajr calculation
 	double xvd = (-sin([PrayerTimes deg2rad:SunriseAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
 	/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
-	if(xvd <= -1) xvd = -0.997999;
-	if(xvd >= 1) xvd = 0.997999;
+
+	if(xvd <= -1 || xvd >= 1) {
+		validFajrTime = NO;
+		xvd = (xvd/fabs(xvd)) * 0.999999;
+	} 
 	
 	double vd = [PrayerTimes rad2deg:1/15.0 * acos(xvd)];
 	
-	//isha time calc
+	
+	
+	// isha calculation
 	double xvn = (-sin([PrayerTimes deg2rad:SunsetAngle]) - sin([PrayerTimes deg2rad:d]) * sin([PrayerTimes deg2rad:Latitude]))
 	/ (cos([PrayerTimes deg2rad:d]) * cos([PrayerTimes deg2rad:Latitude]));
-	if(xvn <= -1) xvn = -0.999999;
-	if(xvn >= 1) xvn = 0.999999;
+	
+	if(xvn <= -1 || xvn >= 1) {
+		validIshaTime = NO;
+		xvn = (xvn/fabs(xvn)) * 0.999999;
+	}
 	
 	double vn = [PrayerTimes rad2deg:1/15.0 * acos(xvn)];
 	
 	
+	
+	// asr calculation
 	double w = [PrayerTimes rad2deg:(
 									 1/15.0 * acos(
 												   (
@@ -322,6 +335,28 @@
 		IshaTime = [PrayerTimes hoursToTime: z + u + 1.5 : calcDate];
 	} else {
 		IshaTime = [PrayerTimes hoursToTime: z + vn : calcDate];
+	}
+	
+	
+	// apply corrections to high latitude locations
+	if(Latitude > 48) {
+		
+		// time from maghrib until tomorrow's shuruq
+		double nightTime = ((24 - (z + u)) + (z - u));
+		
+		// calculate and aplly fajr adjustment
+		double fajrDiff = (1/60.0 * SunriseAngle) * nightTime;
+		if(!validFajrTime || ((z - u) - (z - vd)) > fajrDiff) {
+			FajrTime = [PrayerTimes hoursToTime: z - u - fajrDiff : calcDate];
+		}
+		
+		// calculate and apply isha adjustment if we are not using a fixed isha time method
+		if(Method != 4 && Method != 5) {
+			double ishaDiff = (1/60.0 * SunsetAngle) * nightTime;
+			if(!validIshaTime || ((z + vn) - (z + u)) > ishaDiff) {
+				IshaTime = [PrayerTimes hoursToTime: z + u + ishaDiff : calcDate];
+			}			
+		}	
 	}
 }
 

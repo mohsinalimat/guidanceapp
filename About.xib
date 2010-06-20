@@ -41,7 +41,7 @@
 			<object class="NSWindowTemplate" id="823149260">
 				<int key="NSWindowStyleMask">3</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{196, 312}, {289, 175}}</string>
+				<string key="NSWindowRect">{{689, 489}, {289, 175}}</string>
 				<int key="NSWTFlags">603980800</int>
 				<string key="NSWindowTitle">About Guidance</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -85,7 +85,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="845634402">
 								<int key="NSCellFlags">67239488</int>
 								<int key="NSCellFlags2">138413056</int>
-								<string key="NSContents">Version 2.0</string>
+								<string key="NSContents">Version 2.0 (999)</string>
 								<object class="NSFont" key="NSSupport">
 									<string key="NSName">LucidaGrande</string>
 									<double key="NSSize">11</double>
@@ -375,9 +375,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{655, 138}, {289, 175}}</string>
+					<string>{{689, 489}, {289, 175}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{655, 138}, {289, 175}}</string>
+					<string>{{689, 489}, {289, 175}}</string>
 					<integer value="1"/>
 					<string>{{61, 246}, {584, 247}}</string>
 					<string>{3.40282e+38, 3.40282e+38}</string>

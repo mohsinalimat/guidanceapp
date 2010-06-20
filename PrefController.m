@@ -16,7 +16,7 @@
 /****************/
 
 - (void)awakeFromNib
-{
+{	
 	// register user defaults preference plist file
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
@@ -136,6 +136,33 @@
 	[lookupIndicator setDisplayedWhenStopped:NO];
 	[lookupStatusImage setImage:nil];
 	[location setStringValue:[userDefaults stringForKey:@"Location"]];
+	
+	
+	[NSTimeZone resetSystemTimeZone];
+	if ([systemTimezone state] == NSOffState)
+	{
+		[daylightSavings setEnabled:YES];
+		[timezone setEnabled:YES];
+		[timezone selectItemAtIndex:[timezoneArray indexOfObject:[NSNumber numberWithFloat:[userDefaults floatForKey:@"Timezone"]]]];
+	} 
+	else 
+	{
+		if([[NSTimeZone systemTimeZone] isDaylightSavingTime]) {
+			[daylightSavings setState:NSOnState];
+			[userDefaults setBool:YES forKey:@"DaylightSavings"];
+		} else {
+			[daylightSavings setState:NSOffState];
+			[userDefaults setBool:NO forKey:@"DaylightSavings"];
+		}
+		
+		float systemTimezoneValue = [[NSTimeZone systemTimeZone] secondsFromGMT]/3600;
+		if([[NSTimeZone systemTimeZone] isDaylightSavingTime]) systemTimezoneValue--;
+		
+		[timezone selectItemAtIndex:[timezoneArray indexOfObject:[NSNumber numberWithFloat:systemTimezoneValue]]];
+		
+		[daylightSavings setEnabled:NO];
+		[timezone setEnabled:NO];
+	}
 }
 
 - (void)windowDidLoad
