@@ -182,6 +182,7 @@
 
 - (NSString *) hijriDate;
 - (void)soundDidEnd:(id) notification;
+- (void)duaDidEnd:(id) notification;
 
 
 @end

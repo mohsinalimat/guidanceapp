@@ -711,7 +711,7 @@ static AppController *sharedAppController = nil;
 		adhanFile = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"dua" ofType:@"m4a"]];
 		adhan = [[QTMovie movieWithURL:adhanFile error:nil] retain];
 		[adhan setDelegate:self];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soundDidEnd:) name:QTMovieDidEndNotification object:adhan];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(duaDidEnd:) name:QTMovieDidEndNotification object:adhan];
 		
 		[adhan setVolume:adhanVolume];
 		[adhan play];	
@@ -731,6 +731,22 @@ static AppController *sharedAppController = nil;
 		
 		skipDua = NO;
 	}
+}
+
+- (void)duaDidEnd:(id) notification
+{
+	adhanIsPlaying = NO;
+	currentAdhan = 0;
+	[self setStatusIcons];
+	
+	//remove "Mute Adhan" option
+	if([appMenu indexOfItem:muteAdhan] > -1) {
+		[appMenu removeItemAtIndex:[appMenu indexOfItem:muteAdhan]];
+	}
+	
+	if([appMenu indexOfItem:hijriItem] != 0) [appMenu removeItemAtIndex:0];
+	
+	skipDua = NO;
 }
 
 
