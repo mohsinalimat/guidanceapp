@@ -1,0 +1,1 @@
+Islamic prayer times menu bar application for Mac OS X written in cocoa, can play adhan or display a growl notification showing the prayer time when it is time to pray.
